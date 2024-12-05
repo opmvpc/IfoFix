@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use PHPUnit\Framework\Attributes\Ticket;
 
 class User extends Authenticatable
 {
@@ -26,9 +27,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firstName',
+        'lastName',
         'email',
         'password',
+        'role',
+        'isActive',
+        'isDeleted',
     ];
 
     /**
@@ -63,5 +68,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+    public function interventions()
+    {
+        return $this->belongsToMany(Intervention::class, 'intervention_users', 'user_id', 'interventionId');
+    }
+
+    public function operations()
+    {
+        return $this->hasMany(Operation::class);
     }
 }
