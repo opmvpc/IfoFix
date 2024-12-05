@@ -4,7 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ticket_images extends Model
+class Ticket_images extends Model
 {
-    //
+    protected $fillable = [
+        'ticketId',
+        'imageUrl',
+    ];
+
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class, 'ticketId');
+    }
 }
