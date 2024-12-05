@@ -20,9 +20,9 @@ class TicketFactory extends Factory
     public function definition(): array
     {
         return [
-            'clientId' => Client::factory(),
-            'deviceId' => Device::factory(),
-            'user_id' => User::factory(),
+            'clientId' => Client::inRandomOrder()->first()->id,
+            'deviceId' => Device::inRandomOrder()->first()->id,
+            'user_id' => User::inRandomOrder()->first()->id,
             'title' => fake()->sentence(),
             'description' => fake()->text(),
             'isFinished' => fake()->boolean(),

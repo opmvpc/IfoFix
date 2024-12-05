@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Brand;
+use App\Models\Type;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,20 +20,19 @@ class DeviceFactory extends Factory
     {
 
         $devices = [
-            ['name' => 'iPhone 13', 'brandId' => 1, 'typeId' => 1],
-            ['name' => 'Galaxy S21', 'brandId' => 2, 'typeId' => 1],
-            ['name' => 'iPad Pro', 'brandId' => 1, 'typeId' => 2],
-            ['name' => 'Galaxy Tab S7', 'brandId' => 2, 'typeId' => 2],
-            ['name' => 'HP Pavillon', 'brandId' => 3, 'typeId' => 3],
-            ['name' => 'Asus Zenbook', 'brandId' => 4, 'typeId' => 3],
-            ['name' => 'Acer Nitro', 'brandId' => 5, 'typeId' => 3],
+            'iPhone 13',
+            'Galaxy S21',
+            'iPad Pro',
+            'Galaxy Tab S7',
+            'HP Pavillon',
+            'Asus Zenbook',
+            'Acer Nitro',
         ];
 
         return [
-        // retourne une ligne differentes a chaque fatory et pas deux fois la meme
-            'name' => $devices[$this->faker->numberBetween(0, 6)]['name'],
-            'brandId' => $devices[$this->faker->numberBetween(0, 6)]['brandId'],
-            'typeId' => $devices[$this->faker->numberBetween(0, 6)]['typeId'],
+            'name' => $this->faker->randomElement($devices),
+            'brandId' => Brand::inRandomOrder()->first()->id,
+            'typeId' => Type::inRandomOrder()->first()->id,
         ];
-
+    }
 }

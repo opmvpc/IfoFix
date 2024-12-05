@@ -13,15 +13,6 @@ class TypesSeeder extends Seeder
      */
     public function run(): void
     {
-        $types = [
-            ['name' => 'Smartphone'],
-            ['name' => 'Tablet'],
-            ['name' => 'Laptop'],
-            ['name' => 'Desktop'],
-        ];
-
-        foreach ($types as $type) {
-            Type::create($type);
-        }
+        Type::factory(4)->create();
     }
 }
