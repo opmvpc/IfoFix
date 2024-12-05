@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('clientId')->constrained('clients');
             $table->foreignId('deviceId')->constrained('devices');
+            $table->foreignId('user_id')->constrained('users');
             $table->string('title');
             $table->text('description');
             $table->boolean('isFinished')->default(false);
