@@ -4,6 +4,9 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 
 <template>
     <AppLayout title="Dashboard">
-        <font-awesome-icon icon="fa-solid fa-user" />
+        <div class="h-[2000px]">
+            <font-awesome-icon icon="fa-solid fa-user" />
+
+        </div>
     </AppLayout>
 </template>
