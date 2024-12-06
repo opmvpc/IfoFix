@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="flex gap-3">
-                <Select>
+                <Select v-model="selectedTechnician">
                     <SelectTrigger>
                         <SelectValue placeholder="Technicien" />
                     </SelectTrigger>
@@ -173,14 +173,21 @@ const props = defineProps({
 
 const pendingTickets = ref(true);
 const deliveredTickets = ref(false);
+const selectedTechnician = ref(null);
 
 const filteredTickets = computed(() => {
+    let tickets = props.tickets;
     if (pendingTickets.value) {
-        return props.tickets.filter((ticket) => !ticket.isFinished);
+        tickets = tickets.filter((ticket) => !ticket.isFinished);
     }
     if (deliveredTickets.value) {
-        return props.tickets.filter((ticket) => ticket.isDelivered);
+        tickets = tickets.filter((ticket) => ticket.isDelivered);
     }
-    return props.tickets;
+    if (selectedTechnician.value) {
+        tickets = tickets.filter(
+            (ticket) => ticket.user.id === selectedTechnician.value
+        );
+    }
+    return tickets;
 });
 </script>
