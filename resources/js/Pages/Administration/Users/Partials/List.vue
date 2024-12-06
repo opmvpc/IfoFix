@@ -141,6 +141,7 @@ import {
     CardContent,
     CardFooter,
 } from "@/Components/ui//card";
+import { Badge } from "@/Components/ui//badge";
 
 const props = defineProps({
     users: {
@@ -221,13 +222,14 @@ const columns = [
         },
         cell: ({ row }) =>
             h(
-                "span",
+                Badge,
                 {
-                    class: `px-2 py-1 text-xs text-white rounded-md ${
-                        row.original.isActive ? "bg-green-500" : "bg-red-500"
-                    }`,
+                    // class: `px-2 py-1 text-xs text-white ${
+                    //     row.original.isActive ? "bg-green-500" : "bg-red-500"
+                    // }`,
+                    variant: row.original.isActive ? "success" : "danger",
                 },
-                row.original.isActive ? "Actif" : "Inactif"
+                () => (row.original.isActive ? "Actif" : "Inactif")
             ),
     },
 ];

@@ -7,29 +7,29 @@
                 class="flex flex-col w-full h-full grow"
             >
                 <TabsList
-                    class="flex justify-start w-full p-2 bg-gray-300 rounded-md"
+                    class="flex justify-start w-full p-2 text-white bg-indigo-500 rounded-md"
                 >
                     <TabsTrigger
                         value="stats"
-                        class="px-4 py-2 rounded-md hover:bg-gray-400"
+                        class="px-4 py-2 rounded-md hover:bg-indigo-400"
                     >
                         Statistiques
                     </TabsTrigger>
                     <TabsTrigger
                         value="users"
-                        class="px-4 py-2 rounded-md hover:bg-gray-400"
+                        class="px-4 py-2 rounded-md hover:bg-indigo-400"
                     >
                         Utilisateurs
                     </TabsTrigger>
                     <TabsTrigger
                         value="clients"
-                        class="px-4 py-2 rounded-md hover:bg-gray-400"
+                        class="px-4 py-2 rounded-md hover:bg-indigo-400"
                     >
                         Clients
                     </TabsTrigger>
                     <TabsTrigger
                         value="devices"
-                        class="px-4 py-2 rounded-md hover:bg-gray-400"
+                        class="px-4 py-2 rounded-md hover:bg-indigo-400"
                     >
                         Appareils
                     </TabsTrigger>
