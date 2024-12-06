@@ -1,27 +1,56 @@
 <template>
     <AppLayout title="Administration">
-        <div class="container">
+        <div class="container flex flex-col min-h-screen p-4 mx-auto">
             <Head title="Administration" />
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
+            <Tabs
+                default-value="stats"
+                class="flex flex-col w-full h-full grow"
             >
-                Administration
-            </h2>
-            <Tabs default-value="stats" class="w-full">
-                <TabsList class="justify-start w-full bg-gray-300">
-                    <TabsTrigger value="stats"> Statistiques </TabsTrigger>
-                    <TabsTrigger value="users"> Utilisateurs </TabsTrigger>
-                    <TabsTrigger value="clients"> Clients </TabsTrigger>
-                    <TabsTrigger value="devices"> Appareils </TabsTrigger>
+                <TabsList
+                    class="flex justify-start w-full p-2 bg-gray-300 rounded-md"
+                >
+                    <TabsTrigger
+                        value="stats"
+                        class="px-4 py-2 rounded-md hover:bg-gray-400"
+                    >
+                        Statistiques
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="users"
+                        class="px-4 py-2 rounded-md hover:bg-gray-400"
+                    >
+                        Utilisateurs
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="clients"
+                        class="px-4 py-2 rounded-md hover:bg-gray-400"
+                    >
+                        Clients
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="devices"
+                        class="px-4 py-2 rounded-md hover:bg-gray-400"
+                    >
+                        Appareils
+                    </TabsTrigger>
                 </TabsList>
-                <TabsContent value="stats"> Stats page </TabsContent>
-                <TabsContent value="users">
-                    Users administration page
+                <TabsContent value="stats" class=""> Stats page </TabsContent>
+                <TabsContent
+                    value="users"
+                    class="flex flex-row overflow-hidden grow"
+                >
+                    <UsersPage :users />
                 </TabsContent>
-                <TabsContent value="clients">
+                <TabsContent
+                    value="clients"
+                    class="p-4 bg-white rounded-md shadow-md"
+                >
                     Clients administration page
                 </TabsContent>
-                <TabsContent value="devices">
+                <TabsContent
+                    value="devices"
+                    class="p-4 bg-white rounded-md shadow-md"
+                >
                     Devices administration page
                 </TabsContent>
             </Tabs>
@@ -33,4 +62,12 @@
 import { Head, Link } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
+import UsersPage from "@/Pages/Administration/Users/Index.vue";
+import { defineProps } from "vue";
+
+const { users } = defineProps({
+    users: {
+        type: Array,
+    },
+});
 </script>
