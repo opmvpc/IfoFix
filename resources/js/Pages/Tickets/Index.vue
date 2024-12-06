@@ -2,8 +2,21 @@
     <AppLayout>
         <div class="p-3 space-y-3">
             <div class="flex justify-between items-center gap-3">
-                <h1>Tickets</h1>
+                <h1 class="text-xl font-semibold">Tickets</h1>
                 <Button>Ajouter un ticket</Button>
+            </div>
+            <div class="flex justify-between gap-3">
+                <Input placeholder="Rechercher un ticket" class="" />
+                <div class="flex gap-3 shrink-0">
+                    <div class="flex items-center space-x-2">
+                        <Switch id="pending-mode" />
+                        <Label for="pending-mode">en cours</Label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <Switch id="delivered-mode" />
+                        <Label for="delivered-mode">rendu</Label>
+                    </div>
+                </div>
             </div>
             <div class="flex gap-3">
                 <Select>
@@ -47,23 +60,9 @@
                     </SelectContent>
                 </Select>
             </div>
-            <div class="flex justify-between gap-3">
-                <Input
-                    placeholder="Rechercher un ticket"
-                    class="w-auto basis-1/2"
-                />
-                <div class="flex gap-3">
-                    <div class="flex items-center space-x-2">
-                        <Switch id="pending-mode" />
-                        <Label for="pending-mode">en cours</Label>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <Switch id="delivered-mode" />
-                        <Label for="delivered-mode">rendu</Label>
-                    </div>
-                </div>
-            </div>
         </div>
+
+        <hr />
     </AppLayout>
 </template>
 
