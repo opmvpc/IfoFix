@@ -23,7 +23,7 @@ class TicketFactory extends Factory
             'clientId' => Client::inRandomOrder()->first()->id,
             'deviceId' => Device::inRandomOrder()->first()->id,
             'user_id' => User::inRandomOrder()->first()->id,
-            'title' => fake()->sentence(),
+            'title' => fake()->sentence(3),
             'description' => fake()->text(),
             'isFinished' => fake()->boolean(),
             'isDelivered' => $this->faker->boolean(),
