@@ -1,166 +1,114 @@
 <template>
-    <Form @submit="onSubmit">
-        <Dialog>
-            <DialogTrigger as-child>
-                <Button variant="link">
-                    <font-awesome-icon icon="fa-solid fa-plus" />
-                </Button>
-            </DialogTrigger>
-            <DialogContent class="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle>Créer un utilisateur</DialogTitle>
-                    <DialogDescription>
-                        Formulaire de création d'un utilisateur.
-                    </DialogDescription>
-                </DialogHeader>
+    <Dialog>
+        <DialogTrigger as-child>
+            <Button variant="link">
+                <font-awesome-icon icon="fa-solid fa-plus" />
+            </Button>
+        </DialogTrigger>
+        <DialogContent class="sm:max-w-[425px]">
+            <DialogHeader>
+                <DialogTitle>Créer un utilisateur</DialogTitle>
+                <DialogDescription>
+                    Formulaire de création d'un utilisateur.
+                </DialogDescription>
+            </DialogHeader>
+            <form @submit.prevent="onSubmit">
                 <div class="grid grid-cols-1 gap-6">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <FormField
-                                v-slot="{ componentField }"
-                                name="firstName"
-                            >
-                                <FormItem>
-                                    <FormLabel>Prénom</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="text"
-                                            placeholder="Prénom"
-                                            v-bind="componentField"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            </FormField>
+                            <div class="space-y-2">
+                                <Label>Prénom</Label>
+                                <Input
+                                    type="text"
+                                    placeholder="Prénom"
+                                    v-model="form.firstName"
+                                />
+                                <InputError :message="form.errors.firstName" />
+                            </div>
                         </div>
                         <div>
-                            <FormField
-                                v-slot="{ componentField }"
-                                name="lastName"
-                            >
-                                <FormItem>
-                                    <FormLabel>Nom</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="text"
-                                            placeholder="Nom"
-                                            v-bind="componentField"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            </FormField>
+                            <div class="space-y-2">
+                                <Label>Nom</Label>
+                                <Input
+                                    type="text"
+                                    placeholder="Nom"
+                                    v-model="form.lastName"
+                                />
+                                <InputError :message="form.errors.lastName" />
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <FormField v-slot="{ componentField }" name="email">
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="email"
-                                        placeholder="Email"
-                                        v-bind="componentField"
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
+                    <div class="space-y-2">
+                        <Label>Email</Label>
+                        <Input
+                            type="email"
+                            placeholder="Email"
+                            v-model="form.email"
+                        />
+                        <InputError :message="form.errors.email" />
                     </div>
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="grow">
-                            <FormField
-                                v-slot="{ componentField }"
-                                name="password"
-                            >
-                                <FormItem>
-                                    <FormLabel>Mot de passe</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="password"
-                                            placeholder="Mot de passe"
-                                            v-bind="componentField"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            </FormField>
+                        <div class="space-y-2 grow">
+                            <Label>Mot de passe</Label>
+                            <Input
+                                type="password"
+                                placeholder="Mot de passe"
+                                v-model="form.password"
+                            />
+                            <InputError :message="form.errors.password" />
                         </div>
-                        <div class="grow">
-                            <FormField
-                                v-slot="{ componentField }"
-                                name="password_confirmation"
-                            >
-                                <FormItem>
-                                    <FormLabel>Confirmation</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="password"
-                                            placeholder="Confirmation"
-                                            v-bind="componentField"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            </FormField>
+                        <div class="space-y-2 grow">
+                            <Label>Confirmation</Label>
+                            <Input
+                                type="password"
+                                placeholder="Confirmation"
+                                v-model="form.password_confirmation"
+                            />
                         </div>
                     </div>
-                    <div>
-                        <FormField v-slot="{ componentField }" name="role">
-                            <FormItem>
-                                <FormLabel>Rôle</FormLabel>
-                                <FormControl>
-                                    <Select v-bind="componentField">
-                                        <SelectTrigger>
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="admin">
-                                                Administrateur
-                                            </SelectItem>
-                                            <SelectItem value="user"
-                                                >Utilisateur</SelectItem
-                                            >
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
+                    <div class="space-y-2">
+                        <Label>Rôle</Label>
+                        <Select v-model="form.role">
+                            <SelectTrigger>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="admin">
+                                    Administrateur
+                                </SelectItem>
+                                <SelectItem value="user">
+                                    Utilisateur
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <InputError :message="form.errors.role" />
                     </div>
-                    <div>
-                        <FormField v-slot="{ componentField }" name="status">
-                            <FormItem>
-                                <FormLabel>Statut</FormLabel>
-                                <FormControl>
-                                    <Select v-bind="componentField">
-                                        <SelectTrigger>
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="active">
-                                                Actif
-                                            </SelectItem>
-                                            <SelectItem value="inactive">
-                                                Inactif
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
+                    <div class="space-y-2">
+                        <Label>Statut</Label>
+                        <Select v-model="form.status">
+                            <SelectTrigger>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="active"> Actif </SelectItem>
+                                <SelectItem value="inactive">
+                                    Inactif
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <InputError :message="form.errors.status" />
                     </div>
                 </div>
                 <Button
                     type="submit"
                     class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    :disabled="form.processing"
                 >
                     Créer
                 </Button>
-            </DialogContent>
-        </Dialog>
-    </Form>
+            </form>
+        </DialogContent>
+    </Dialog>
 </template>
 
 <script setup>
@@ -173,23 +121,7 @@ import {
     DialogTitle,
     DialogDescription,
 } from "@/Components/ui/dialog";
-import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-    CardContent,
-    CardFooter,
-} from "@/Components/ui/card";
-import {
-    Form,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-    FormControl,
-} from "@/Components/ui/form";
-// import { Label } from "@/Components/ui/label";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/Components/ui/input";
 import { useForm } from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
@@ -200,7 +132,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/Components/ui/select";
-import { ref } from "vue";
 
 const form = useForm({
     firstName: "",
@@ -209,9 +140,10 @@ const form = useForm({
     password: "",
     password_confirmation: "",
     role: "",
+    status: "",
 });
 
-const onSubmit = (values) => {
+const onSubmit = () => {
     form.post(route("users.store"), {
         onSuccess: () => form.reset(),
     });
