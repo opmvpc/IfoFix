@@ -3,7 +3,9 @@
         <div class="p-3 flex flex-col gap-3 h-screen overflow-hidden">
             <div class="flex justify-between items-center gap-3">
                 <h1 class="text-xl font-semibold">Tickets</h1>
-                <Button>Ajouter un ticket</Button>
+                <Link :href="route('tickets.create')"
+                    ><Button>Ajouter un ticket</Button></Link
+                >
             </div>
             <div class="flex justify-between gap-3">
                 <Input placeholder="Rechercher un ticket" class="" />
@@ -31,6 +33,7 @@
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
+                            <SelectItem :value="aucun"> Aucun </SelectItem>
                             <SelectItem
                                 v-for="(technician, index) in technicians"
                                 :key="index"
@@ -41,12 +44,14 @@
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-                <Select>
+
+                <Select v-model="selectedDevice">
                     <SelectTrigger>
                         <SelectValue placeholder="Model" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
+                            <SelectItem :value="aucun"> Aucun </SelectItem>
                             <SelectItem
                                 v-for="(device, index) in devices"
                                 :key="index"
@@ -56,12 +61,14 @@
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-                <Select>
+
+                <Select v-model="selectedBrand">
                     <SelectTrigger>
                         <SelectValue placeholder="Marque" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
+                            <SelectItem :value="aucun"> Aucun </SelectItem>
                             <SelectItem
                                 v-for="(brand, index) in brands"
                                 :key="index"
@@ -71,12 +78,13 @@
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-                <Select>
+                <Select v-model="selectedType">
                     <SelectTrigger>
                         <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
+                            <SelectItem :value="aucun"> Aucun </SelectItem>
                             <SelectItem
                                 v-for="(type, index) in types"
                                 :key="index"
@@ -119,15 +127,19 @@
                             <td class="px-4 py-2">{{ ticket.title }}</td>
                             <td
                                 v-if="ticket.isFinished"
-                                class="px-4 py-2 text-green-500 font-medium"
+                                class="px-4 py-2 text-emerald-600 font-medium"
                             >
-                                Terminé
+                                <Badge class="p-1 px-2 bg-emerald-100"
+                                    >Terminé</Badge
+                                >
                             </td>
                             <td
                                 v-if="!ticket.isFinished"
-                                class="px-4 py-2 text-orange-400 font-medium"
+                                class="px-4 py-2 text-orange-600 font-medium"
                             >
-                                En cours
+                                <Badge class="p-1 px-2 bg-orange-100"
+                                    >En cours</Badge
+                                >
                             </td>
 
                             <td class="px-4 py-2">
@@ -162,6 +174,8 @@ import {
 import { Switch } from "@/Components/ui/switch";
 import { Label } from "@/Components/ui/label";
 import { computed, ref } from "vue";
+import { Badge } from "@/Components/ui/badge";
+import { Link } from "@inertiajs/vue3";
 
 const props = defineProps({
     tickets: Array,
@@ -174,6 +188,9 @@ const props = defineProps({
 const pendingTickets = ref(true);
 const deliveredTickets = ref(false);
 const selectedTechnician = ref(null);
+const selectedDevice = ref(null);
+const selectedBrand = ref(null);
+const selectedType = ref(null);
 
 const filteredTickets = computed(() => {
     let tickets = props.tickets;
@@ -186,6 +203,22 @@ const filteredTickets = computed(() => {
     if (selectedTechnician.value) {
         tickets = tickets.filter(
             (ticket) => ticket.user.id === selectedTechnician.value
+        );
+    }
+    if (selectedDevice.value) {
+        tickets = tickets.filter(
+            (ticket) => ticket.device.id === selectedDevice.value
+        );
+    }
+    if (selectedBrand.value) {
+        tickets = tickets.filter(
+            (ticket) => ticket.device.brandId === selectedBrand.value
+        );
+    }
+
+    if (selectedType.value) {
+        tickets = tickets.filter(
+            (ticket) => ticket.device.typeId === selectedType.value
         );
     }
     return tickets;
