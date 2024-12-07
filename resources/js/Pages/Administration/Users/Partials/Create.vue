@@ -1,137 +1,178 @@
 <template>
-    <form @submit.prevent="submit">
-        <Card>
-            <CardHeader>
-                <CardTitle>Créer un utilisateur</CardTitle>
-                <CardDescription
-                    >Formulaire de création d'un utilisateur</CardDescription
-                >
-            </CardHeader>
-            <CardContent>
+    <Form @submit="onSubmit">
+        <Dialog>
+            <DialogTrigger as-child>
+                <Button variant="link">
+                    <font-awesome-icon icon="fa-solid fa-plus" />
+                </Button>
+            </DialogTrigger>
+            <DialogContent class="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Créer un utilisateur</DialogTitle>
+                    <DialogDescription>
+                        Formulaire de création d'un utilisateur.
+                    </DialogDescription>
+                </DialogHeader>
                 <div class="grid grid-cols-1 gap-6">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <Label for="firstName">Prénom</Label>
-                            <Input
-                                id="firstName"
-                                v-model="form.firstName"
-                                type="text"
+                            <FormField
+                                v-slot="{ componentField }"
                                 name="firstName"
-                                autocomplete="given-name"
-                                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            />
-                            <InputError
-                                class="mt-2"
-                                :message="form.errors.firstName"
-                            />
+                            >
+                                <FormItem>
+                                    <FormLabel>Prénom</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="text"
+                                            placeholder="Prénom"
+                                            v-bind="componentField"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            </FormField>
                         </div>
                         <div>
-                            <Label for="lastName">Nom</Label>
-                            <Input
-                                id="lastName"
-                                v-model="form.lastName"
-                                type="text"
+                            <FormField
+                                v-slot="{ componentField }"
                                 name="lastName"
-                                autocomplete="given-name"
-                                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            />
-                            <InputError
-                                class="mt-2"
-                                :message="form.errors.lastName"
-                            />
+                            >
+                                <FormItem>
+                                    <FormLabel>Nom</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="text"
+                                            placeholder="Nom"
+                                            v-bind="componentField"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            </FormField>
                         </div>
                     </div>
                     <div>
-                        <Label for="email">Email</Label>
-                        <Input
-                            id="email"
-                            v-model="form.email"
-                            type="email"
-                            name="email"
-                            autocomplete="email"
-                            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        />
-                        <InputError class="mt-2" :message="form.errors.email" />
+                        <FormField v-slot="{ componentField }" name="email">
+                            <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="email"
+                                        placeholder="Email"
+                                        v-bind="componentField"
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        </FormField>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="grow">
-                            <Label for="password" class="text-nowrap"
-                                >Mot de passe</Label
-                            >
-                            <Input
-                                id="password"
-                                v-model="form.password"
-                                type="password"
+                            <FormField
+                                v-slot="{ componentField }"
                                 name="password"
-                                autocomplete="new-password"
-                                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            />
+                            >
+                                <FormItem>
+                                    <FormLabel>Mot de passe</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="password"
+                                            placeholder="Mot de passe"
+                                            v-bind="componentField"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            </FormField>
                         </div>
                         <div class="grow">
-                            <Label
-                                for="password_confirmation"
-                                class="text-nowrap"
-                                >Confirmer le mot de passe</Label
-                            >
-                            <Input
-                                id="password_confirmation"
-                                v-model="form.password_confirmation"
-                                type="password"
+                            <FormField
+                                v-slot="{ componentField }"
                                 name="password_confirmation"
-                                autocomplete="new-password"
-                                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            />
+                            >
+                                <FormItem>
+                                    <FormLabel>Confirmation</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="password"
+                                            placeholder="Confirmation"
+                                            v-bind="componentField"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            </FormField>
                         </div>
-                        <InputError
-                            class="col-span-2 mt-2"
-                            :message="form.errors.password"
-                        />
                     </div>
                     <div>
-                        <Label for="role">Rôle</Label>
-                        <!-- <select
-                            id="role"
-                            v-model="form.role"
-                            name="role"
-                            autocomplete="role"
-                            class="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        >
-                            <option value="admin">Administrateur</option>
-                            <option value="tecnician" selected>
-                                Technicien
-                            </option>
-                        </select> -->
-                        <Select name="role" v-model="form.role">
-                            <SelectTrigger>
-                                <SelectValue
-                                    placeholder="Selectionner un rôle"
-                                />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="technician">
-                                    Technicien
-                                </SelectItem>
-                                <SelectItem value="admin">
-                                    Administrateur
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <InputError class="mt-2" :message="form.errors.role" />
+                        <FormField v-slot="{ componentField }" name="role">
+                            <FormItem>
+                                <FormLabel>Rôle</FormLabel>
+                                <FormControl>
+                                    <Select v-bind="componentField">
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="admin">
+                                                Administrateur
+                                            </SelectItem>
+                                            <SelectItem value="user"
+                                                >Utilisateur</SelectItem
+                                            >
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        </FormField>
+                    </div>
+                    <div>
+                        <FormField v-slot="{ componentField }" name="status">
+                            <FormItem>
+                                <FormLabel>Statut</FormLabel>
+                                <FormControl>
+                                    <Select v-bind="componentField">
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="active">
+                                                Actif
+                                            </SelectItem>
+                                            <SelectItem value="inactive">
+                                                Inactif
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        </FormField>
                     </div>
                 </div>
-            </CardContent>
-            <CardFooter>
-                <button
+                <Button
                     type="submit"
                     class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                     Créer
-                </button>
-            </CardFooter>
-        </Card>
-    </form>
+                </Button>
+            </DialogContent>
+        </Dialog>
+    </Form>
 </template>
+
 <script setup>
+import { Button } from "@/Components/ui/button";
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+} from "@/Components/ui/dialog";
 import {
     Card,
     CardHeader,
@@ -140,7 +181,15 @@ import {
     CardContent,
     CardFooter,
 } from "@/Components/ui/card";
-import { Label } from "@/Components/ui/label";
+import {
+    Form,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+    FormControl,
+} from "@/Components/ui/form";
+// import { Label } from "@/Components/ui/label";
 import { Input } from "@/Components/ui/input";
 import { useForm } from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
@@ -151,6 +200,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/Components/ui/select";
+import { ref } from "vue";
 
 const form = useForm({
     firstName: "",
@@ -161,7 +211,7 @@ const form = useForm({
     role: "",
 });
 
-const submit = () => {
+const onSubmit = (values) => {
     form.post(route("users.store"), {
         onSuccess: () => form.reset(),
     });

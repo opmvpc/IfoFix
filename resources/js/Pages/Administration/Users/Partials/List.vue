@@ -1,7 +1,10 @@
 <template>
     <Card class="flex flex-col">
         <CardContent class="flex-1 p-6">
-            <h1 class="text-2xl font-bold">Liste des utilisateurs</h1>
+            <div class="flex">
+                <h1 class="text-2xl font-bold">Liste des utilisateurs</h1>
+                <UserCreate />
+            </div>
             <div class="flex items-center gap-2 py-4">
                 <Input
                     class="max-w-52"
@@ -57,6 +60,7 @@
                             <TableRow
                                 v-for="row in table.getRowModel().rows"
                                 :key="row.id"
+                                @click="selectUser(row.original)"
                             >
                                 <TableCell
                                     v-for="cell in row.getVisibleCells()"
@@ -142,6 +146,9 @@ import {
     CardFooter,
 } from "@/Components/ui//card";
 import { Badge } from "@/Components/ui//badge";
+import UserCreate from "@/Pages/Administration/Users/Partials/Create.vue";
+
+const emit = defineEmits(["user-selected"]);
 
 const props = defineProps({
     users: {
@@ -274,4 +281,8 @@ const table = useVueTable({
         },
     },
 });
+
+const selectUser = (user) => {
+    emit("user-selected", user);
+};
 </script>
