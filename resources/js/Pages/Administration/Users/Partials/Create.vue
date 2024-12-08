@@ -55,7 +55,6 @@
                                 placeholder="Mot de passe"
                                 v-model="form.password"
                             />
-                            <InputError :message="form.errors.password" />
                         </div>
                         <div class="space-y-2 grow">
                             <Label>Confirmation</Label>
@@ -65,6 +64,10 @@
                                 v-model="form.password_confirmation"
                             />
                         </div>
+                        <InputError
+                            class="col-span-2"
+                            :message="form.errors.password"
+                        />
                     </div>
                     <div class="space-y-2">
                         <Label>Rôle</Label>
