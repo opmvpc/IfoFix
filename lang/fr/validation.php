@@ -188,6 +188,22 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'firstName' => 'Prénom',
+        'lastName' => 'Nom',
+        'email' => 'Email',
+        'password' => 'Mot de passe',
+        'password_confirmation' => 'Confirmation du mot de passe',
+        'current_password' => 'Mot de passe actuel',
+        'new_password' => 'Nouveau mot de passe',
+        'new_password_confirmation' => 'Confirmation du nouveau mot de passe',
+        'city' => 'Ville',
+        'country' => 'Pays',
+        'address' => 'Adresse',
+        'phone' => 'Téléphone',
+        'mobile' => 'Mobile',
+        'role' => 'Rôle',
+        'status' => 'Statut',
+    ],
 
 ];
