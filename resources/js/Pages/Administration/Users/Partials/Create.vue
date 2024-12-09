@@ -1,5 +1,5 @@
 <template>
-    <Dialog>
+    <Dialog @update:open="handleOpen">
         <DialogTrigger as-child>
             <Button variant="link">
                 <font-awesome-icon icon="fa-solid fa-plus" />
@@ -79,8 +79,8 @@
                                 <SelectItem value="admin">
                                     Administrateur
                                 </SelectItem>
-                                <SelectItem value="user">
-                                    Utilisateur
+                                <SelectItem value="technician">
+                                    Technicien
                                 </SelectItem>
                             </SelectContent>
                         </Select>
@@ -88,23 +88,21 @@
                     </div>
                     <div class="space-y-2">
                         <Label>Statut</Label>
-                        <Select v-model="form.status">
+                        <Select v-model="form.isActive">
                             <SelectTrigger>
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="active"> Actif </SelectItem>
-                                <SelectItem value="inactive">
-                                    Inactif
-                                </SelectItem>
+                                <SelectItem value="1"> Actif </SelectItem>
+                                <SelectItem value="0"> Inactif </SelectItem>
                             </SelectContent>
                         </Select>
-                        <InputError :message="form.errors.status" />
+                        <InputError :message="form.errors.isActive" />
                     </div>
                 </div>
                 <Button
                     type="submit"
-                    class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    class="inline-flex justify-center px-4 py-2 mt-6 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     :disabled="form.processing"
                 >
                     Créer
@@ -142,13 +140,19 @@ const form = useForm({
     email: "",
     password: "",
     password_confirmation: "",
-    role: "",
-    status: "",
+    role: "technician",
+    isActive: "1",
 });
 
 const onSubmit = () => {
     form.post(route("users.store"), {
         onSuccess: () => form.reset(),
     });
+};
+
+const handleOpen = (value) => {
+    if (!value) {
+        form.reset();
+    }
 };
 </script>

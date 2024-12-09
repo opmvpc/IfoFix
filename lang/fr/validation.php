@@ -203,7 +203,7 @@ return [
         'phone' => 'Téléphone',
         'mobile' => 'Mobile',
         'role' => 'Rôle',
-        'status' => 'Statut',
+        'isActive' => 'Status',
     ],
 
 ];

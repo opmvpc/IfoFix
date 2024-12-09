@@ -28,15 +28,17 @@ class UsersController extends Controller
             'email' => 'required| string | email | max:255 | unique:users',
             'password' => $this->passwordRules(),
             'role' => 'required | string | max:255',
+            'isActive' => 'required | boolean',
         ]);
 
         // dd($validatedData);
-        $user = User::create([
+        User::create([
             'firstName' => $validatedData['firstName'],
             'lastName' => $validatedData['lastName'],
             'email' => $validatedData['email'],
             'password' => bcrypt($validatedData['password']),
             'role' => $validatedData['role'],
+            'isActive' => $validatedData['isActive'],
         ]);
         // Return Inertia response instead of JSON
         return back()->with('success', 'User created successfully.');
