@@ -1,6 +1,6 @@
 <template>
     <AppLayout>
-        <div class="p-3 flex flex-col gap-3 h-screen overflow-hidden">
+        <div class="p-3 flex flex-col gap-3">
             <div class="flex justify-between items-center gap-3">
                 <h1 class="text-xl font-semibold">Tickets</h1>
                 <Link :href="route('tickets.create')"
@@ -96,65 +96,8 @@
                 </Select>
             </div>
             <hr />
-            <div class="overflow-scroll border-gray-300 rounded-lg">
-                <table
-                    class="w-full table-auto border-collapse bg-white rounded-lg"
-                >
-                    <thead>
-                        <tr>
-                            <th class="px-4 py-2 text-left font-bold">Id</th>
-                            <th class="px-4 py-2 text-left font-bold">Titre</th>
-                            <th class="px-4 py-2 text-left font-bold">
-                                Statut
-                            </th>
 
-                            <th class="px-4 py-2 text-left font-bold">
-                                Assigné à
-                            </th>
-
-                            <th class="px-4 py-2 text-left font-bold">
-                                Action
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="ticket in filteredTickets"
-                            :key="ticket.id"
-                            class="hover:bg-gray-50 border-t border-t-slate-200"
-                        >
-                            <td class="px-4 py-2">#{{ ticket.id }}</td>
-                            <td class="px-4 py-2">{{ ticket.title }}</td>
-                            <td
-                                v-if="ticket.isFinished"
-                                class="px-4 py-2 text-emerald-600 font-medium"
-                            >
-                                <Badge class="p-1 px-2 bg-emerald-100"
-                                    >Terminé</Badge
-                                >
-                            </td>
-                            <td
-                                v-if="!ticket.isFinished"
-                                class="px-4 py-2 text-orange-600 font-medium"
-                            >
-                                <Badge class="p-1 px-2 bg-orange-100"
-                                    >En cours</Badge
-                                >
-                            </td>
-
-                            <td class="px-4 py-2">
-                                {{ ticket.user.firstName }}
-                            </td>
-
-                            <td
-                                class="px-4 py-2 text-center font-bold cursor-pointer"
-                            >
-                                ✖
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <Test :tickets="filteredTickets" />
         </div>
     </AppLayout>
 </template>
@@ -162,7 +105,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Button from "@/Components/ui/button/Button.vue";
-import Input from "@/components/ui/input/Input.vue";
+import Input from "@/Components/ui/input/Input.vue";
 import {
     Select,
     SelectContent,
@@ -176,6 +119,7 @@ import { Label } from "@/Components/ui/label";
 import { computed, ref } from "vue";
 import { Badge } from "@/Components/ui/badge";
 import { Link } from "@inertiajs/vue3";
+import Test from "./Test.vue";
 
 const props = defineProps({
     tickets: Array,

@@ -23,7 +23,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/Components/ui/table";
-import { cn, valueUpdater } from "@/utils";
+import { cn, valueUpdater } from "@/lib/utils";
 import {
     createColumnHelper,
     FlexRender,
@@ -35,8 +35,10 @@ import {
     useVueTable,
 } from "@tanstack/vue-table";
 import { ArrowUpDown, ChevronDown } from "lucide-vue-next";
-import { h, ref } from "vue";
-import DropdownAction from "./DataTableDemoColumn.vue";
+import { h, ref, watch, watchEffect } from "vue";
+import { Badge } from "@/Components/ui/badge";
+import { router } from "@inertiajs/vue3";
+// import DropdownAction from "./DataTableDemoColumn.vue";
 
 export interface Payment {
     id: string;
@@ -45,70 +47,32 @@ export interface Payment {
     email: string;
 }
 
-const data: Payment[] = [
-    {
-        id: "m5gr84i9",
-        amount: 316,
-        status: "success",
-        email: "ken99@yahoo.com",
-    },
-    {
-        id: "3u1reuv4",
-        amount: 242,
-        status: "success",
-        email: "Abe45@gmail.com",
-    },
-    {
-        id: "derv1ws0",
-        amount: 837,
-        status: "processing",
-        email: "Monserrat44@gmail.com",
-    },
-    {
-        id: "5kma53ae",
-        amount: 874,
-        status: "success",
-        email: "Silas22@gmail.com",
-    },
-    {
-        id: "bhqecj4p",
-        amount: 721,
-        status: "failed",
-        email: "carmella@hotmail.com",
-    },
-];
+const props = defineProps({
+    tickets: Array,
+    technicians: Array,
+    devices: Array,
+    brands: Array,
+    types: Array,
+});
+console.log(props.tickets);
 
-const columnHelper = createColumnHelper<Payment>();
+const tickets = ref(props.tickets);
+watchEffect(() => {
+    tickets.value = props.tickets;
+});
 
 const columns = [
-    columnHelper.display({
-        id: "select",
-        header: ({ table }) =>
-            h(Checkbox, {
-                checked:
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate"),
-                "onUpdate:checked": (value) =>
-                    table.toggleAllPageRowsSelected(!!value),
-                ariaLabel: "Select all",
-            }),
+    {
+        accessorKey: "id",
+        header: "id",
         cell: ({ row }) => {
-            return h(Checkbox, {
-                checked: row.getIsSelected(),
-                "onUpdate:checked": (value) => row.toggleSelected(!!value),
-                ariaLabel: "Select row",
-            });
+            return h("p", row.getValue("id"));
         },
         enableSorting: false,
         enableHiding: false,
-    }),
-    columnHelper.accessor("status", {
-        enablePinning: true,
-        header: "Status",
-        cell: ({ row }) =>
-            h("div", { class: "capitalize" }, row.getValue("status")),
-    }),
-    columnHelper.accessor("email", {
+    },
+    {
+        accessorKey: "title",
         header: ({ column }) => {
             return h(
                 Button,
@@ -117,42 +81,77 @@ const columns = [
                     onClick: () =>
                         column.toggleSorting(column.getIsSorted() === "asc"),
                 },
-                () => ["Email", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+                () => ["Titre", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
             );
         },
         cell: ({ row }) =>
-            h("div", { class: "lowercase" }, row.getValue("email")),
-    }),
-    columnHelper.accessor("amount", {
-        header: () => h("div", { class: "text-right" }, "Amount"),
-        cell: ({ row }) => {
-            const amount = Number.parseFloat(row.getValue("amount"));
-
-            // Format the amount as a dollar amount
-            const formatted = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount);
-
-            return h("div", { class: "text-right font-medium" }, formatted);
+            h("p", { class: "capitalize" }, row.getValue("title")),
+    },
+    {
+        accessorKey: "isFinished",
+        header: ({ column }) => {
+            return h(
+                Button,
+                {
+                    variant: "ghost",
+                    onClick: () =>
+                        column.toggleSorting(column.getIsSorted() === "asc"),
+                },
+                () => ["Status", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+            );
         },
-    }),
-    columnHelper.display({
+        cell: ({ row }) => {
+            const status = row.getValue("isFinished") ? "Terminé" : "En cours";
+            return h(
+                Badge,
+                {
+                    class:
+                        status === "Terminé"
+                            ? "px-2 py-1 bg-emerald-100 text-emerald-600"
+                            : "px-2 py-1 bg-orange-100 text-orange-600",
+                },
+                () => status
+            );
+        },
+    },
+
+    {
+        accessorKey: "user",
+        header: "Assigné à",
+        cell: ({ row }) => {
+            const user = row.original.user;
+            return h(
+                "span",
+                {},
+                user
+                    ? `${user.firstName}, ${user.lastName.charAt(0)}.`
+                    : "Non assigné"
+            );
+        },
+    },
+    {
         id: "actions",
         enableHiding: false,
         cell: ({ row }) => {
-            const payment = row.original;
-
             return h(
-                "div",
-                { class: "relative" },
-                h(DropdownAction, {
-                    payment,
-                    onExpand: row.toggleExpanded,
-                })
+                Button,
+                {
+                    variant: "destructive",
+                    size: "sm",
+                    onClick: () => {
+                        if (
+                            confirm(
+                                "Êtes-vous sûr de vouloir supprimer ce ticket ?"
+                            )
+                        ) {
+                            router.delete(`/tickets/${row.getValue("id")}`);
+                        }
+                    },
+                },
+                () => "Supprimer"
             );
         },
-    }),
+    },
 ];
 
 const sorting = ref<SortingState>([]);
@@ -160,9 +159,15 @@ const columnFilters = ref<ColumnFiltersState>([]);
 const columnVisibility = ref<VisibilityState>({});
 const rowSelection = ref({});
 const expanded = ref<ExpandedState>({});
+const globalFilter = ref("");
+
+const onGlobalFilterChange = (value: string) => {
+    globalFilter.value = value;
+    table.setGlobalFilter(value);
+};
 
 const table = useVueTable({
-    data,
+    data: tickets,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -178,6 +183,8 @@ const table = useVueTable({
         valueUpdater(updaterOrValue, rowSelection),
     onExpandedChange: (updaterOrValue) =>
         valueUpdater(updaterOrValue, expanded),
+    onGlobalFilterChange: (updaterOrValue) =>
+        valueUpdater(updaterOrValue, globalFilter),
     state: {
         get sorting() {
             return sorting.value;
@@ -194,10 +201,14 @@ const table = useVueTable({
         get expanded() {
             return expanded.value;
         },
+        get globalFilter() {
+            return globalFilter.value;
+        },
         columnPinning: {
             left: ["status"],
         },
     },
+    globalFilterFn: "includesString",
 });
 </script>
 
@@ -206,11 +217,9 @@ const table = useVueTable({
         <div class="flex gap-2 items-center py-4">
             <Input
                 class="max-w-sm"
-                placeholder="Filter emails..."
-                :model-value="table.getColumn('email')?.getFilterValue() as string"
-                @update:model-value="
-                    table.getColumn('email')?.setFilterValue($event)
-                "
+                placeholder="Rechercher..."
+                :model-value="table.getState().globalFilter"
+                @update:model-value="table.setGlobalFilter"
             />
             <DropdownMenu>
                 <DropdownMenuTrigger as-child>
