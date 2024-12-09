@@ -43,4 +43,27 @@ class UsersController extends Controller
         // Return Inertia response instead of JSON
         return back()->with('success', 'User created successfully.');
     }
+
+    public function edit(Request $request)
+    {
+        // dd($request->all());
+        $validatedData = $request->validate([
+            'id' => 'required | integer',
+            'firstName' => 'required | string | max:255',
+            'lastName' => 'required | string | max:255',
+            'email' => 'required| string | email | max:255',
+            'role' => 'required | string | max:255',
+            'isActive' => 'required | boolean',
+        ]);
+
+        $user = User::find($validatedData['id']);
+        $user->firstName = $validatedData['firstName'];
+        $user->lastName = $validatedData['lastName'];
+        $user->email = $validatedData['email'];
+        $user->role = $validatedData['role'];
+        $user->isActive = $validatedData['isActive'];
+        $user->save();
+
+        return back()->with('success', 'User updated successfully.');
+    }
 }

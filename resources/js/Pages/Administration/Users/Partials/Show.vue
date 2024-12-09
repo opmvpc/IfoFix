@@ -220,7 +220,7 @@ const isUserSelected = computed(() => props.user !== null);
 
 const submit = () => {
     if (props.user?.id) {
-        form.patch(route("users.update", props.user.id));
+        form.put(route("users.edit"));
     }
 };
 </script>

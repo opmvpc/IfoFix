@@ -61,6 +61,7 @@
                                 v-for="row in table.getRowModel().rows"
                                 :key="row.id"
                                 @click="selectUser(row.original)"
+                                class="cursor-pointer hover:bg-blue-100"
                             >
                                 <TableCell
                                     v-for="cell in row.getVisibleCells()"
@@ -260,12 +261,12 @@ const table = useVueTable({
         valueUpdater(updaterOrValue, columnVisibility),
     onGlobalFilterChange: (updaterOrValue) =>
         valueUpdater(updaterOrValue, globalFilter),
-    globalFilterFn: (row, columnId, value) => {
-        const search = value.toLowerCase();
-        return Object.values(row.original).some((cellValue) =>
-            String(cellValue).toLowerCase().includes(search)
-        );
-    },
+    // globalFilterFn: (row, columnId, value) => {
+    //     const search = value.toLowerCase();
+    //     return Object.values(row.original).some((cellValue) =>
+    //         String(cellValue).toLowerCase().includes(search)
+    //     );
+    // },
     state: {
         get sorting() {
             return sorting.value;

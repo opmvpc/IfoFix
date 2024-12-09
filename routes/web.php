@@ -26,4 +26,5 @@ Route::middleware([
     })->name('dashboard');
     Route::get('/administration', [AdministrationController::class, 'index'])->name('administration');
     Route::post('/users', [UsersController::class, 'store'])->name('users.store');
+    Route::put('/users', [UsersController::class, 'edit'])->name('users.edit');
 });

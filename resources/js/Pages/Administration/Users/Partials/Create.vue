@@ -47,28 +47,6 @@
                         />
                         <InputError :message="form.errors.email" />
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-2 grow">
-                            <Label>Mot de passe</Label>
-                            <Input
-                                type="password"
-                                placeholder="Mot de passe"
-                                v-model="form.password"
-                            />
-                        </div>
-                        <div class="space-y-2 grow">
-                            <Label>Confirmation</Label>
-                            <Input
-                                type="password"
-                                placeholder="Confirmation"
-                                v-model="form.password_confirmation"
-                            />
-                        </div>
-                        <InputError
-                            class="col-span-2"
-                            :message="form.errors.password"
-                        />
-                    </div>
                     <div class="space-y-2">
                         <Label>Rôle</Label>
                         <Select v-model="form.role">
@@ -98,6 +76,28 @@
                             </SelectContent>
                         </Select>
                         <InputError :message="form.errors.isActive" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2 grow">
+                            <Label>Mot de passe</Label>
+                            <Input
+                                type="password"
+                                placeholder="Mot de passe"
+                                v-model="form.password"
+                            />
+                        </div>
+                        <div class="space-y-2 grow">
+                            <Label>Confirmation</Label>
+                            <Input
+                                type="password"
+                                placeholder="Confirmation"
+                                v-model="form.password_confirmation"
+                            />
+                        </div>
+                        <InputError
+                            class="col-span-2"
+                            :message="form.errors.password"
+                        />
                     </div>
                 </div>
                 <Button
