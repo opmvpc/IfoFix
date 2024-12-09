@@ -8,11 +8,12 @@ use Inertia\Inertia;
 
 class AdministrationController extends Controller
 {
-    public function index()
+    public function index($tab = 'stats')
     {
         $users = User::all();
         return Inertia::render('Administration/Index', [
-            'users' => $users
+            'users' => $users,
+            'activeTab' => $tab,
         ]);
     }
 }

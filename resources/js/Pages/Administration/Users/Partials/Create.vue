@@ -122,7 +122,7 @@ import {
     DialogTitle,
     DialogDescription,
 } from "@/Components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/Components/ui/label";
 import { Input } from "@/Components/ui/input";
 import { useForm } from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";

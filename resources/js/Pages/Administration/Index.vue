@@ -3,7 +3,7 @@
         <div class="container flex flex-col min-h-screen p-4 mx-auto">
             <Head title="Administration" />
             <Tabs
-                default-value="stats"
+                :default-value="activeTab"
                 class="flex flex-col w-full h-full grow"
             >
                 <TabsList
@@ -65,9 +65,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
 import UsersPage from "@/Pages/Administration/Users/Index.vue";
 import { defineProps } from "vue";
 
-const { users } = defineProps({
+const props = defineProps({
     users: {
         type: Array,
     },
+    activeTab: {
+        type: String,
+        default: "stats",
+    },
 });
+
+console.log(props.activeTab);
 </script>

@@ -12,10 +12,17 @@ class UsersController extends Controller
 
     use PasswordValidationRules;
 
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
-        // return $users as JSON
+        $status = $request->query('status', 'all');
+
+        $query = User::query();
+
+        if ($status !== 'all') {
+            $query->where('isActive', $status === 'active');
+        }
+
+        $users = $query->get();
         return response()->json($users);
     }
 
@@ -41,7 +48,7 @@ class UsersController extends Controller
             'isActive' => $validatedData['isActive'],
         ]);
         // Return Inertia response instead of JSON
-        return back()->with('success', 'User created successfully.');
+        return Inertia::location(route('administration', 'users'));
     }
 
     public function edit(Request $request)
@@ -64,6 +71,6 @@ class UsersController extends Controller
         $user->isActive = $validatedData['isActive'];
         $user->save();
 
-        return back()->with('success', 'User updated successfully.');
+        return Inertia::location(route('administration', 'users'));
     }
 }

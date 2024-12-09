@@ -163,7 +163,7 @@
 import { ref, computed, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { Button } from "@/Components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/Components/ui/label";
 import {
     Card,
     CardHeader,
