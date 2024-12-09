@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
+use App\Models\Client;
 use App\Models\Device;
 use App\Models\Ticket;
 use App\Models\Type;
 use App\Models\User;
+use Illuminate\Http\Request; // Correction ici : bon import de Request
 use Inertia\Inertia;
 
 class TicketsController extends Controller
@@ -19,16 +21,28 @@ class TicketsController extends Controller
             'devices' => Device::all(),
             'brands' => Brand::all(),
             'types' => Type::all(),
+            'clients' => Client::all(),
         ]);
     }
 
-    public function create()
+
+    public function store(Request $request)
     {
-        return Inertia::render('Tickets/Create', [
-            'technicians' => User::where('role', 'technician')->get(),
-            'devices' => Device::all(),
-            'brands' => Brand::all(),
-            'types' => Type::all(),
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'deviceId' => 'required|exists:devices,id',
+            'clientId' => 'required|exists:clients,id',
         ]);
+
+        $ticket = Ticket::create([
+            ...$validated,
+            'user_id' => auth()->id(),
+            'isFinished' => false,
+            'isDelivered' => false,
+            'isDeleted' => false,
+        ]);
+
+        return redirect()->back()->with('success', 'Ticket créé avec succès');
     }
 }

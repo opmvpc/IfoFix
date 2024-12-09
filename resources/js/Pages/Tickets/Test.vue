@@ -6,7 +6,6 @@ import type {
     VisibilityState,
 } from "@tanstack/vue-table";
 import { Button } from "@/Components/ui/button";
-import { Checkbox } from "@/Components/ui/checkbox";
 
 import {
     DropdownMenu,
@@ -54,7 +53,6 @@ const props = defineProps({
     brands: Array,
     types: Array,
 });
-console.log(props.tickets);
 
 const tickets = ref(props.tickets);
 watchEffect(() => {
@@ -161,9 +159,30 @@ const rowSelection = ref({});
 const expanded = ref<ExpandedState>({});
 const globalFilter = ref("");
 
-const onGlobalFilterChange = (value: string) => {
-    globalFilter.value = value;
-    table.setGlobalFilter(value);
+// Ajouter cette fonction de filtrage personnalisée après la définition des colonnes
+const fuzzyFilter = (
+    row: any,
+    columnId: string,
+    value: string,
+    column: any
+) => {
+    const searchValue = value.toLowerCase();
+    const rowData = row.original;
+
+    // Fonction récursive pour chercher dans les objets imbriqués
+    const searchInObject = (obj: any): boolean => {
+        if (!obj) return false;
+
+        return Object.keys(obj).some((key) => {
+            const val = obj[key];
+            if (typeof val === "object") {
+                return searchInObject(val);
+            }
+            return String(val).toLowerCase().includes(searchValue);
+        });
+    };
+
+    return searchInObject(rowData);
 };
 
 const table = useVueTable({
@@ -208,7 +227,7 @@ const table = useVueTable({
             left: ["status"],
         },
     },
-    globalFilterFn: "includesString",
+    globalFilterFn: fuzzyFilter,
 });
 </script>
 
@@ -221,6 +240,7 @@ const table = useVueTable({
                 :model-value="table.getState().globalFilter"
                 @update:model-value="table.setGlobalFilter"
             />
+
             <DropdownMenu>
                 <DropdownMenuTrigger as-child>
                     <Button variant="outline" class="ml-auto">
