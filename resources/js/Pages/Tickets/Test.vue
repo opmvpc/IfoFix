@@ -38,7 +38,6 @@ import { h, ref, watch, watchEffect } from "vue";
 import { Badge } from "@/Components/ui/badge";
 import { router } from "@inertiajs/vue3";
 // import DropdownAction from "./DataTableDemoColumn.vue";
-import CreateTicket from "./CreateTicket.vue";
 
 export interface Payment {
     id: string;
@@ -231,54 +230,49 @@ const table = useVueTable({
     },
     globalFilterFn: fuzzyFilter,
 });
-
-const showCreateForm = ref(false);
-
-const buttonClick = () => {
-    showCreateForm.value = true;
-};
 </script>
 
 <template>
-    <div class="w-full">
-        <div class="flex items-center gap-2">
-            <h1 class="text-xl font-semibold">Tickets</h1>
-            <Button @click="buttonClick">Ajouter un ticket</Button>
-        </div>
-        <div class="flex gap-2 items-center py-4">
-            <Input
-                class="max-w-sm"
-                placeholder="Rechercher..."
-                :model-value="table.getState().globalFilter"
-                @update:model-value="table.setGlobalFilter"
-            />
+    <div class="flex gap-2">
+        <div class="w-full">
+            <div class="flex items-center gap-2">
+                <h1 class="text-xl font-semibold">Tickets</h1>
+                <Button @click="$emit('buttonClick')">Ajouter un ticket</Button>
+            </div>
+            <div class="flex gap-2 items-center py-4">
+                <Input
+                    class="max-w-sm"
+                    placeholder="Rechercher..."
+                    :model-value="table.getState().globalFilter"
+                    @update:model-value="table.setGlobalFilter"
+                />
 
-            <DropdownMenu>
-                <DropdownMenuTrigger as-child>
-                    <Button variant="outline" class="ml-auto">
-                        Columns <ChevronDown class="ml-2 h-4 w-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuCheckboxItem
-                        v-for="column in table
-                            .getAllColumns()
-                            .filter((column) => column.getCanHide())"
-                        :key="column.id"
-                        class="capitalize"
-                        :checked="column.getIsVisible()"
-                        @update:checked="
-                            (value) => {
-                                column.toggleVisibility(!!value);
-                            }
-                        "
-                    >
-                        {{ column.id }}
-                    </DropdownMenuCheckboxItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-        </div>
-        <div class="flex gap-2">
+                <DropdownMenu>
+                    <DropdownMenuTrigger as-child>
+                        <Button variant="outline" class="ml-auto">
+                            Columns <ChevronDown class="ml-2 h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuCheckboxItem
+                            v-for="column in table
+                                .getAllColumns()
+                                .filter((column) => column.getCanHide())"
+                            :key="column.id"
+                            class="capitalize"
+                            :checked="column.getIsVisible()"
+                            @update:checked="
+                                (value) => {
+                                    column.toggleVisibility(!!value);
+                                }
+                            "
+                        >
+                            {{ column.id }}
+                        </DropdownMenuCheckboxItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+
             <div class="rounded-md border grow">
                 <Table>
                     <TableHeader>
@@ -365,38 +359,31 @@ const buttonClick = () => {
                     </TableBody>
                 </Table>
             </div>
-            <CreateTicket
-                v-if="showCreateForm"
-                :devices="devices"
-                :technicians="technicians"
-                :clients="clients"
-                @close="showCreateForm = false"
-                class="w-96"
-            />
-        </div>
 
-        <div class="flex items-center justify-end space-x-2 py-4">
-            <div class="flex-1 text-sm text-muted-foreground">
-                {{ table.getFilteredSelectedRowModel().rows.length }} of
-                {{ table.getFilteredRowModel().rows.length }} row(s) selected.
-            </div>
-            <div class="space-x-2">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    :disabled="!table.getCanPreviousPage()"
-                    @click="table.previousPage()"
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    :disabled="!table.getCanNextPage()"
-                    @click="table.nextPage()"
-                >
-                    Next
-                </Button>
+            <div class="flex items-center justify-end space-x-2 py-4">
+                <div class="flex-1 text-sm text-muted-foreground">
+                    {{ table.getFilteredSelectedRowModel().rows.length }} of
+                    {{ table.getFilteredRowModel().rows.length }} row(s)
+                    selected.
+                </div>
+                <div class="space-x-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        :disabled="!table.getCanPreviousPage()"
+                        @click="table.previousPage()"
+                    >
+                        Previous
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        :disabled="!table.getCanNextPage()"
+                        @click="table.nextPage()"
+                    >
+                        Next
+                    </Button>
+                </div>
             </div>
         </div>
     </div>

@@ -89,12 +89,19 @@
                     </SelectContent>
                 </Select>
             </div>
-            <hr />
 
             <div class="flex gap-4">
                 <div class="flex-1 p-4 border rounded-lg bg-white shadow">
-                    <Test :tickets="filteredTickets" :clients="clients" />
+                    <Test :tickets="filteredTickets" :clients="clients" @button-click="buttonClick" />
                 </div>
+                <CreateTicket
+            v-if="showCreateForm"
+            :devices="devices"
+            :technicians="technicians"
+            :clients="clients"
+            @close="showCreateForm = false"
+            class="w-96"
+        />
 
             </div>
         </div>
@@ -116,6 +123,7 @@ import { Switch } from "@/Components/ui/switch";
 import { Label } from "@/Components/ui/label";
 import { computed, ref } from "vue";
 import Test from "./Test.vue";
+import CreateTicket from "./CreateTicket.vue";
 
 const props = defineProps({
     tickets: Array,
@@ -165,5 +173,11 @@ const filteredTickets = computed(() => {
     return tickets;
 });
 
+
+const showCreateForm = ref(false);
+
+const buttonClick = () => {
+    showCreateForm.value = true;
+};
 
 </script>
