@@ -68,7 +68,7 @@
                         v-model="technicianSearch"
                         placeholder="Rechercher un technicien"
                     />
-                    <Select v-model="form.technicianId">
+                    <Select v-model="form.user_id">
                         <SelectTrigger>
                             <SelectValue placeholder="Sélectionner" />
                         </SelectTrigger>
@@ -113,7 +113,7 @@ const props = defineProps({
     clients: Array, // Nouvelle prop
 });
 
-defineEmits(["close"]);
+const emit = defineEmits(["close"]);
 
 const technicianSearch = ref("");
 const filteredTechnicians = computed(() => {
@@ -136,7 +136,7 @@ const form = useForm({
     description: "",
     deviceId: null,
     clientId: null, // Modifié de client à clientId
-    technicianId: null,
+    user_id: null,
 });
 
 const submit = () => {

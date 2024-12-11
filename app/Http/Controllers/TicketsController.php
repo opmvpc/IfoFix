@@ -11,8 +11,13 @@ use App\Models\User;
 use Illuminate\Http\Request; // Correction ici : bon import de Request
 use Inertia\Inertia;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 class TicketsController extends Controller
+
 {
+
+
     public function index()
     {
         return Inertia::render('Tickets/Index', [
@@ -28,16 +33,17 @@ class TicketsController extends Controller
 
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'deviceId' => 'required|exists:devices,id',
             'clientId' => 'required|exists:clients,id',
+            'user_id' => 'required|exists:users,id',
         ]);
 
-        $ticket = Ticket::create([
+        Ticket::create([
             ...$validated,
-            'user_id' => auth()->id(),
             'isFinished' => false,
             'isDelivered' => false,
             'isDeleted' => false,
