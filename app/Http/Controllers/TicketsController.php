@@ -9,9 +9,9 @@ use App\Models\Ticket;
 use App\Models\Type;
 use App\Models\User;
 use Illuminate\Http\Request; // Correction ici : bon import de Request
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class TicketsController extends Controller
 
@@ -39,11 +39,11 @@ class TicketsController extends Controller
             'description' => 'required|string',
             'deviceId' => 'required|exists:devices,id',
             'clientId' => 'required|exists:clients,id',
-            'user_id' => 'nullable|exists:users,id',
         ]);
 
         Ticket::create([
             ...$validated,
+            'user_id' => Auth::id(),
             'isFinished' => false,
             'isDelivered' => false,
             'isDeleted' => false,
