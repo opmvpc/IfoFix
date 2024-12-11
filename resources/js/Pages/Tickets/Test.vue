@@ -87,7 +87,15 @@ const columns = [
             );
         },
         cell: ({ row }) =>
-            h("p", { class: "capitalize" }, row.getValue("title")),
+            h(
+                "div",
+                {
+                    class: "capitalize cursor-pointer hover:text-blue-600",
+                    onClick: () =>
+                        router.visit(`/tickets/${row.getValue("id")}`),
+                },
+                row.getValue("title")
+            ),
     },
     {
         accessorKey: "isFinished",

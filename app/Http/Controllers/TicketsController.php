@@ -21,7 +21,7 @@ class TicketsController extends Controller
     public function index()
     {
         return Inertia::render('Tickets/Index', [
-            'tickets' => Ticket::with('user')->with('device')->get(),
+            'tickets' => Ticket::where('isDeleted', false)->with('user')->with('device')->get(),
             'technicians' => User::where('role', 'technician')->get(),
             'devices' => Device::all(),
             'brands' => Brand::all(),
@@ -39,7 +39,7 @@ class TicketsController extends Controller
             'description' => 'required|string',
             'deviceId' => 'required|exists:devices,id',
             'clientId' => 'required|exists:clients,id',
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'nullable|exists:users,id',
         ]);
 
         Ticket::create([
@@ -50,5 +50,22 @@ class TicketsController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Ticket créé avec succès');
+    }
+
+    //delete function
+    public function destroy(Ticket $ticket)
+    {
+        //soft delete
+        $ticket->update([
+            'isDeleted' => true,
+        ]);
+        return redirect()->back()->with('success', 'Ticket supprimé avec succès');
+    }
+
+    public function show(Ticket $ticket)
+    {
+        return Inertia::render('Tickets/ShowTicket', [
+            'ticket' => $ticket->load(['user', 'device', 'client']),
+        ]);
     }
 }
