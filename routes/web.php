@@ -25,6 +25,7 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
     Route::get('/administration/{tab?}', [AdministrationController::class, 'index'])->name('administration');
+    Route::get('/users', [UsersController::class, 'index'])->name('users.index');
     Route::post('/users', [UsersController::class, 'store'])->name('users.store');
     Route::put('/users', [UsersController::class, 'edit'])->name('users.edit');
 });
