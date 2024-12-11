@@ -3,22 +3,7 @@
         <div class="p-3 flex flex-col gap-3">
 
             <div class="flex justify-between gap-3">
-                <div class="flex gap-3 shrink-0">
-                    <div class="flex items-center space-x-2">
-                        <Switch
-                            v-model:checked="pendingTickets"
-                            id="pending-mode"
-                        />
-                        <Label for="pending-mode">en cours</Label>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <Switch
-                            v-model:checked="deliveredTickets"
-                            id="delivered-mode"
-                        />
-                        <Label for="delivered-mode">rendu</Label>
-                    </div>
-                </div>
+
             </div>
             <div class="flex gap-3">
                 <Select v-model="selectedTechnician">
@@ -92,7 +77,12 @@
 
             <div class="flex gap-4">
                 <div class="flex-1 p-4 border rounded-lg bg-white shadow">
-                    <Test :tickets="filteredTickets" :clients="clients" @button-click="buttonClick" />
+                    <Test :tickets="filteredTickets" :clients="clients"
+                    :pendingTickets="pendingTickets"
+                    :deliveredTickets="deliveredTickets"
+                    @updateDeliveredTickets="deliveredTickets = $event"
+                    @updatePendingTickets="pendingTickets = $event"
+                    @button-click="buttonClick" />
                 </div>
                 <CreateTicket
             v-if="showCreateForm"

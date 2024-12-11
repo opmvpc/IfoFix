@@ -37,6 +37,7 @@ import { ArrowUpDown, ChevronDown } from "lucide-vue-next";
 import { h, ref, watch, watchEffect } from "vue";
 import { Badge } from "@/Components/ui/badge";
 import { router } from "@inertiajs/vue3";
+import Switch from "@/Components/ui/switch/Switch.vue";
 // import DropdownAction from "./DataTableDemoColumn.vue";
 
 export interface Payment {
@@ -53,6 +54,8 @@ const props = defineProps({
     brands: Array,
     types: Array,
     clients: Array,
+    pendingTickets: Boolean,
+    deliveredTickets: Boolean,
 });
 
 const tickets = ref(props.tickets);
@@ -246,6 +249,29 @@ const table = useVueTable({
                     :model-value="table.getState().globalFilter"
                     @update:model-value="table.setGlobalFilter"
                 />
+                <div class="flex gap-3 shrink-0">
+                    <div class="flex items-center space-x-2">
+                        <Switch
+                            :checked="pendingTickets"
+                            @update:checked="
+                                (value) => $emit('updatePendingTickets', value)
+                            "
+                            id="pending-mode"
+                        />
+                        <Label for="pending-mode">en cours</Label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <Switch
+                            :checked="deliveredTickets"
+                            @update:checked="
+                                (value) =>
+                                    $emit('updateDeliveredTickets', value)
+                            "
+                            id="delivered-mode"
+                        />
+                        <Label for="delivered-mode">rendu</Label>
+                    </div>
+                </div>
 
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
