@@ -1,10 +1,7 @@
 <template>
     <AppLayout>
         <div class="p-3 flex flex-col gap-3">
-            <div class="flex justify-between items-center gap-3">
-                <h1 class="text-xl font-semibold">Tickets</h1>
-                <Button @click="buttonClick">Ajouter un ticket</Button>
-            </div>
+
             <div class="flex justify-between gap-3">
                 <div class="flex gap-3 shrink-0">
                     <div class="flex items-center space-x-2">
@@ -96,25 +93,17 @@
 
             <div class="flex gap-4">
                 <div class="flex-1 p-4 border rounded-lg bg-white shadow">
-                    <Test :tickets="filteredTickets" />
+                    <Test :tickets="filteredTickets" :clients="clients" />
                 </div>
-                <CreateTicket
-                    v-if="showCreateForm"
-                    :devices="devices"
-                    :technicians="technicians"
-                    :clients="clients"
-                    @close="showCreateForm = false"
-                    class="w-96"
-                />
+
             </div>
         </div>
     </AppLayout>
 </template>
 
-<script setup>
+<script setup ">
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Button from "@/Components/ui/button/Button.vue";
-import Input from "@/Components/ui/input/Input.vue";
 import {
     Select,
     SelectContent,
@@ -126,10 +115,7 @@ import {
 import { Switch } from "@/Components/ui/switch";
 import { Label } from "@/Components/ui/label";
 import { computed, ref } from "vue";
-import { Badge } from "@/Components/ui/badge";
-import { Link } from "@inertiajs/vue3";
 import Test from "./Test.vue";
-import CreateTicket from "./CreateTicket.vue";
 
 const props = defineProps({
     tickets: Array,
@@ -146,7 +132,6 @@ const selectedTechnician = ref(null);
 const selectedDevice = ref(null);
 const selectedBrand = ref(null);
 const selectedType = ref(null);
-const showCreateForm = ref(false);
 
 const filteredTickets = computed(() => {
     let tickets = props.tickets;
@@ -180,7 +165,5 @@ const filteredTickets = computed(() => {
     return tickets;
 });
 
-const buttonClick = () => {
-    showCreateForm.value = true;
-};
+
 </script>

@@ -38,6 +38,7 @@ import { h, ref, watch, watchEffect } from "vue";
 import { Badge } from "@/Components/ui/badge";
 import { router } from "@inertiajs/vue3";
 // import DropdownAction from "./DataTableDemoColumn.vue";
+import CreateTicket from "./CreateTicket.vue";
 
 export interface Payment {
     id: string;
@@ -52,6 +53,7 @@ const props = defineProps({
     devices: Array,
     brands: Array,
     types: Array,
+    clients: Array,
 });
 
 const tickets = ref(props.tickets);
@@ -229,10 +231,20 @@ const table = useVueTable({
     },
     globalFilterFn: fuzzyFilter,
 });
+
+const showCreateForm = ref(false);
+
+const buttonClick = () => {
+    showCreateForm.value = true;
+};
 </script>
 
 <template>
     <div class="w-full">
+        <div class="flex items-center gap-2">
+            <h1 class="text-xl font-semibold">Tickets</h1>
+            <Button @click="buttonClick">Ajouter un ticket</Button>
+        </div>
         <div class="flex gap-2 items-center py-4">
             <Input
                 class="max-w-sm"
@@ -266,86 +278,101 @@ const table = useVueTable({
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>
-        <div class="rounded-md border">
-            <Table>
-                <TableHeader>
-                    <TableRow
-                        v-for="headerGroup in table.getHeaderGroups()"
-                        :key="headerGroup.id"
-                    >
-                        <TableHead
-                            v-for="header in headerGroup.headers"
-                            :key="header.id"
-                            :data-pinned="header.column.getIsPinned()"
-                            :class="
-                                cn(
-                                    {
-                                        'sticky bg-background/95':
-                                            header.column.getIsPinned(),
-                                    },
-                                    header.column.getIsPinned() === 'left'
-                                        ? 'left-0'
-                                        : 'right-0'
-                                )
-                            "
+        <div class="flex gap-2">
+            <div class="rounded-md border grow">
+                <Table>
+                    <TableHeader>
+                        <TableRow
+                            v-for="headerGroup in table.getHeaderGroups()"
+                            :key="headerGroup.id"
                         >
-                            <FlexRender
-                                v-if="!header.isPlaceholder"
-                                :render="header.column.columnDef.header"
-                                :props="header.getContext()"
-                            />
-                        </TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    <template v-if="table.getRowModel().rows?.length">
-                        <template
-                            v-for="row in table.getRowModel().rows"
-                            :key="row.id"
-                        >
-                            <TableRow
-                                :data-state="row.getIsSelected() && 'selected'"
+                            <TableHead
+                                v-for="header in headerGroup.headers"
+                                :key="header.id"
+                                :data-pinned="header.column.getIsPinned()"
+                                :class="
+                                    cn(
+                                        {
+                                            'sticky bg-background/95':
+                                                header.column.getIsPinned(),
+                                        },
+                                        header.column.getIsPinned() === 'left'
+                                            ? 'left-0'
+                                            : 'right-0'
+                                    )
+                                "
                             >
-                                <TableCell
-                                    v-for="cell in row.getVisibleCells()"
-                                    :key="cell.id"
-                                    :data-pinned="cell.column.getIsPinned()"
-                                    :class="
-                                        cn(
-                                            {
-                                                'sticky bg-background/95':
-                                                    cell.column.getIsPinned(),
-                                            },
-                                            cell.column.getIsPinned() === 'left'
-                                                ? 'left-0'
-                                                : 'right-0'
-                                        )
+                                <FlexRender
+                                    v-if="!header.isPlaceholder"
+                                    :render="header.column.columnDef.header"
+                                    :props="header.getContext()"
+                                />
+                            </TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <template v-if="table.getRowModel().rows?.length">
+                            <template
+                                v-for="row in table.getRowModel().rows"
+                                :key="row.id"
+                            >
+                                <TableRow
+                                    :data-state="
+                                        row.getIsSelected() && 'selected'
                                     "
                                 >
-                                    <FlexRender
-                                        :render="cell.column.columnDef.cell"
-                                        :props="cell.getContext()"
-                                    />
-                                </TableCell>
-                            </TableRow>
-                            <TableRow v-if="row.getIsExpanded()">
-                                <TableCell :colspan="row.getAllCells().length">
-                                    {{ row.original }}
-                                </TableCell>
-                            </TableRow>
+                                    <TableCell
+                                        v-for="cell in row.getVisibleCells()"
+                                        :key="cell.id"
+                                        :data-pinned="cell.column.getIsPinned()"
+                                        :class="
+                                            cn(
+                                                {
+                                                    'sticky bg-background/95':
+                                                        cell.column.getIsPinned(),
+                                                },
+                                                cell.column.getIsPinned() ===
+                                                    'left'
+                                                    ? 'left-0'
+                                                    : 'right-0'
+                                            )
+                                        "
+                                    >
+                                        <FlexRender
+                                            :render="cell.column.columnDef.cell"
+                                            :props="cell.getContext()"
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow v-if="row.getIsExpanded()">
+                                    <TableCell
+                                        :colspan="row.getAllCells().length"
+                                    >
+                                        {{ row.original }}
+                                    </TableCell>
+                                </TableRow>
+                            </template>
                         </template>
-                    </template>
 
-                    <TableRow v-else>
-                        <TableCell
-                            :colspan="columns.length"
-                            class="h-24 text-center"
-                        >
-                            No results.
-                        </TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
+                        <TableRow v-else>
+                            <TableCell
+                                :colspan="columns.length"
+                                class="h-24 text-center"
+                            >
+                                No results.
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </div>
+            <CreateTicket
+                v-if="showCreateForm"
+                :devices="devices"
+                :technicians="technicians"
+                :clients="clients"
+                @close="showCreateForm = false"
+                class="w-96"
+            />
         </div>
 
         <div class="flex items-center justify-end space-x-2 py-4">
