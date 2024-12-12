@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Client;
 use App\Models\Device;
+use App\Models\Intervention;
 use App\Models\Ticket;
 use App\Models\Type;
 use App\Models\User;
@@ -33,21 +34,36 @@ class TicketsController extends Controller
 
     public function store(Request $request)
     {
-
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'deviceId' => 'required|exists:devices,id',
             'clientId' => 'required|exists:clients,id',
+            'technicianId' => 'nullable|exists:users,id,role,technician'
         ]);
 
-        Ticket::create([
-            ...$validated,
+        $ticket = Ticket::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'deviceId' => $validated['deviceId'],
+            'clientId' => $validated['clientId'],
             'user_id' => Auth::id(),
             'isFinished' => false,
             'isDelivered' => false,
             'isDeleted' => false,
         ]);
+
+
+        if ($request->input(('technicianId')) !== null) {
+            //creation d'une intervention
+            $Intervention = Intervention::create([
+                'ticketId' => $ticket->id,
+                'isFinished' => false,
+                'isDeleted' => false,
+            ]);
+            //creation d'un intervention_user
+            $Intervention->users()->attach($request->input(('technicianId')));
+        }
 
         return redirect()->back()->with('success', 'Ticket créé avec succès');
     }

@@ -68,7 +68,7 @@
                         v-model="technicianSearch"
                         placeholder="Rechercher un technicien"
                     />
-                    <Select v-model="form.user_id">
+                    <Select v-model="form.technicianId">
                         <SelectTrigger>
                             <SelectValue placeholder="Sélectionner" />
                         </SelectTrigger>
@@ -136,7 +136,7 @@ const form = useForm({
     description: "",
     deviceId: null,
     clientId: null, // Modifié de client à clientId
-    user_id: null,
+    technicianId: null,
 });
 
 const submit = () => {
