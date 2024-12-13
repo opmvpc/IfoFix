@@ -109,8 +109,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/Components/ui/select";
-import { Switch } from "@/Components/ui/switch";
-import { Label } from "@/Components/ui/label";
 import { computed, ref } from "vue";
 import Test from "./Test.vue";
 import CreateTicket from "./CreateTicket.vue";

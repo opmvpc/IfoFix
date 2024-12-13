@@ -9,6 +9,7 @@ use App\Models\Intervention;
 use App\Models\Ticket;
 use App\Models\Type;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request; // Correction ici : bon import de Request
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -17,12 +18,13 @@ use Inertia\Inertia;
 class TicketsController extends Controller
 
 {
-
-
     public function index()
     {
         return Inertia::render('Tickets/Index', [
-            'tickets' => Ticket::where('isDeleted', false)->with('user')->with('device')->get(),
+            'tickets' => Ticket::where('isDeleted', false)->with([
+                'device',
+                'interventions.users'
+            ])->orderBy('created_at', 'desc')->get(),
             'technicians' => User::where('role', 'technician')->get(),
             'devices' => Device::all(),
             'brands' => Brand::all(),
@@ -82,6 +84,8 @@ class TicketsController extends Controller
     {
         return Inertia::render('Tickets/ShowTicket', [
             'ticket' => $ticket->load(['user', 'device', 'client']),
+            'interventions' => $ticket->interventions()->with('users')->get(),
+            'technicians' => User::where('role', 'technician')->get(),
         ]);
     }
 }

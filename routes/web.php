@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InterventionsController;
 use App\Http\Controllers\TicketsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +25,5 @@ Route::middleware([
     })->name('dashboard');
 
     Route::resource('tickets', TicketsController::class);
+    Route::resource('interventions', InterventionsController::class);
 });
