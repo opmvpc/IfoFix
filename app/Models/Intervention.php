@@ -10,9 +10,16 @@ class Intervention extends Model
     use HasFactory;
 
     protected $fillable = [
-        'ticketId',
+        'description',
+        'duration',
+        'date',
         'isFinished',
-        'isDeleted',
+        'ticketId',
+    ];
+
+    protected $casts = [
+        'date' => 'date',
+        'isFinished' => 'boolean',
     ];
 
     public function users()
