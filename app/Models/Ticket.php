@@ -36,4 +36,18 @@ class Ticket extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function interventions()
+    {
+        return $this->hasMany(Intervention::class, 'ticketId');
+    }
+
+    public function technicians()
+    {
+        return User::query()
+            ->join('users_interventions', 'users.id', '=', 'users_interventions.user_id')
+            ->join('interventions', 'interventions.id', '=', 'users_interventions.interventionId')
+            ->join('tickets', 'tickets.id', '=', 'interventions.ticketId')
+            ->where('tickets.id', $this->id) // Filtre pour le ticket actuel
+            ->select('users.*');
+    }
 }

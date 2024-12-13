@@ -61,6 +61,7 @@ const props = defineProps({
 const tickets = ref(props.tickets);
 watchEffect(() => {
     tickets.value = props.tickets;
+    console.log("tickets", tickets.value);
 });
 
 const columns = [
@@ -126,16 +127,21 @@ const columns = [
     },
 
     {
-        accessorKey: "user",
+        accessorKey: "interventions",
         header: "Assigné à",
         cell: ({ row }) => {
-            const user = row.original.user;
+            const interventions = row.getValue("interventions");
+            // Récupérer tous les utilisateurs de toutes les interventions
+            const allUsers = interventions
+                .flatMap((intervention) => intervention.users)
+                .map((user) => user.firstName);
+            // Supprimer les doublons et joindre les noms
+            const uniqueUsers = Array.from(new Set(allUsers));
+
             return h(
-                "span",
-                {},
-                user
-                    ? `${user.firstName}, ${user.lastName.charAt(0)}.`
-                    : "Non assigné"
+                "div",
+                { class: "flex flex-col gap-1" },
+                uniqueUsers.join(", ") || "Non assigné"
             );
         },
     },
