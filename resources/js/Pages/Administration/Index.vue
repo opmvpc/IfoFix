@@ -63,7 +63,6 @@ import { Head, Link } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
 import UsersPage from "@/Pages/Administration/Users/Index.vue";
-import { defineProps } from "vue";
 
 const props = defineProps({
     users: {
@@ -74,6 +73,4 @@ const props = defineProps({
         default: "stats",
     },
 });
-
-console.log(props.activeTab);
 </script>

@@ -28,7 +28,6 @@ class UsersController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $validatedData = $request->validate([
             'firstName' => 'required | string | max:255',
             'lastName' => 'required | string | max:255',
@@ -38,7 +37,6 @@ class UsersController extends Controller
             'isActive' => 'required | boolean',
         ]);
 
-        // dd($validatedData);
         User::create([
             'firstName' => $validatedData['firstName'],
             'lastName' => $validatedData['lastName'],
@@ -48,7 +46,10 @@ class UsersController extends Controller
             'isActive' => $validatedData['isActive'],
         ]);
         // Return Inertia response instead of JSON
-        return Inertia::location(route('administration', 'users'));
+        return back()->with([
+            'success' => 'Utilisateur Créer',
+            'refresh' => true // Indicateur de refresh
+        ]);
     }
 
     public function edit(Request $request)
@@ -71,6 +72,9 @@ class UsersController extends Controller
         $user->isActive = $validatedData['isActive'];
         $user->save();
 
-        return Inertia::location(route('administration', 'users'));
+        return back()->with([
+            'success' => 'Utilisateur mis à jour',
+            'refresh' => true // Indicateur de refresh
+        ]);
     }
 }

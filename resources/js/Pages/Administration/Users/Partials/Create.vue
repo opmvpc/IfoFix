@@ -1,5 +1,5 @@
 <template>
-    <Dialog @update:open="handleOpen">
+    <Dialog :open="isOpen" @update:open="handleOpen">
         <DialogTrigger as-child>
             <Button variant="link">
                 <font-awesome-icon icon="fa-solid fa-plus" />
@@ -133,6 +133,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/Components/ui/select";
+import { inject, ref } from "vue";
 
 const form = useForm({
     firstName: "",
@@ -144,13 +145,23 @@ const form = useForm({
     isActive: "1",
 });
 
+// const fetchUsers = inject("fetchUsers");
+const isOpen = ref(false);
+
+const emit = defineEmits(["user-created"]);
+
 const onSubmit = () => {
     form.post(route("users.store"), {
-        onSuccess: () => form.reset(),
+        onSuccess: () => {
+            form.reset();
+            emit("user-created");
+            isOpen.value = false;
+        },
     });
 };
 
 const handleOpen = (value) => {
+    isOpen.value = value;
     if (!value) {
         form.reset();
     }

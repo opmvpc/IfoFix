@@ -160,10 +160,10 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, inject } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { Button } from "@/Components/ui/button";
-import { Label } from "@/Components/ui/label";
+import { Label } from "@/components/ui/label";
 import {
     Card,
     CardHeader,
@@ -186,6 +186,9 @@ const props = defineProps({
         default: () => null,
     },
 });
+
+const emit = defineEmits(["user-updated"]);
+// const fetchUsers = inject("fetchUsers");
 
 // Reactive form using Inertia's useForm
 const form = useForm({
@@ -220,7 +223,15 @@ const isUserSelected = computed(() => props.user !== null);
 
 const submit = () => {
     if (props.user?.id) {
-        form.put(route("users.edit"));
+        form.put(route("users.edit"), {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: () => {
+                // toast.success("Utilisateur mis à jour avec succès");
+                emit("user-updated");
+                // fetchUsers();
+            },
+        });
     }
 };
 </script>

@@ -12,6 +12,20 @@
                     :model-value="table.getState().globalFilter"
                     @update:model-value="table.setGlobalFilter"
                 />
+                <!-- <RadioGroup v-model="statusFilter" class="flex gap-2">
+                    <div class="flex items-center space-x-2">
+                        <RadioGroupItem value="all" id="all" />
+                        <Label for="all">Tous</Label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <RadioGroupItem value="active" id="active" />
+                        <Label for="active">Actifs</Label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <RadioGroupItem value="inactive" id="inactive" />
+                        <Label for="inactive">Inactifs</Label>
+                    </div>
+                </RadioGroup> -->
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                         <Button variant="outline" class="ml-auto">
@@ -137,7 +151,7 @@ import {
     useVueTable,
 } from "@tanstack/vue-table";
 import { ArrowUpDown, ChevronDown } from "lucide-vue-next";
-import { h, ref } from "vue";
+import { h, ref, watch } from "vue";
 import {
     Card,
     CardHeader,
@@ -148,6 +162,8 @@ import {
 } from "@/Components/ui//card";
 import { Badge } from "@/Components/ui//badge";
 import UserCreate from "@/Pages/Administration/Users/Partials/Create.vue";
+import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 const emit = defineEmits(["user-selected"]);
 
@@ -246,9 +262,12 @@ const sorting = ref([]);
 const columnFilters = ref([]);
 const columnVisibility = ref({});
 const globalFilter = ref("");
+// const statusFilter = ref("all");
 
 const table = useVueTable({
-    data: props.users,
+    get data() {
+        return props.users;
+    },
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -261,18 +280,13 @@ const table = useVueTable({
         valueUpdater(updaterOrValue, columnVisibility),
     onGlobalFilterChange: (updaterOrValue) =>
         valueUpdater(updaterOrValue, globalFilter),
-    // globalFilterFn: (row, columnId, value) => {
-    //     const search = value.toLowerCase();
-    //     return Object.values(row.original).some((cellValue) =>
-    //         String(cellValue).toLowerCase().includes(search)
-    //     );
-    // },
+
     state: {
         get sorting() {
             return sorting.value;
         },
         get columnFilters() {
-            return columnFilters.value;
+            return [...columnFilters.value];
         },
         get columnVisibility() {
             return columnVisibility.value;
@@ -282,6 +296,20 @@ const table = useVueTable({
         },
     },
 });
+
+// watch(statusFilter, (newValue) => {
+//     if (newValue === "all") {
+//         columnFilters.value = columnFilters.value.filter(
+//             (f) => f.id !== "isActive"
+//         );
+//     } else {
+//         const filters = [
+//             ...columnFilters.value.filter((f) => f.id !== "isActive"),
+//         ];
+//         filters.push({ id: "isActive", value: newValue });
+//         columnFilters.value = filters;
+//     }
+// });
 
 const selectUser = (user) => {
     emit("user-selected", user);
