@@ -188,7 +188,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["user-updated"]);
-// const fetchUsers = inject("fetchUsers");
 
 // Reactive form using Inertia's useForm
 const form = useForm({
@@ -221,15 +220,14 @@ watch(
 // Computed property to check if a user is selected
 const isUserSelected = computed(() => props.user !== null);
 
-const submit = () => {
+const submit = async () => {
     if (props.user?.id) {
-        form.put(route("users.edit"), {
+        await form.put(route("users.edit"), {
             preserveScroll: true,
             preserveState: true,
             onSuccess: () => {
                 // toast.success("Utilisateur mis à jour avec succès");
                 emit("user-updated");
-                // fetchUsers();
             },
         });
     }

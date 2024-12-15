@@ -12,17 +12,17 @@ class UsersController extends Controller
 
     use PasswordValidationRules;
 
-    public function index(Request $request)
+    public function index()
     {
-        $status = $request->query('status', 'all');
+        // $status = $request->query('status', 'all');
 
-        $query = User::query();
+        // $query = User::all();
 
-        if ($status !== 'all') {
-            $query->where('isActive', $status === 'active');
-        }
+        // if ($status !== 'all') {
+        //     $query->where('isActive', $status === 'active');
+        // }
 
-        $users = $query->get();
+        $users = User::all();
         return response()->json($users);
     }
 
