@@ -172,6 +172,8 @@ const columns = [
                 () => ["Prénom", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
             );
         },
+        cell: ({ row }) =>
+            h("div", { class: "capitalize" }, row.original.firstName),
     },
     {
         accessorKey: "lastName",
@@ -186,6 +188,8 @@ const columns = [
                 () => ["Nom", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
             );
         },
+        cell: ({ row }) =>
+            h("div", { class: "capitalize" }, row.original.lastName),
     },
     {
         accessorKey: "email",

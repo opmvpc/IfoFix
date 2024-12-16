@@ -11,7 +11,6 @@
         <UserProfile
             v-if="selectedUser"
             :user="selectedUser"
-            @user-updated="fetchUsers"
             class="w-1/3 transition-all duration-300 ease-in-out"
         />
     </div>
@@ -19,10 +18,8 @@
 
 <script setup>
 import UsersList from "@/Pages/Administration/Users/Partials/List.vue";
-import UserCreate from "@/Pages/Administration/Users/Partials/Create.vue";
 import UserProfile from "@/Pages/Administration/Users/Partials/Show.vue";
-import { defineProps, ref } from "vue";
-import axios from "axios";
+import { defineProps, ref, watch } from "vue";
 
 const { users } = defineProps({
     users: {
@@ -36,12 +33,13 @@ const selectedUser = ref(null);
 
 const setSelectedUser = (user) => {
     selectedUser.value = user;
-    console.log(user);
 };
 
-const fetchUsers = () => {
-    axios.get("/users").then((response) => {
-        usersList.value = response.data;
-    });
-};
+watch(
+    () => users,
+    (newUsers) => {
+        usersList.value = newUsers;
+    },
+    { deep: true }
+);
 </script>

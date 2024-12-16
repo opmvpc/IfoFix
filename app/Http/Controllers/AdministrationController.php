@@ -10,10 +10,13 @@ class AdministrationController extends Controller
 {
     public function index($tab = 'stats')
     {
-        $users = User::all();
         return Inertia::render('Administration/Index', [
-            'users' => $users,
-            'activeTab' => $tab,
+            'users' => fn() => User::all(),
+            'activeTab' => fn() =>  $tab,
+            'flash' => [
+                'success' => session('success'), // Retrieve flash success message
+                'refresh' => session('refresh') // Retrieve refresh flag
+            ]
         ]);
     }
 }

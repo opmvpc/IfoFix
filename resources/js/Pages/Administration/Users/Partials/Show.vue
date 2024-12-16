@@ -19,6 +19,7 @@
                                         type="text"
                                         placeholder="Prénom"
                                         v-model="form.firstName"
+                                        class="capitalize"
                                     />
                                     <p
                                         v-if="form.errors.firstName"
@@ -35,6 +36,7 @@
                                         type="text"
                                         placeholder="Nom"
                                         v-model="form.lastName"
+                                        class="capitalize"
                                     />
                                     <p
                                         v-if="form.errors.lastName"
@@ -187,8 +189,6 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["user-updated"]);
-
 // Reactive form using Inertia's useForm
 const form = useForm({
     id: "",
@@ -211,7 +211,7 @@ watch(
             form.lastName = newUser.lastName;
             form.email = newUser.email;
             form.role = newUser.role;
-            form.isActive = String(newUser.isActive); // Convert to string
+            form.isActive = String(newUser.isActive);
         }
     },
     { immediate: true }
@@ -220,14 +220,13 @@ watch(
 // Computed property to check if a user is selected
 const isUserSelected = computed(() => props.user !== null);
 
-const submit = async () => {
+const submit = () => {
     if (props.user?.id) {
-        await form.put(route("users.edit"), {
+        form.put(route("users.edit"), {
             preserveScroll: true,
             preserveState: true,
             onSuccess: () => {
                 // toast.success("Utilisateur mis à jour avec succès");
-                emit("user-updated");
             },
         });
     }

@@ -6,6 +6,7 @@ use App\Actions\Fortify\PasswordValidationRules;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use phpDocumentor\Reflection\PseudoTypes\LowercaseString;
 
 class UsersController extends Controller
 {
@@ -38,23 +39,22 @@ class UsersController extends Controller
         ]);
 
         User::create([
-            'firstName' => $validatedData['firstName'],
-            'lastName' => $validatedData['lastName'],
+            'firstName' => strtolower($validatedData['firstName']),
+            'lastName' => strtolower($validatedData['lastName']),
             'email' => $validatedData['email'],
             'password' => bcrypt($validatedData['password']),
             'role' => $validatedData['role'],
             'isActive' => $validatedData['isActive'],
         ]);
-        // Return Inertia response instead of JSON
-        return back()->with([
-            'success' => 'Utilisateur Créer',
+
+        return redirect()->route('administration', ['tab' => 'users'])->with([
+            'success' => 'Utilisateur ajouté',
             'refresh' => true // Indicateur de refresh
         ]);
     }
 
     public function edit(Request $request)
     {
-        // dd($request->all());
         $validatedData = $request->validate([
             'id' => 'required | integer',
             'firstName' => 'required | string | max:255',
@@ -65,14 +65,14 @@ class UsersController extends Controller
         ]);
 
         $user = User::find($validatedData['id']);
-        $user->firstName = $validatedData['firstName'];
-        $user->lastName = $validatedData['lastName'];
+        $user->firstName = strtolower($validatedData['firstName']);
+        $user->lastName = strtolower($validatedData['lastName']);
         $user->email = $validatedData['email'];
         $user->role = $validatedData['role'];
         $user->isActive = $validatedData['isActive'];
         $user->save();
 
-        return back()->with([
+        return redirect()->route('administration', ['tab' => 'users'])->with([
             'success' => 'Utilisateur mis à jour',
             'refresh' => true // Indicateur de refresh
         ]);

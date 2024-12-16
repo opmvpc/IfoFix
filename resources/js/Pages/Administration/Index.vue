@@ -39,7 +39,7 @@
                     value="users"
                     class="flex flex-row overflow-hidden grow"
                 >
-                    <UsersPage :users />
+                    <UsersPage :users="usersList" />
                 </TabsContent>
                 <TabsContent
                     value="clients"
@@ -67,10 +67,34 @@ import UsersPage from "@/Pages/Administration/Users/Index.vue";
 const props = defineProps({
     users: {
         type: Array,
+        default: [],
     },
     activeTab: {
         type: String,
         default: "stats",
     },
 });
+
+import { usePage } from "@inertiajs/vue3";
+import { ref, watch } from "vue";
+const page = usePage();
+
+const usersList = ref(props.users);
+
+// Watch for flash messages
+watch(
+    () => page.props.flash,
+    (newFlash) => {
+        if (newFlash && typeof newFlash === "object" && newFlash.refresh) {
+            fetchUsers();
+        }
+    },
+    { deep: true }
+);
+
+const fetchUsers = () => {
+    axios.get("/users").then((response) => {
+        usersList.value = response.data;
+    });
+};
 </script>

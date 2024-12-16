@@ -145,17 +145,14 @@ const form = useForm({
     isActive: "1",
 });
 
-// const fetchUsers = inject("fetchUsers");
 const isOpen = ref(false);
 
-const emit = defineEmits(["user-created"]);
-
 const onSubmit = () => {
-    form.post(route("users.store"), {
+    form.post("/users", {
+        preserveScroll: true,
         onSuccess: () => {
-            form.reset();
             emit("user-created");
-            isOpen.value = false;
+            handleOpen(false);
         },
     });
 };
