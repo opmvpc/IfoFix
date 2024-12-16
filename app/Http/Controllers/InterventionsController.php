@@ -12,9 +12,22 @@ class InterventionsController extends Controller
 {
     public function edit(Intervention $intervention)
     {
+
         $intervention->load('users');
 
         return Inertia::render('Interventions/Edit', [
+            'intervention' => $intervention,
+            'interventionImage' => $intervention->images(),
+            'allUsers' => User::all(['id', 'firstName', 'lastName'])->toArray()
+        ]);
+    }
+
+    public function show(Intervention $intervention)
+    {
+
+        $intervention->load('users');
+
+        return Inertia::render('Interventions/Show', [
             'intervention' => $intervention,
             'interventionImage' => $intervention->images(),
             'allUsers' => User::all(['id', 'firstName', 'lastName'])->toArray()
