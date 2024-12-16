@@ -3,7 +3,7 @@ import Button from "@/Components/ui/button/Button.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CreateIntervention from "@/Components/Interventions/CreateIntervention.vue";
 import { Link } from "@inertiajs/vue3";
-import { ref, h } from "vue";
+import { ref, h, computed } from "vue";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -25,6 +25,22 @@ const formatDate = (date) => {
 const formatTime = (time) => {
     return time ? time.slice(0, 5) : ""; // Format HH:mm
 };
+
+const getUniqueTechnicians = (interventions) => {
+    const technicianMap = new Map();
+
+    interventions.forEach((intervention) => {
+        intervention.users.forEach((user) => {
+            technicianMap.set(user.id, user);
+        });
+    });
+
+    return Array.from(technicianMap.values());
+};
+
+const uniqueTechnicians = computed(() =>
+    getUniqueTechnicians(props.interventions)
+);
 </script>
 
 <template>
@@ -102,15 +118,22 @@ const formatTime = (time) => {
 
                             <div class="flex-1 min-w-[200px] space-y-2">
                                 <p class="font-semibold">Technicien(s)</p>
-                                <div v-if="interventions[0]?.users?.length > 0">
-                                    <p
-                                        v-for="technician in interventions[0]
-                                            .users"
+                                <div
+                                    v-if="uniqueTechnicians.length > 0"
+                                    class="flex flex-wrap gap-2"
+                                >
+                                    <div
+                                        v-for="technician in uniqueTechnicians"
                                         :key="technician.id"
+                                        class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
                                     >
+                                        <font-awesome-icon
+                                            icon="fa-solid fa-user"
+                                            class="mr-2 h-3 w-3"
+                                        />
                                         {{ technician.firstName }}
                                         {{ technician.lastName }}
-                                    </p>
+                                    </div>
                                 </div>
                                 <div v-else class="text-gray-500">
                                     Non assigné

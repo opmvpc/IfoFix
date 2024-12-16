@@ -96,7 +96,7 @@
             </div>
             <div>
                 <Label for="duration">Durée (minutes)</Label>
-                <Input type="time" id="duration" v-model="form.duration" />
+                <Input type="number" id="duration" v-model="form.duration" />
             </div>
             <div>
                 <Label for="date">Date</Label>
