@@ -1,6 +1,6 @@
 <template>
     <AppLayout>
-        <div class="p-3 flex flex-col gap-3">
+        <div class="flex flex-col gap-3 p-3">
 
             <div class="flex justify-between gap-3">
 
@@ -75,8 +75,8 @@
                 </Select>
             </div>
 
-            <div class="flex gap-4 items-start">
-                <div class="flex-1 p-4 border rounded-lg bg-white shadow">
+            <div class="flex items-start gap-4">
+                <div class="flex-1 p-4 bg-white border rounded-lg shadow">
                     <DataTable
                     :tickets="filteredTickets"
                     :clients="clients"
@@ -124,6 +124,7 @@ const props = defineProps({
     brands: Array,
     types: Array,
     clients: Array,
+    messages: String,
 });
 
 

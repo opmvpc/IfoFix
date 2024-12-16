@@ -45,7 +45,7 @@
                     value="clients"
                     class="p-4 bg-white rounded-md shadow-md"
                 >
-                    Clients administration page
+                    <ClientsPage :clients="clientsList" />
                 </TabsContent>
                 <TabsContent
                     value="devices"
@@ -63,9 +63,14 @@ import { Head, Link } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
 import UsersPage from "@/Pages/Administration/Users/Index.vue";
+import ClientsPage from "@/Pages/Administration/Clients/Index.vue";
 
 const props = defineProps({
     users: {
+        type: Array,
+        default: [],
+    },
+    clients: {
         type: Array,
         default: [],
     },
@@ -80,6 +85,7 @@ import { ref, watch } from "vue";
 const page = usePage();
 
 const usersList = ref(props.users);
+const clientsList = ref(props.clients);
 
 // Watch for flash messages
 watch(
@@ -88,6 +94,8 @@ watch(
         if (newFlash && typeof newFlash === "object" && newFlash.refresh) {
             if (newFlash.refresh === "users") {
                 fetchUsers();
+            } else if (newFlash.refresh === "clients") {
+                fetchClients();
             }
         }
     },
@@ -97,6 +105,12 @@ watch(
 const fetchUsers = () => {
     axios.get("/users").then((response) => {
         usersList.value = response.data;
+    });
+};
+
+const fetchClients = () => {
+    axios.get("/clients").then((response) => {
+        clientsList.value = response.data;
     });
 };
 </script>
