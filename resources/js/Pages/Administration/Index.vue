@@ -86,7 +86,9 @@ watch(
     () => page.props.flash,
     (newFlash) => {
         if (newFlash && typeof newFlash === "object" && newFlash.refresh) {
-            fetchUsers();
+            if (newFlash.refresh === "users") {
+                fetchUsers();
+            }
         }
     },
     { deep: true }

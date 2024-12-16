@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use phpDocumentor\Reflection\PseudoTypes\LowercaseString;
 
 class UsersController extends Controller
 {
@@ -15,14 +13,6 @@ class UsersController extends Controller
 
     public function index()
     {
-        // $status = $request->query('status', 'all');
-
-        // $query = User::all();
-
-        // if ($status !== 'all') {
-        //     $query->where('isActive', $status === 'active');
-        // }
-
         $users = User::all();
         return response()->json($users);
     }
@@ -49,7 +39,7 @@ class UsersController extends Controller
 
         return redirect()->route('administration', ['tab' => 'users'])->with([
             'success' => 'Utilisateur ajouté',
-            'refresh' => true // Indicateur de refresh
+            'refresh' => 'users'
         ]);
     }
 
@@ -74,7 +64,7 @@ class UsersController extends Controller
 
         return redirect()->route('administration', ['tab' => 'users'])->with([
             'success' => 'Utilisateur mis à jour',
-            'refresh' => true // Indicateur de refresh
+            'refresh' => 'users' // Indicateur de refresh
         ]);
     }
 }
