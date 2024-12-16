@@ -108,6 +108,60 @@
             </DialogContent>
         </Dialog>
 
+        <!-- Nouvelle Modal pour les appareils -->
+        <Dialog
+            :open="isDeviceModalOpen"
+            @update:open="isDeviceModalOpen = $event"
+        >
+            <DialogContent class="sm:max-w-[500px] min-h-[500px]">
+                <DialogHeader>
+                    <DialogTitle>Sélectionner un appareil</DialogTitle>
+                    <DialogDescription>
+                        Recherchez et sélectionnez un appareil
+                    </DialogDescription>
+                </DialogHeader>
+
+                <div class="space-y-4">
+                    <Input
+                        type="search"
+                        placeholder="Rechercher un appareil..."
+                        v-model="deviceSearch"
+                    />
+
+                    <div class="h-[300px] overflow-y-auto space-y-2">
+                        <RadioGroup v-model="form.deviceId">
+                            <div
+                                v-for="device in filteredDevices"
+                                :key="device.id"
+                                class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
+                            >
+                                <RadioGroupItem
+                                    :value="device.id"
+                                    :id="'device-' + device.id"
+                                />
+                                <Label
+                                    :for="'device-' + device.id"
+                                    class="flex-grow cursor-pointer"
+                                >
+                                    {{ device.name }}
+                                </Label>
+                            </div>
+                        </RadioGroup>
+                    </div>
+                </div>
+
+                <DialogFooter>
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        @click="closeDeviceModal"
+                    >
+                        Confirmer
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+
         <form @submit.prevent="submit" class="space-y-4">
             <div>
                 <Label for="title">Titre</Label>
@@ -118,26 +172,62 @@
                 <Input id="description" v-model="form.description" />
             </div>
             <div>
-                <Label for="device">Appareil</Label>
-                <Select v-model="form.deviceId">
-                    <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner un appareil" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem
-                                v-for="device in devices"
-                                :key="device.id"
-                                :value="device.id"
-                            >
-                                {{ device.name }}
-                            </SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+                <Label for="device" class="flex items-center gap-2">
+                    Appareil
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        @click="openNewDeviceModal"
+                    >
+                        <font-awesome-icon icon="fa-solid fa-plus" />
+                    </Button>
+                </Label>
+                <div class="flex flex-col gap-2">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        @click="openDeviceModal"
+                        class="w-full justify-between"
+                    >
+                        <span>{{
+                            selectedDeviceName || "Sélectionner un appareil"
+                        }}</span>
+                        <font-awesome-icon icon="fa-solid fa-laptop" />
+                    </Button>
+
+                    <div
+                        v-if="form.deviceId"
+                        class="flex items-center justify-between p-2 bg-gray-50 rounded-md"
+                    >
+                        <span class="text-sm">
+                            {{ selectedDeviceName }}
+                        </span>
+                        <button
+                            type="button"
+                            @click="form.deviceId = null"
+                            class="text-gray-500 hover:text-gray-700"
+                        >
+                            <font-awesome-icon
+                                icon="fa-solid fa-times"
+                                class="h-3 w-3"
+                            />
+                        </button>
+                    </div>
+                </div>
             </div>
             <div>
-                <Label for="client">Client</Label>
+                <Label for="client" class="flex items-center gap-2">
+                    Client
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        @click="openNewClientModal"
+                    >
+                        <font-awesome-icon icon="fa-solid fa-plus" />
+                    </Button>
+                </Label>
                 <div class="flex flex-col gap-2">
                     <Button
                         type="button"
@@ -210,6 +300,134 @@
             </div>
             <Button type="submit" class="w-full">Créer</Button>
         </form>
+
+        <!-- Modal de création de client -->
+        <Dialog
+            :open="isNewClientModalOpen"
+            @update:open="isNewClientModalOpen = $event"
+        >
+            <DialogContent class="sm:max-w-[500px]">
+                <DialogHeader>
+                    <DialogTitle>Créer un nouveau client</DialogTitle>
+                </DialogHeader>
+
+                <form @submit.prevent="submitNewClient" class="space-y-4">
+                    <div>
+                        <Label for="newClientFirstName">Prénom</Label>
+                        <Input
+                            id="newClientFirstName"
+                            v-model="newClientForm.firstName"
+                        />
+                    </div>
+                    <div>
+                        <Label for="newClientLastName">Nom</Label>
+                        <Input
+                            id="newClientLastName"
+                            v-model="newClientForm.lastName"
+                        />
+                    </div>
+                    <div>
+                        <Label for="newClientEmail">Email</Label>
+                        <Input
+                            id="newClientEmail"
+                            v-model="newClientForm.email"
+                            type="email"
+                        />
+                    </div>
+                    <div>
+                        <Label for="newClientPhone">Téléphone</Label>
+                        <Input
+                            id="newClientPhone"
+                            v-model="newClientForm.phone"
+                        />
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            @click="closeNewClientModal"
+                        >
+                            Annuler
+                        </Button>
+                        <Button type="submit">Créer</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+
+        <!-- Modal de création d'appareil -->
+        <Dialog
+            :open="isNewDeviceModalOpen"
+            @update:open="isNewDeviceModalOpen = $event"
+        >
+            <DialogContent class="sm:max-w-[500px]">
+                <DialogHeader>
+                    <DialogTitle>Créer un nouvel appareil</DialogTitle>
+                </DialogHeader>
+
+                <form @submit.prevent="submitNewDevice" class="space-y-4">
+                    <div>
+                        <Label for="newDeviceName">Nom</Label>
+                        <Input
+                            id="newDeviceName"
+                            v-model="newDeviceForm.name"
+                        />
+                    </div>
+                    <div>
+                        <Label for="newDeviceBrand">Marque</Label>
+                        <Select v-model="newDeviceForm.brandId">
+                            <SelectTrigger>
+                                <SelectValue
+                                    placeholder="Sélectionner une marque"
+                                />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem
+                                        v-for="brand in brands"
+                                        :key="brand.id"
+                                        :value="brand.id"
+                                    >
+                                        {{ brand.name }}
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <Label for="newDeviceType">Type</Label>
+                        <Select v-model="newDeviceForm.typeId">
+                            <SelectTrigger>
+                                <SelectValue
+                                    placeholder="Sélectionner un type"
+                                />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem
+                                        v-for="type in types"
+                                        :key="type.id"
+                                        :value="type.id"
+                                    >
+                                        {{ type.name }}
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            @click="closeNewDeviceModal"
+                        >
+                            Annuler
+                        </Button>
+                        <Button type="submit">Créer</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
     </div>
 </template>
 
@@ -243,6 +461,8 @@ const props = defineProps({
     devices: Array,
     technicians: Array,
     clients: Array, // Nouvelle prop
+    brands: Array, // Ajouter cette prop
+    types: Array, // Ajouter cette prop
 });
 
 const emit = defineEmits(["close"]);
@@ -338,5 +558,83 @@ const submit = () => {
             console.error("Erreur lors de la soumission:", errors);
         },
     });
+};
+
+const isNewClientModalOpen = ref(false);
+const newClientForm = useForm({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+});
+
+const openNewClientModal = () => {
+    isNewClientModalOpen.value = true;
+};
+
+const closeNewClientModal = () => {
+    isNewClientModalOpen.value = false;
+    newClientForm.reset();
+};
+
+const submitNewClient = () => {
+    newClientForm.post(route("clients.store"), {
+        preserveScroll: true,
+        onSuccess: (response) => {
+            closeNewClientModal();
+            // Mettre à jour la liste des clients
+            form.clientId = response.props.client.id;
+        },
+    });
+};
+
+const isNewDeviceModalOpen = ref(false);
+const newDeviceForm = useForm({
+    name: "",
+    brandId: null,
+    typeId: null,
+});
+
+const openNewDeviceModal = () => {
+    isNewDeviceModalOpen.value = true;
+};
+
+const closeNewDeviceModal = () => {
+    isNewDeviceModalOpen.value = false;
+    newDeviceForm.reset();
+};
+
+const submitNewDevice = () => {
+    newDeviceForm.post(route("devices.store"), {
+        preserveScroll: true,
+        onSuccess: (response) => {
+            closeNewDeviceModal();
+            // Mettre à jour la liste des appareils
+            form.deviceId = response.props.device.id;
+        },
+    });
+};
+
+const isDeviceModalOpen = ref(false);
+const deviceSearch = ref("");
+
+const filteredDevices = computed(() => {
+    if (!deviceSearch.value) return props.devices;
+    return props.devices.filter((device) =>
+        device.name.toLowerCase().includes(deviceSearch.value.toLowerCase())
+    );
+});
+
+const selectedDeviceName = computed(() => {
+    const selectedDevice = props.devices.find((d) => d.id === form.deviceId);
+    return selectedDevice ? selectedDevice.name : "";
+});
+
+const openDeviceModal = () => {
+    isDeviceModalOpen.value = true;
+};
+
+const closeDeviceModal = () => {
+    isDeviceModalOpen.value = false;
 };
 </script>
