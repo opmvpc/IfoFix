@@ -33,7 +33,7 @@ class ClientsController extends Controller
             'phone' => $validatedData['phone'],
         ]);
 
-        return redirect()->route('administration', ['tab' => 'clients'])->with([
+        return redirect()->back()->with([
             'success' => 'Client ajouté',
             'refresh' => 'clients'
         ]);
@@ -56,7 +56,7 @@ class ClientsController extends Controller
         $client->phone = $validatedData['phone'];
         $client->save();
 
-        return redirect()->route('administration', ['tab' => 'clients'])->with([
+        return redirect()->back()->with([
             'success' => 'Utilisateur mis à jour',
             'refresh' => 'clients' // Indicateur de refresh
         ]);

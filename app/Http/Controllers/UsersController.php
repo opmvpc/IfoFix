@@ -37,7 +37,7 @@ class UsersController extends Controller
             'isActive' => $validatedData['isActive'],
         ]);
 
-        return redirect()->route('administration', ['tab' => 'users'])->with([
+        return redirect()->back()->with([
             'success' => 'Utilisateur ajouté',
             'refresh' => 'users'
         ]);
@@ -62,7 +62,7 @@ class UsersController extends Controller
         $user->isActive = $validatedData['isActive'];
         $user->save();
 
-        return redirect()->route('administration', ['tab' => 'users'])->with([
+        return redirect()->back()->with([
             'success' => 'Utilisateur mis à jour',
             'refresh' => 'users' // Indicateur de refresh
         ]);

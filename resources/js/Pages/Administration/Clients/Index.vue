@@ -19,7 +19,7 @@
 <script setup>
 import ClientsList from "@/Pages/Administration/Clients/Partials/List.vue";
 import ClientProfile from "@/Pages/Administration/Clients/Partials/Show.vue";
-import { defineProps, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 const { clients } = defineProps({
     clients: {

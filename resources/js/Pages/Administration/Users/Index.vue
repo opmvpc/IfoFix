@@ -19,7 +19,7 @@
 <script setup>
 import UsersList from "@/Pages/Administration/Users/Partials/List.vue";
 import UserProfile from "@/Pages/Administration/Users/Partials/Show.vue";
-import { defineProps, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 const { users } = defineProps({
     users: {
