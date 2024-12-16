@@ -63,12 +63,6 @@ const logout = () => {
                     >
                         Dashboard
                     </NavLink>
-                    <NavLink
-                        :href="route('administration')"
-                        :active="route().current('administration')"
-                    >
-                        Administration
-                    </NavLink>
                     <!-- Add more navigation links here -->
                 </div>
                 <div class="p-4 mt-auto">
@@ -179,7 +173,7 @@ const logout = () => {
             </nav>
 
             <!-- Main Content -->
-            <div class="flex flex-col flex-1 ml-64 overflow-y-auto">
+            <div class="flex flex-col flex-1 ml-40 overflow-y-auto">
                 <div>
                     <!-- Page Heading -->
                     <header

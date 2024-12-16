@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdministrationController;
-use App\Http\Controllers\UsersController;
-use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,8 +21,4 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    Route::get('/administration/{tab?}', [AdministrationController::class, 'index'])->name('administration');
-    Route::get('/users', [UsersController::class, 'index'])->name('users.index');
-    Route::post('/users', [UsersController::class, 'store'])->name('users.store');
-    Route::put('/users', [UsersController::class, 'edit'])->name('users.edit');
 });
