@@ -29,9 +29,7 @@ class ModelsController extends Controller
             'typeId' => $request->typeId,
         ]);
 
-        return response()->json([
-            'message' => 'Device created successfully',
-            'device' => $device
-        ]);
+        return redirect()->route('tickets.index')
+            ->with('message', 'Modèle créé avec succès');
     }
 }

@@ -41,9 +41,8 @@ class TicketsController extends Controller
             'description' => 'required|string',
             'deviceId' => 'required|exists:devices,id',
             'clientId' => 'required|exists:clients,id',
-            'technicianId' => 'nullable|exists:users,id,role,technician'
+            'technicianIds' => 'nullable|array|exists:users,id,role,technician'
         ]);
-
         $ticket = Ticket::create([
             'title' => $validated['title'],
             'description' => $validated['description'],
@@ -56,7 +55,7 @@ class TicketsController extends Controller
         ]);
 
 
-        if ($request->input(('technicianId')) !== null) {
+        if ($request->input(('technicianIds')) !== null) {
             //creation d'une intervention
             $Intervention = Intervention::create([
                 'ticketId' => $ticket->id,
@@ -64,7 +63,7 @@ class TicketsController extends Controller
                 'isDeleted' => false,
             ]);
             //creation d'un intervention_user
-            $Intervention->users()->attach($request->input(('technicianId')));
+            $Intervention->users()->attach($request->input(('technicianIds')));
         }
 
         return redirect()->back()->with('success', 'Ticket créé avec succès');
