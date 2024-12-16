@@ -91,6 +91,8 @@
             :devices="devices"
             :technicians="technicians"
             :clients="clients"
+            :brands="brands"
+            :types="types"
             @close="showCreateForm = false"
             class="w-96"
         />
@@ -123,6 +125,7 @@ const props = defineProps({
     types: Array,
     clients: Array,
 });
+
 
 const pendingTickets = ref(true);
 const deliveredTickets = ref(false);

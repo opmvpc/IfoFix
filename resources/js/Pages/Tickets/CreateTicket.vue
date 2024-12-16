@@ -465,6 +465,8 @@ const props = defineProps({
     types: Array, // Ajouter cette prop
 });
 
+console.log(props.brands);
+
 const emit = defineEmits(["close"]);
 
 const isModalOpen = ref(false);

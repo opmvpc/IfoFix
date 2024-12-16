@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InterventionsController;
+use App\Http\Controllers\ModelsController;
 use App\Http\Controllers\TicketsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -27,5 +28,6 @@ Route::middleware([
 
     Route::resource('tickets', TicketsController::class);
     Route::resource('interventions', InterventionsController::class);
+    Route::resource('devices', ModelsController::class);
     Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
 });
