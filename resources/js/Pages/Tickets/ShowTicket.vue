@@ -207,46 +207,48 @@ const uniqueTechnicians = computed(() =>
                                     </span>
                                 </div>
                             </div>
-                            <DropdownMenu v-if="intervention.users.length">
-                                <DropdownMenuTrigger
-                                    class="flex items-center px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200"
-                                >
-                                    <font-awesome-icon
-                                        icon="fa-solid fa-users"
-                                        class="mr-2"
-                                    />
-                                    {{ intervention.users.length }}
-                                    technicien(s)
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <div class="p-2">
-                                        <div
-                                            v-for="user in intervention.users"
-                                            :key="user.id"
-                                            class="py-1"
-                                        >
-                                            {{ user.firstName }}
-                                            {{ user.lastName }}
+                            <div class="flex gap-3">
+                                <DropdownMenu v-if="intervention.users.length">
+                                    <DropdownMenuTrigger
+                                        class="flex items-center px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200"
+                                    >
+                                        <font-awesome-icon
+                                            icon="fa-solid fa-users"
+                                            class="mr-2"
+                                        />
+                                        {{ intervention.users.length }}
+                                        technicien(s)
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <div class="p-2">
+                                            <div
+                                                v-for="user in intervention.users"
+                                                :key="user.id"
+                                                class="py-1"
+                                            >
+                                                {{ user.firstName }}
+                                                {{ user.lastName }}
+                                            </div>
                                         </div>
-                                    </div>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                            <div class="flex items-center gap-4">
-                                <span
-                                    :class="{
-                                        'px-3 py-1 rounded-full text-sm': true,
-                                        'bg-emerald-100 text-emerald-600':
-                                            intervention.isFinished,
-                                        'bg-orange-100 text-orange-600':
-                                            !intervention.isFinished,
-                                    }"
-                                >
-                                    {{
-                                        intervention.isFinished
-                                            ? "Terminé"
-                                            : "En cours"
-                                    }}
-                                </span>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                                <div class="flex items-center gap-4">
+                                    <span
+                                        :class="{
+                                            'px-3 py-1 rounded-full text-sm': true,
+                                            'bg-emerald-100 text-emerald-600':
+                                                intervention.isFinished,
+                                            'bg-orange-100 text-orange-600':
+                                                !intervention.isFinished,
+                                        }"
+                                    >
+                                        {{
+                                            intervention.isFinished
+                                                ? "Terminé"
+                                                : "En cours"
+                                        }}
+                                    </span>
+                                </div>
                                 <Link
                                     :href="`/interventions/${intervention.id}/edit`"
                                 >

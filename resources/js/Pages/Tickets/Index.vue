@@ -77,7 +77,7 @@
 
             <div class="flex gap-4 items-start">
                 <div class="flex-1 p-4 border rounded-lg bg-white shadow">
-                    <Test
+                    <DataTable
                     :tickets="filteredTickets"
                     :clients="clients"
                     :pendingTickets="pendingTickets"
@@ -112,7 +112,7 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 import { computed, ref } from "vue";
-import Test from "./Test.vue";
+import DataTable from "./DataTable.vue";
 import CreateTicket from "./CreateTicket.vue";
 
 const props = defineProps({
