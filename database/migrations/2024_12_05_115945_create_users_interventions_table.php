@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('users_interventions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('interventionId')->constrained();
+            $table->foreignId('interventionId')->constrained('interventions');
             $table->timestamps();
         });
     }

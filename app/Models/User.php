@@ -77,7 +77,7 @@ class User extends Authenticatable
 
     public function interventions()
     {
-        return $this->belongsToMany(Intervention::class, 'intervention_users', 'user_id', 'interventionId');
+        return $this->belongsToMany(Intervention::class, 'users_interventions', 'user_id', 'interventionId');
     }
 
     public function operations()

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\InterventionsController;
+use App\Http\Controllers\TicketsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -21,4 +23,7 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::resource('tickets', TicketsController::class);
+    Route::resource('interventions', InterventionsController::class);
 });

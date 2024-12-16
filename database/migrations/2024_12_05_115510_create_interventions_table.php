@@ -18,6 +18,7 @@ return new class extends Migration
             $table->time('duration')->nullable();
             $table->date('date')->nullable();
             $table->boolean('isFinished')->default(false);
+            $table->boolean('isDeleted')->default(false);
             $table->timestamps();
         });
     }
