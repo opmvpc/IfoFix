@@ -77,7 +77,9 @@
 
             <div class="flex gap-4 items-start">
                 <div class="flex-1 p-4 border rounded-lg bg-white shadow">
-                    <Test :tickets="filteredTickets" :clients="clients"
+                    <Test
+                    :tickets="filteredTickets"
+                    :clients="clients"
                     :pendingTickets="pendingTickets"
                     :deliveredTickets="deliveredTickets"
                     @updateDeliveredTickets="deliveredTickets = $event"

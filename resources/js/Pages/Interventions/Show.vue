@@ -6,7 +6,9 @@ import {
     CardTitle,
     CardDescription,
     CardContent,
+    CardFooter,
 } from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
 
 const props = defineProps({
     intervention: {
@@ -18,12 +20,6 @@ const props = defineProps({
 
 <template>
     <AppLayout title="Détails de l'intervention">
-        <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Intervention #{{ intervention.id }}
-            </h2>
-        </template>
-
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <Card>
@@ -34,57 +30,40 @@ const props = defineProps({
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div class="grid gap-4">
-                            <div>
+                        <div class="grid gap-6">
+                            <div class="grid gap-2">
                                 <h3 class="font-medium">Description</h3>
                                 <p class="text-gray-600">
-                                    {{
-                                        intervention.description ||
-                                        "Aucune description"
-                                    }}
+                                    {{ intervention.description }}
                                 </p>
                             </div>
 
-                            <div>
+                            <div class="grid gap-2">
                                 <h3 class="font-medium">Durée</h3>
                                 <p class="text-gray-600">
-                                    {{
-                                        intervention.duration || "Non spécifiée"
-                                    }}
+                                    {{ intervention.duration }} minutes
                                 </p>
                             </div>
 
-                            <div>
+                            <div class="grid gap-2">
                                 <h3 class="font-medium">Date</h3>
                                 <p class="text-gray-600">
+                                    {{ intervention.date }}
+                                </p>
+                            </div>
+
+                            <div class="grid gap-2">
+                                <h3 class="font-medium">Statut</h3>
+                                <p class="text-gray-600">
                                     {{
-                                        intervention.date
-                                            ? intervention.date
-                                            : "Non spécifiée"
+                                        intervention.isFinished
+                                            ? "Terminée"
+                                            : "En cours"
                                     }}
                                 </p>
                             </div>
 
-                            <div>
-                                <h3 class="font-medium">Statut</h3>
-                                <p class="text-gray-600">
-                                    <span
-                                        :class="
-                                            intervention.isFinished
-                                                ? 'text-green-600'
-                                                : 'text-yellow-600'
-                                        "
-                                    >
-                                        {{
-                                            intervention.isFinished
-                                                ? "Terminée"
-                                                : "En cours"
-                                        }}
-                                    </span>
-                                </p>
-                            </div>
-
-                            <div>
+                            <div class="grid gap-2">
                                 <h3 class="font-medium">Intervenants</h3>
                                 <div class="mt-2 space-y-2">
                                     <div
@@ -96,12 +75,23 @@ const props = defineProps({
                                             icon="fa-solid fa-user"
                                             class="text-gray-400"
                                         />
-                                        <span>{{ user.firstName }}</span>
+                                        <span
+                                            >{{ user.firstName }}
+                                            {{ user.lastName }}</span
+                                        >
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </CardContent>
+                    <CardFooter class="flex justify-end">
+                        <Button
+                            variant="outline"
+                            :href="route('interventions.index')"
+                        >
+                            Retour
+                        </Button>
+                    </CardFooter>
                 </Card>
             </div>
         </div>

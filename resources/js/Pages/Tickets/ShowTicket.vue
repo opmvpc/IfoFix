@@ -3,7 +3,7 @@ import Button from "@/Components/ui/button/Button.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CreateIntervention from "@/Components/Interventions/CreateIntervention.vue";
 import { Link } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, h } from "vue";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -101,7 +101,7 @@ const formatTime = (time) => {
                             </div>
 
                             <div class="flex-1 min-w-[200px] space-y-2">
-                                <p class="font-semibold">Technicien assigné</p>
+                                <p class="font-semibold">Technicien(s)</p>
                                 <div v-if="interventions[0]?.users?.length > 0">
                                     <p
                                         v-for="technician in interventions[0]
@@ -161,10 +161,7 @@ const formatTime = (time) => {
                         class="bg-white rounded-lg shadow-lg p-4"
                     >
                         <div class="flex justify-between items-center">
-                            <div class="space-y-2">
-                                <p class="text-gray-700">
-                                    {{ intervention.description }}
-                                </p>
+                            <div>
                                 <div class="flex gap-4 text-sm text-gray-600">
                                     <span>
                                         <font-awesome-icon
@@ -178,7 +175,12 @@ const formatTime = (time) => {
                                             icon="fa-solid fa-clock"
                                             class="mr-2"
                                         />
-                                        {{ formatTime(intervention.duration) }}
+                                        {{ intervention.duration }}
+                                        {{
+                                            intervention.duration > 1
+                                                ? "minutes"
+                                                : "minute"
+                                        }}
                                     </span>
                                 </div>
                             </div>
@@ -190,9 +192,7 @@ const formatTime = (time) => {
                                         icon="fa-solid fa-users"
                                         class="mr-2"
                                     />
-                                    {{
-                                        intervention.users.length
-                                    }}
+                                    {{ intervention.users.length }}
                                     technicien(s)
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
@@ -209,17 +209,6 @@ const formatTime = (time) => {
                                 </DropdownMenuContent>
                             </DropdownMenu>
                             <div class="flex items-center gap-4">
-                                <Link
-                                    :href="`/interventions/${intervention.id}`"
-                                >
-                                    <Button variant="outline" size="sm">
-                                        <font-awesome-icon
-                                            icon="fa-solid fa-eye"
-                                            class="mr-2"
-                                        />
-                                        Voir
-                                    </Button>
-                                </Link>
                                 <span
                                     :class="{
                                         'px-3 py-1 rounded-full text-sm': true,
@@ -235,6 +224,17 @@ const formatTime = (time) => {
                                             : "En cours"
                                     }}
                                 </span>
+                                <Link
+                                    :href="`/interventions/${intervention.id}/edit`"
+                                >
+                                    <Button variant="outline" size="sm">
+                                        <font-awesome-icon
+                                            icon="fa-solid fa-eye"
+                                            class="mr-2"
+                                        />
+                                        Voir
+                                    </Button>
+                                </Link>
                             </div>
                         </div>
                     </div>

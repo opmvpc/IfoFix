@@ -10,13 +10,25 @@ class Intervention extends Model
     use HasFactory;
 
     protected $fillable = [
-        'ticketId',
+        'description',
+        'duration',
+        'date',
         'isFinished',
-        'isDeleted',
+        'ticketId',
+    ];
+
+    protected $casts = [
+        'date' => 'date',
+        'isFinished' => 'boolean',
     ];
 
     public function users()
     {
         return $this->belongsToMany(User::class, 'users_interventions', 'interventionId', 'user_id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Intervention_images::class, 'interventionId');
     }
 }
