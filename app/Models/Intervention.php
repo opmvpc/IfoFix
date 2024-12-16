@@ -26,4 +26,9 @@ class Intervention extends Model
     {
         return $this->belongsToMany(User::class, 'users_interventions', 'interventionId', 'user_id');
     }
+
+    public function images()
+    {
+        return $this->hasMany(Intervention_images::class, 'interventionId');
+    }
 }

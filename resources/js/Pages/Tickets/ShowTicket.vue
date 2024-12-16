@@ -101,7 +101,7 @@ const formatTime = (time) => {
                             </div>
 
                             <div class="flex-1 min-w-[200px] space-y-2">
-                                <p class="font-semibold">Technicien assigné</p>
+                                <p class="font-semibold">Technicien(s)</p>
                                 <div v-if="interventions[0]?.users?.length > 0">
                                     <p
                                         v-for="technician in interventions[0]
@@ -225,7 +225,7 @@ const formatTime = (time) => {
                                     }}
                                 </span>
                                 <Link
-                                    :href="`/interventions/${intervention.id}`"
+                                    :href="`/interventions/${intervention.id}/edit`"
                                 >
                                     <Button variant="outline" size="sm">
                                         <font-awesome-icon

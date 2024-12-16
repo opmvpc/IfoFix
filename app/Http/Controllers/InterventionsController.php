@@ -5,16 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Intervention;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class InterventionsController extends Controller
 {
-    public function show(Intervention $intervention)
+    public function edit(Intervention $intervention)
     {
         $intervention->load('users');
 
-        return Inertia::render('Interventions/Show', [
+        return Inertia::render('Interventions/Edit', [
             'intervention' => $intervention,
+            'interventionImage' => $intervention->images(),
             'allUsers' => User::all(['id', 'firstName', 'lastName'])->toArray()
         ]);
     }
@@ -55,11 +57,19 @@ class InterventionsController extends Controller
             'description' => 'required|string',
             'duration' => 'required|integer',
             'date' => 'required|date',
-            'technician_id' => 'required|exists:users,id',
+            'technicianId' => 'required|array', // Changé de technician_ids à technician_id
+            'technicianId.*' => 'exists:users,id',
             'ticketId' => 'required|exists:tickets,id'
         ]);
 
+        // Extraire les technician_ids avant la création
+        $technicianIds = $validated['technicianId']; // Changé de technician_ids à technician_id
+        unset($validated['technicianId']);
+
         $intervention = Intervention::create($validated);
+
+        // Attacher les techniciens à l'intervention
+        $intervention->users()->attach($technicianIds);
 
         if ($request->wantsJson()) {
             return response()->json(['intervention' => $intervention]);

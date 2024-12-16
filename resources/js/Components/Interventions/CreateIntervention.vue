@@ -32,16 +32,10 @@
                         >
                             <Checkbox
                                 :id="'tech-' + tech.id"
-                                :checked="
-                                    selectedTechnicianIds.includes(tech.id)
-                                "
-                                @change="toggleTechnician(tech.id)"
+                                :checked="form.technicianId.includes(tech.id)"
+                                @update:checked="toggleTechnician(tech.id)"
                             />
-                            <Label
-                                :for="'tech-' + tech.id"
-                                class="flex-grow cursor-pointer"
-                                @click="toggleTechnician(tech.id)"
-                            >
+                            <Label :for="'tech-' + tech.id" class="flex-grow">
                                 {{ tech.firstName }} {{ tech.lastName }}
                             </Label>
                         </div>
@@ -87,7 +81,7 @@
                             type="button"
                             variant="ghost"
                             size="sm"
-                            @click="removeTechnicianId(tech.id)"
+                            @click="toggleTechnician(tech.id)"
                             class="h-6 w-6 p-0"
                         >
                             <font-awesome-icon icon="fa-solid fa-times" />
@@ -102,7 +96,7 @@
             </div>
             <div>
                 <Label for="duration">Durée (minutes)</Label>
-                <Input type="number" id="duration" v-model="form.duration" />
+                <Input type="time" id="duration" v-model="form.duration" />
             </div>
             <div>
                 <Label for="date">Date</Label>
@@ -125,7 +119,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
@@ -155,26 +149,20 @@ const props = defineProps({
 const emit = defineEmits(["close"]);
 const isModalOpen = ref(false);
 const searchQuery = ref("");
-const selectedTechnicianIds = ref([]);
-
-// Computed property pour obtenir les techniciens sélectionnés
-const selectedTechnicians = computed(() => {
-    return props.technicians.filter((tech) =>
-        selectedTechnicianIds.value.includes(tech.id)
-    );
-});
-
-// Mise à jour du form quand les techniciens sélectionnés changent
-watch(selectedTechnicianIds, (newIds) => {
-    form.technician_ids = newIds;
-});
 
 const form = useForm({
     description: "",
     duration: null,
     date: null,
     ticketId: props.ticketId,
-    technician_ids: [], // Modifié pour gérer plusieurs techniciens
+    technicianId: [], // C'est le seul tableau qu'on va utiliser
+});
+
+// On utilise directement form.technicianId pour le computed
+const selectedTechnicians = computed(() => {
+    return props.technicians.filter((tech) =>
+        form.technicianId.includes(tech.id)
+    );
 });
 
 const filteredTechnicians = computed(() => {
@@ -189,19 +177,22 @@ const filteredTechnicians = computed(() => {
     );
 });
 
+// Simplifié pour manipuler directement form.technicianId
 const toggleTechnician = (techId) => {
-    const index = selectedTechnicianIds.value.indexOf(techId);
+    const currentIds = [...form.technicianId];
+    const index = currentIds.indexOf(techId);
+
     if (index === -1) {
-        selectedTechnicianIds.value.push(techId);
+        currentIds.push(techId);
     } else {
-        selectedTechnicianIds.value.splice(index, 1);
+        currentIds.splice(index, 1);
     }
+
+    form.technicianId = currentIds;
+    console.log("Techniciens sélectionnés:", form.technicianId);
 };
 
-const removeTechnicianId = (id) => {
-    toggleTechnician(id);
-};
-
+// Le reste des méthodes reste identique
 const openModal = () => {
     isModalOpen.value = true;
 };
@@ -215,7 +206,6 @@ const submit = () => {
         preserveScroll: true,
         onSuccess: () => {
             form.reset();
-            selectedTechnicianIds.value = [];
             emit("close");
         },
     });
