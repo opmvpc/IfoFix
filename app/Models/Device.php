@@ -10,6 +10,8 @@ class Device extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'brandId',
+        'typeId',
         'isDeleted'
     ];
 

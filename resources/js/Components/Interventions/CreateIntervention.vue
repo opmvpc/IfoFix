@@ -9,7 +9,7 @@
 
         <!-- Modal déplacée en dehors du formulaire -->
         <Dialog :open="isModalOpen" @update:open="isModalOpen = $event">
-            <DialogContent class="sm:max-w-[500px]">
+            <DialogContent class="sm:max-w-[500px] min-h-[500px]">
                 <DialogHeader>
                     <DialogTitle>Sélectionner des techniciens</DialogTitle>
                     <DialogDescription>
@@ -24,7 +24,7 @@
                         v-model="searchQuery"
                     />
 
-                    <div class="max-h-[300px] overflow-y-auto space-y-2">
+                    <div class="h-[300px] overflow-y-auto space-y-2">
                         <div
                             v-for="tech in filteredTechnicians"
                             :key="tech.id"
@@ -96,7 +96,7 @@
             </div>
             <div>
                 <Label for="duration">Durée (minutes)</Label>
-                <Input type="time" id="duration" v-model="form.duration" />
+                <Input type="number" id="duration" v-model="form.duration" />
             </div>
             <div>
                 <Label for="date">Date</Label>

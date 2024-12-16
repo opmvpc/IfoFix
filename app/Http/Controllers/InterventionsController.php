@@ -75,7 +75,7 @@ class InterventionsController extends Controller
             return response()->json(['intervention' => $intervention]);
         }
 
-        return redirect()->route('interventions.show', $intervention)
+        return redirect()->route('interventions.edit', $intervention)
             ->with('message', 'Intervention créée avec succès');
     }
 }
