@@ -47,7 +47,7 @@ const logout = () => {
         <div class="flex min-h-screen bg-gray-100 dark:bg-gray-900">
             <!-- Sidebar -->
             <nav
-                class="fixed top-0 left-0 z-10 flex flex-col justify-between w-64 h-screen bg-white border-r border-gray-100 dark:bg-gray-800 dark:border-gray-700"
+                class="fixed top-0 left-0 z-10 flex flex-col justify-between w-40 h-screen bg-white border-r border-gray-100 dark:bg-gray-800 dark:border-gray-700"
             >
                 <div
                     class="flex items-center justify-center h-16 border-b border-gray-100 dark:border-gray-700"
@@ -58,10 +58,16 @@ const logout = () => {
                 </div>
                 <div class="flex flex-col flex-1 mt-5">
                     <NavLink
-                        :href="route('dashboard')"
-                        :active="route().current('dashboard')"
+                        :href="route('tickets.index')"
+                        :active="route().current('tickets.*')"
                     >
-                        Dashboard
+                        Tickets
+                    </NavLink>
+                    <NavLink
+                        :href="route('administration', { tab: 'users' })"
+                        :active="route().current('administration.*')"
+                    >
+                        Administration
                     </NavLink>
                     <!-- Add more navigation links here -->
                 </div>
