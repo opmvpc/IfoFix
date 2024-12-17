@@ -23,58 +23,11 @@
         />
 
         <!-- Nouvelle Modal pour les appareils -->
-        <Dialog
-            :open="isDeviceModalOpen"
-            @update:open="isDeviceModalOpen = $event"
-        >
-            <DialogContent class="sm:max-w-[500px] min-h-[500px]">
-                <DialogHeader>
-                    <DialogTitle>Sélectionner un appareil</DialogTitle>
-                    <DialogDescription>
-                        Recherchez et sélectionnez un appareil
-                    </DialogDescription>
-                </DialogHeader>
-
-                <div class="space-y-4">
-                    <Input
-                        type="search"
-                        placeholder="Rechercher un appareil..."
-                        v-model="deviceSearch"
-                    />
-
-                    <div class="h-[300px] overflow-y-auto space-y-2">
-                        <RadioGroup v-model="form.deviceId">
-                            <div
-                                v-for="device in filteredDevices"
-                                :key="device.id"
-                                class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
-                            >
-                                <RadioGroupItem
-                                    :value="device.id"
-                                    :id="'device-' + device.id"
-                                />
-                                <Label
-                                    :for="'device-' + device.id"
-                                    class="flex-grow cursor-pointer"
-                                >
-                                    {{ device.name }}
-                                </Label>
-                            </div>
-                        </RadioGroup>
-                    </div>
-                </div>
-
-                <DialogFooter>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        @click="closeDeviceModal"
-                    >
-                        Confirmer
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <DeviceModal
+            v-model="isDeviceModalOpen"
+            :form="form"
+            :devices="devices"
+        />
 
         <form @submit.prevent="submit" class="space-y-4">
             <div>
@@ -216,7 +169,7 @@
         </form>
 
         <!-- Modal de création de client -->
-        <Dialog
+        <!-- <Dialog
             :open="isNewClientModalOpen"
             @update:open="isNewClientModalOpen = $event"
         >
@@ -267,7 +220,7 @@
                     </DialogFooter>
                 </form>
             </DialogContent>
-        </Dialog>
+        </Dialog> -->
 
         <!-- Modal de création d'appareil -->
         <Dialog
@@ -368,10 +321,9 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/Components/ui/dialog";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 import TechniciansModal from "./partials/TechniciansModal.vue";
 import ClientsModal from "./partials/ClientsModal.vue";
+import DeviceModal from "./partials/DevicesModal.vue";
 
 const props = defineProps({
     devices: Array,
@@ -485,14 +437,6 @@ const submitNewDevice = () => {
 };
 
 const isDeviceModalOpen = ref(false);
-const deviceSearch = ref("");
-
-const filteredDevices = computed(() => {
-    if (!deviceSearch.value) return props.devices;
-    return props.devices.filter((device) =>
-        device.name.toLowerCase().includes(deviceSearch.value.toLowerCase())
-    );
-});
 
 const selectedDeviceName = computed(() => {
     const selectedDevice = props.devices.find((d) => d.id === form.deviceId);
@@ -501,9 +445,5 @@ const selectedDeviceName = computed(() => {
 
 const openDeviceModal = () => {
     isDeviceModalOpen.value = true;
-};
-
-const closeDeviceModal = () => {
-    isDeviceModalOpen.value = false;
 };
 </script>

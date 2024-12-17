@@ -64,6 +64,7 @@ const props = defineProps({
     form: Object,
     technicians: Array,
 });
+
 const isModalOpen = ref(false);
 
 watch(
