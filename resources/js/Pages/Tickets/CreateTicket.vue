@@ -8,51 +8,12 @@
         </div>
 
         <!-- Nouvelle Modal pour les techniciens -->
-        <Dialog :open="isModalOpen" @update:open="isModalOpen = $event">
-            <DialogContent class="sm:max-w-[500px] min-h-[500px]">
-                <DialogHeader>
-                    <DialogTitle>Sélectionner des techniciens</DialogTitle>
-                    <DialogDescription>
-                        Recherchez et sélectionnez un ou plusieurs techniciens
-                    </DialogDescription>
-                </DialogHeader>
-
-                <div class="space-y-4">
-                    <Input
-                        type="search"
-                        placeholder="Rechercher un technicien..."
-                        v-model="technicianSearch"
-                    />
-
-                    <div class="h-[300px] overflow-y-auto space-y-2">
-                        <div
-                            v-for="tech in filteredTechnicians"
-                            :key="tech.id"
-                            class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
-                        >
-                            <Checkbox
-                                :id="'tech-' + tech.id"
-                                :checked="form.technicianIds.includes(tech.id)"
-                                @update:checked="toggleTechnician(tech.id)"
-                            />
-                            <Label :for="'tech-' + tech.id" class="flex-grow">
-                                {{ tech.firstName }} {{ tech.lastName }}
-                            </Label>
-                        </div>
-                    </div>
-                </div>
-
-                <DialogFooter>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        @click="closeModal"
-                    >
-                        Confirmer
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <TechniciansModal
+            :isModalOpen="isModalOpen"
+            :form="form"
+            :technicians="technicians"
+            @update:isModalOpen="isModalOpen = $event"
+        />
 
         <!-- Nouvelle Modal pour les clients -->
         <Dialog
@@ -434,7 +395,7 @@
 <script setup>
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
@@ -456,6 +417,7 @@ import {
 } from "@/Components/ui/dialog";
 import { Checkbox } from "@/Components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
+import TechniciansModal from "./partials/TechniciansModal.vue";
 
 const props = defineProps({
     devices: Array,
@@ -470,19 +432,6 @@ console.log(props.brands);
 const emit = defineEmits(["close"]);
 
 const isModalOpen = ref(false);
-const technicianSearch = ref("");
-
-const filteredTechnicians = computed(() => {
-    return props.technicians.filter(
-        (tech) =>
-            tech.firstName
-                .toLowerCase()
-                .includes(technicianSearch.value.toLowerCase()) ||
-            tech.lastName
-                .toLowerCase()
-                .includes(technicianSearch.value.toLowerCase())
-    );
-});
 
 const clientSearch = ref("");
 const filteredClients = computed(() => {
@@ -507,19 +456,6 @@ const selectedTechnicians = computed(() => {
         form.technicianIds.includes(tech.id)
     );
 });
-
-const toggleTechnician = (techId) => {
-    const currentIds = [...form.technicianIds];
-    const index = currentIds.indexOf(techId);
-
-    if (index === -1) {
-        currentIds.push(techId);
-    } else {
-        currentIds.splice(index, 1);
-    }
-
-    form.technicianIds = currentIds;
-};
 
 const openModal = () => {
     isModalOpen.value = true;
