@@ -1,8 +1,5 @@
 <template>
-    <Dialog
-        :open="isNewClientModalOpen"
-        @update:open="isNewClientModalOpen = $event"
-    >
+    <Dialog v-model:open="isNewClientModalOpen">
         <DialogContent class="sm:max-w-[500px]">
             <DialogHeader>
                 <DialogTitle>Créer un nouveau client</DialogTitle>
@@ -50,4 +47,40 @@
     </Dialog>
 </template>
 
-<script setup></script>
+<script setup>
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/Components/ui/dialog";
+
+const props = defineProps({
+    modelValue: Boolean,
+    newClientForm: Object,
+    form: Object,
+});
+
+const emit = defineEmits(["update:modelValue"]);
+
+const isNewClientModalOpen = computed({
+    get: () => props.modelValue,
+    set: (value) => emit("update:modelValue", value),
+});
+
+const closeNewClientModal = () => {
+    isNewClientModalOpen.value = false;
+    newClientForm.reset();
+};
+
+const submitNewClient = () => {
+    newClientForm.post(route("clients.store"), {
+        preserveScroll: true,
+        onSuccess: (response) => {
+            closeNewClientModal();
+            form.clientId = response.props.client.id;
+        },
+    });
+};
+</script>
