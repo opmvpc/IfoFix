@@ -176,78 +176,12 @@
         />
 
         <!-- Modal de création d'appareil -->
-        <Dialog
-            :open="isNewDeviceModalOpen"
-            @update:open="isNewDeviceModalOpen = $event"
-        >
-            <DialogContent class="sm:max-w-[500px]">
-                <DialogHeader>
-                    <DialogTitle>Créer un nouvel appareil</DialogTitle>
-                </DialogHeader>
-
-                <form @submit.prevent="submitNewDevice" class="space-y-4">
-                    <div>
-                        <Label for="newDeviceName">Nom</Label>
-                        <Input
-                            id="newDeviceName"
-                            v-model="newDeviceForm.name"
-                        />
-                    </div>
-                    <div>
-                        <Label for="newDeviceBrand">Marque</Label>
-                        <Select v-model="newDeviceForm.brandId">
-                            <SelectTrigger>
-                                <SelectValue
-                                    placeholder="Sélectionner une marque"
-                                />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem
-                                        v-for="brand in brands"
-                                        :key="brand.id"
-                                        :value="brand.id"
-                                    >
-                                        {{ brand.name }}
-                                    </SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div>
-                        <Label for="newDeviceType">Type</Label>
-                        <Select v-model="newDeviceForm.typeId">
-                            <SelectTrigger>
-                                <SelectValue
-                                    placeholder="Sélectionner un type"
-                                />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem
-                                        v-for="type in types"
-                                        :key="type.id"
-                                        :value="type.id"
-                                    >
-                                        {{ type.name }}
-                                    </SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <DialogFooter>
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            @click="closeNewDeviceModal"
-                        >
-                            Annuler
-                        </Button>
-                        <Button type="submit">Créer</Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
+        <CreateDeviceModal
+            v-model="isNewDeviceModalOpen"
+            :newDeviceForm="newDeviceForm"
+            :brands="brands"
+            :types="types"
+        />
     </div>
 </template>
 
@@ -255,29 +189,30 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/Components/ui/select";
+// import {
+//     Select,
+//     SelectContent,
+//     SelectGroup,
+//     SelectItem,
+//     SelectTrigger,
+//     SelectValue,
+// } from "@/Components/ui/select";
 import { XIcon } from "lucide-vue-next";
 import { reactive, ref, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-} from "@/Components/ui/dialog";
+// import {
+//     Dialog,
+//     DialogContent,
+//     DialogHeader,
+//     DialogTitle,
+//     DialogDescription,
+//     DialogFooter,
+// } from "@/Components/ui/dialog";
 import TechniciansModal from "./partials/TechniciansModal.vue";
 import ClientsModal from "./partials/ClientsModal.vue";
 import DeviceModal from "./partials/DevicesModal.vue";
 import CreateClientModal from "./partials/CreateClientModal.vue";
+import CreateDeviceModal from "./partials/CreateDeviceModal.vue";
 
 const props = defineProps({
     devices: Array,
