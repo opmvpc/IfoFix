@@ -16,58 +16,11 @@
         />
 
         <!-- Nouvelle Modal pour les clients -->
-        <Dialog
-            :open="isClientModalOpen"
-            @update:open="isClientModalOpen = $event"
-        >
-            <DialogContent class="sm:max-w-[500px] min-h-[500px]">
-                <DialogHeader>
-                    <DialogTitle>Sélectionner un client</DialogTitle>
-                    <DialogDescription>
-                        Recherchez et sélectionnez un client
-                    </DialogDescription>
-                </DialogHeader>
-
-                <div class="space-y-4">
-                    <Input
-                        type="search"
-                        placeholder="Rechercher un client..."
-                        v-model="clientSearch"
-                    />
-
-                    <div class="h-[300px] overflow-y-auto space-y-2">
-                        <RadioGroup v-model="form.clientId">
-                            <div
-                                v-for="client in filteredClients"
-                                :key="client.id"
-                                class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
-                            >
-                                <RadioGroupItem
-                                    :value="client.id"
-                                    :id="'client-' + client.id"
-                                />
-                                <Label
-                                    :for="'client-' + client.id"
-                                    class="flex-grow cursor-pointer"
-                                >
-                                    {{ client.firstName }} {{ client.lastName }}
-                                </Label>
-                            </div>
-                        </RadioGroup>
-                    </div>
-                </div>
-
-                <DialogFooter>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        @click="closeClientModal"
-                    >
-                        Confirmer
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <ClientsModal
+            v-model="isClientModalOpen"
+            :form="form"
+            :clients="clients"
+        />
 
         <!-- Nouvelle Modal pour les appareils -->
         <Dialog
@@ -418,6 +371,7 @@ import {
 import { Checkbox } from "@/Components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 import TechniciansModal from "./partials/TechniciansModal.vue";
+import ClientsModal from "./partials/ClientsModal.vue";
 
 const props = defineProps({
     devices: Array,
@@ -427,21 +381,9 @@ const props = defineProps({
     types: Array, // Ajouter cette prop
 });
 
-console.log(props.brands);
-
 const emit = defineEmits(["close"]);
 
 const isModalOpen = ref(false);
-
-const clientSearch = ref("");
-const filteredClients = computed(() => {
-    if (!clientSearch.value) return props.clients;
-    return props.clients.filter((client) =>
-        `${client.firstName} ${client.lastName}`
-            .toLowerCase()
-            .includes(clientSearch.value.toLowerCase())
-    );
-});
 
 const form = useForm({
     title: "",
@@ -461,29 +403,18 @@ const openModal = () => {
     isModalOpen.value = true;
 };
 
-const closeModal = () => {
-    isModalOpen.value = false;
+const isClientModalOpen = ref(false);
+
+const openClientModal = () => {
+    isClientModalOpen.value = true;
 };
 
-const isClientModalOpen = ref(false);
 const selectedClientName = computed(() => {
     const selectedClient = props.clients.find((c) => c.id === form.clientId);
     return selectedClient
         ? `${selectedClient.firstName} ${selectedClient.lastName}`
         : "";
 });
-
-const openClientModal = () => {
-    isClientModalOpen.value = true;
-};
-
-const closeClientModal = () => {
-    isClientModalOpen.value = false;
-};
-
-const selectClient = (clientId) => {
-    closeClientModal();
-};
 
 const submit = () => {
     form.post(route("tickets.store"), {
