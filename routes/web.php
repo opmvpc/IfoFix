@@ -34,11 +34,11 @@ Route::middleware([
     Route::resource('interventions', InterventionsController::class);
     Route::resource('devices', ModelsController::class);
     // Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
-    Route::get('/administration/{tab?}', [AdministrationController::class, 'index'])->name('administration');
+    Route::get('/administration/{tab?}', [AdministrationController::class, 'index'])->name('administration')->where('tab', 'stats|users|clients|devices');;
     Route::get('/users', [UsersController::class, 'index'])->name('users.index');
     Route::post('/users', [UsersController::class, 'store'])->name('users.store');
     Route::put('/users', [UsersController::class, 'edit'])->name('users.edit');
-    Route::get('clients', [ClientsController::class, 'index'])->name('clients.index');
-    Route::post('clients', [ClientsController::class, 'store'])->name('clients.store');
-    Route::put('clients', [ClientsController::class, 'edit'])->name('clients.edit');
+    Route::get('/clients', [ClientsController::class, 'index'])->name('clients.index');
+    Route::post('/clients', [ClientsController::class, 'store'])->name('clients.store');
+    Route::put('/clients', [ClientsController::class, 'edit'])->name('clients.edit');
 });

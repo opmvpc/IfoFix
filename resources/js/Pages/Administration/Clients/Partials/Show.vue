@@ -3,10 +3,16 @@
         <form v-if="isClientSelected && client" @submit.prevent="submit">
             <Card>
                 <CardHeader>
-                    <CardTitle
-                        >Profil de {{ form.firstName }}
-                        {{ form.lastName }}</CardTitle
-                    >
+                    <CardTitle class="flex justify-between">
+                        <span> Profil </span>
+                        <span>
+                            <font-awesome-icon
+                                icon="fa-solid fa-close"
+                                class="text-gray-400 cursor-pointer hover:text-gray-600"
+                                @click.prevent="emit('client-selected', null)"
+                            />
+                        </span>
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div class="grid grid-cols-1 gap-6">
@@ -47,48 +53,35 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <div class="space-y-2">
-                                <Label>Email</Label>
-                                <Input
-                                    type="email"
-                                    placeholder="Email"
-                                    v-model="form.email"
-                                />
-                                <p
-                                    v-if="form.errors.email"
-                                    class="text-sm text-red-500"
-                                >
-                                    {{ form.errors.email }}
-                                </p>
-                            </div>
+                        <div class="space-y-2">
+                            <Label>Email</Label>
+                            <Input
+                                type="email"
+                                placeholder="Email"
+                                v-model="form.email"
+                            />
+                            <p
+                                v-if="form.errors.email"
+                                class="text-sm text-red-500"
+                            >
+                                {{ form.errors.email }}
+                            </p>
                         </div>
-                        <div>
-                            <div class="space-y-2">
-                                <Label>Rôle</Label>
-                                <Select v-model="form.role">
-                                    <SelectTrigger>
-                                        <SelectValue
-                                            placeholder="Selectionner un rôle"
-                                        />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="technician"
-                                            >Technicien</SelectItem
-                                        >
-                                        <SelectItem value="admin"
-                                            >Administrateur</SelectItem
-                                        >
-                                    </SelectContent>
-                                </Select>
-                                <p
-                                    v-if="form.errors.role"
-                                    class="text-sm text-red-500"
-                                >
-                                    {{ form.errors.role }}
-                                </p>
-                            </div>
+                        <div class="space-y-2">
+                            <Label>Téléphone</Label>
+                            <Input
+                                type="phone"
+                                placeholder="Téléphone"
+                                v-model="form.phone"
+                            />
+                            <p
+                                v-if="form.errors.email"
+                                class="text-sm text-red-500"
+                            >
+                                {{ form.errors.email }}
+                            </p>
                         </div>
+
                         <div>
                             <div class="space-y-2">
                                 <Label>Status</Label>
@@ -113,40 +106,6 @@
                                 >
                                     {{ form.errors.isActive }}
                                 </p>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <div class="space-y-2">
-                                    <Label>Mot de passe</Label>
-                                    <Input
-                                        type="password"
-                                        placeholder="Mot de passe"
-                                        v-model="form.password"
-                                    />
-                                    <p
-                                        v-if="form.errors.password"
-                                        class="text-sm text-red-500"
-                                    >
-                                        {{ form.errors.password }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="space-y-2">
-                                    <Label>Confirmer le mot de passe</Label>
-                                    <Input
-                                        type="password"
-                                        placeholder="Confirmation"
-                                        v-model="form.passwordConfirmation"
-                                    />
-                                    <p
-                                        v-if="form.errors.passwordConfirmation"
-                                        class="text-sm text-red-500"
-                                    >
-                                        {{ form.errors.passwordConfirmation }}
-                                    </p>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -182,6 +141,8 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 
+const emit = defineEmits(["client-selected"]);
+
 const props = defineProps({
     client: {
         type: Object,
@@ -196,6 +157,7 @@ const form = useForm({
     lastName: "",
     email: "",
     phone: "",
+    isActive: "",
 });
 
 // Watch for changes in the user prop and update form
@@ -208,6 +170,7 @@ watch(
             form.lastName = newUser.lastName;
             form.email = newUser.email;
             form.phone = newUser.phone;
+            form.isActive = String(newUser.isActive);
         }
     },
     { immediate: true }
@@ -218,7 +181,7 @@ const isClientSelected = computed(() => props.client !== null);
 
 const submit = () => {
     if (props.client?.id) {
-        form.put(route("clients"), {
+        form.put(route("clients.edit"), {
             preserveScroll: true,
             preserveState: true,
             onSuccess: () => {

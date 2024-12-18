@@ -4,14 +4,18 @@
             :clients="clientsList"
             :class="[
                 'transition-all duration-300 ease-in-out',
-                selectedClient ? 'w-2/3' : 'w-full',
+                selectedClient
+                    ? 'w-0 invisible opacity-0 md:w-2/3 md:visible md:opacity-100'
+                    : 'w-full',
             ]"
             @client-selected="setSelectedClient"
         />
         <ClientProfile
             v-if="selectedClient"
             :client="selectedClient"
+            @client-selected="setSelectedClient"
             class="w-1/3 transition-all duration-300 ease-in-out"
+            :class="selectedClient ? 'w-full md:w-1/3' : 'w-0'"
         />
     </div>
 </template>

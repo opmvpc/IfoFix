@@ -1,12 +1,18 @@
 <template>
     <div class="duration-300 animate-in slide-in-from-right">
-        <form v-if="isUserSelected && user" @submit.prevent="submit">
-            <Card>
+        <form v-if="user" @submit.prevent="submit" class="">
+            <Card class="h-full">
                 <CardHeader>
-                    <CardTitle
-                        >Profil de {{ form.firstName }}
-                        {{ form.lastName }}</CardTitle
-                    >
+                    <CardTitle class="flex justify-between">
+                        <span> Profil </span>
+                        <span>
+                            <font-awesome-icon
+                                icon="fa-solid fa-close"
+                                class="text-gray-400 cursor-pointer hover:text-gray-600"
+                                @click.prevent="emit('user-selected', null)"
+                            />
+                        </span>
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div class="grid grid-cols-1 gap-6">
@@ -165,7 +171,7 @@
 import { ref, computed, watch, inject } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { Button } from "@/Components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/Components/ui/label";
 import {
     Card,
     CardHeader,
@@ -189,23 +195,26 @@ const props = defineProps({
     },
 });
 
-// Reactive form using Inertia's useForm
+const emit = defineEmits(["user-selected"]);
+
 const form = useForm({
     id: "",
     firstName: "",
     lastName: "",
     email: "",
     role: "",
-    isActive: "", // Initialize as empty string
+    isActive: "",
     password: "",
     passwordConfirmation: "",
 });
 
-// Watch for changes in the user prop and update form
+const user = ref(props.user);
+
 watch(
     () => props.user,
     (newUser) => {
         if (newUser) {
+            user.value = newUser;
             form.id = newUser.id;
             form.firstName = newUser.firstName;
             form.lastName = newUser.lastName;
@@ -217,11 +226,8 @@ watch(
     { immediate: true }
 );
 
-// Computed property to check if a user is selected
-const isUserSelected = computed(() => props.user !== null);
-
 const submit = () => {
-    if (props.user?.id) {
+    if (user) {
         form.put(route("users.edit"), {
             preserveScroll: true,
             preserveState: true,

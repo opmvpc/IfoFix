@@ -1,56 +1,52 @@
 <template>
     <AppLayout title="Administration">
-        <div class="container flex flex-col min-h-screen p-4 mx-auto">
+        <div class="container h-screen max-h-screen p-4 mx-auto">
             <Head title="Administration" />
-            <Tabs
-                :default-value="activeTab"
-                class="flex flex-col w-full h-full grow"
-            >
+            <Tabs :default-value="activeTab" class="">
                 <TabsList
                     class="flex justify-start w-full p-2 text-white bg-indigo-500 rounded-md"
                 >
-                    <TabsTrigger
-                        value="stats"
-                        class="px-4 py-2 rounded-md hover:bg-indigo-400"
-                    >
-                        Statistiques
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="users"
-                        class="px-4 py-2 rounded-md hover:bg-indigo-400"
-                    >
-                        Utilisateurs
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="clients"
-                        class="px-4 py-2 rounded-md hover:bg-indigo-400"
-                    >
-                        Clients
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="devices"
-                        class="px-4 py-2 rounded-md hover:bg-indigo-400"
-                    >
-                        Appareils
-                    </TabsTrigger>
+                    <Link :href="route('administration', { tab: 'stats' })">
+                        <TabsTrigger
+                            value="stats"
+                            class="px-4 py-2 rounded-md hover:bg-indigo-400"
+                        >
+                            Statistiques
+                        </TabsTrigger>
+                    </Link>
+                    <Link :href="route('administration', { tab: 'users' })">
+                        <TabsTrigger
+                            value="users"
+                            class="px-4 py-2 rounded-md hover:bg-indigo-400"
+                        >
+                            Utilisateurs
+                        </TabsTrigger>
+                    </Link>
+                    <Link :href="route('administration', { tab: 'clients' })">
+                        <TabsTrigger
+                            value="clients"
+                            class="px-4 py-2 rounded-md hover:bg-indigo-400"
+                        >
+                            Clients
+                        </TabsTrigger>
+                    </Link>
+                    <Link :href="route('administration', { tab: 'devices' })">
+                        <TabsTrigger
+                            value="devices"
+                            class="px-4 py-2 rounded-md hover:bg-indigo-400"
+                        >
+                            Appareils
+                        </TabsTrigger>
+                    </Link>
                 </TabsList>
                 <TabsContent value="stats" class=""> Stats page </TabsContent>
-                <TabsContent
-                    value="users"
-                    class="flex flex-row overflow-hidden grow"
-                >
+                <TabsContent value="users" class="">
                     <UsersPage :users="usersList" />
                 </TabsContent>
-                <TabsContent
-                    value="clients"
-                    class="p-4 bg-white rounded-md shadow-md"
-                >
+                <TabsContent value="clients" class="">
                     <ClientsPage :clients="clientsList" />
                 </TabsContent>
-                <TabsContent
-                    value="devices"
-                    class="p-4 bg-white rounded-md shadow-md"
-                >
+                <TabsContent value="devices" class="">
                     Devices administration page
                 </TabsContent>
             </Tabs>
@@ -84,6 +80,8 @@ import { usePage } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
 const page = usePage();
 
+const activeTab = ref(props.activeTab);
+
 const usersList = ref(props.users);
 const clientsList = ref(props.clients);
 
@@ -113,4 +111,14 @@ const fetchClients = () => {
         clientsList.value = response.data;
     });
 };
+
+watch(
+    () => props.activeTab,
+    (newTab) => {
+        console.log("handleTabChange", newTab);
+        console.log("newTab", newTab);
+        activeTab.value = newTab;
+    },
+    { immediate: true }
+);
 </script>
