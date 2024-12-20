@@ -81,33 +81,6 @@
                                 {{ form.errors.email }}
                             </p>
                         </div>
-
-                        <div>
-                            <div class="space-y-2">
-                                <Label>Status</Label>
-                                <Select v-model="form.isActive">
-                                    <SelectTrigger>
-                                        <SelectValue
-                                            placeholder="Selectionner un statut"
-                                        />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem :value="'1'"
-                                            >Actif</SelectItem
-                                        >
-                                        <SelectItem :value="'0'"
-                                            >Inactif</SelectItem
-                                        >
-                                    </SelectContent>
-                                </Select>
-                                <p
-                                    v-if="form.errors.isActive"
-                                    class="text-sm text-red-500"
-                                >
-                                    {{ form.errors.isActive }}
-                                </p>
-                            </div>
-                        </div>
                     </div>
                 </CardContent>
                 <CardFooter>
@@ -121,10 +94,10 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, inject } from "vue";
+import { computed, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { Button } from "@/Components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/Components/ui/label";
 import {
     Card,
     CardHeader,
@@ -133,13 +106,6 @@ import {
     CardFooter,
 } from "@/Components/ui/card";
 import { Input } from "@/Components/ui/input";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/Components/ui/select";
 
 const emit = defineEmits(["client-selected"]);
 
@@ -157,7 +123,6 @@ const form = useForm({
     lastName: "",
     email: "",
     phone: "",
-    isActive: "",
 });
 
 // Watch for changes in the user prop and update form
@@ -170,7 +135,6 @@ watch(
             form.lastName = newUser.lastName;
             form.email = newUser.email;
             form.phone = newUser.phone;
-            form.isActive = String(newUser.isActive);
         }
     },
     { immediate: true }

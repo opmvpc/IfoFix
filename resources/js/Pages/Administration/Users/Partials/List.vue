@@ -275,6 +275,7 @@ const table = useVueTable({
     //         String(cellValue).toLowerCase().includes(search)
     //     );
     // },
+
     state: {
         get sorting() {
             return sorting.value;

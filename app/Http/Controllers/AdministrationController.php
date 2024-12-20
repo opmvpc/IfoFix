@@ -12,12 +12,12 @@ class AdministrationController extends Controller
     public function index($tab = 'stats')
     {
         return Inertia::render('Administration/Index', [
+            'activeTab' => $tab,
             'users' => fn() => User::all(),
             'clients' => fn() => Client::all(),
-            'activeTab' => fn() =>  $tab,
             'flash' => [
-                'success' => session('success'), // Retrieve flash success message
-                'refresh' => session('refresh') // Retrieve refresh flag
+                'success' => session('success'),
+                'refresh' => session('refresh')
             ]
         ]);
     }

@@ -4,12 +4,12 @@
             <Head title="Administration" />
             <Tabs :default-value="activeTab" class="">
                 <TabsList
-                    class="flex justify-start w-full p-2 text-white bg-indigo-500 rounded-md"
+                    class="grid justify-start w-full grid-cols-1 p-2 text-white bg-indigo-500 rounded-md sm:grid-cols-2 md:flex md:flex-row"
                 >
                     <Link :href="route('administration', { tab: 'stats' })">
                         <TabsTrigger
                             value="stats"
-                            class="px-4 py-2 rounded-md hover:bg-indigo-400"
+                            class="w-full px-4 py-2 rounded-md hover:bg-indigo-400"
                         >
                             Statistiques
                         </TabsTrigger>
@@ -17,7 +17,7 @@
                     <Link :href="route('administration', { tab: 'users' })">
                         <TabsTrigger
                             value="users"
-                            class="px-4 py-2 rounded-md hover:bg-indigo-400"
+                            class="w-full px-4 py-2 rounded-md hover:bg-indigo-400"
                         >
                             Utilisateurs
                         </TabsTrigger>
@@ -25,7 +25,7 @@
                     <Link :href="route('administration', { tab: 'clients' })">
                         <TabsTrigger
                             value="clients"
-                            class="px-4 py-2 rounded-md hover:bg-indigo-400"
+                            class="w-full px-4 py-2 rounded-md hover:bg-indigo-400"
                         >
                             Clients
                         </TabsTrigger>
@@ -33,7 +33,7 @@
                     <Link :href="route('administration', { tab: 'devices' })">
                         <TabsTrigger
                             value="devices"
-                            class="px-4 py-2 rounded-md hover:bg-indigo-400"
+                            class="w-full px-4 py-2 rounded-md hover:bg-indigo-400"
                         >
                             Appareils
                         </TabsTrigger>
@@ -80,7 +80,7 @@ import { usePage } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
 const page = usePage();
 
-const activeTab = ref(props.activeTab);
+// const activeTab = ref(props.activeTab);
 
 const usersList = ref(props.users);
 const clientsList = ref(props.clients);
@@ -111,14 +111,4 @@ const fetchClients = () => {
         clientsList.value = response.data;
     });
 };
-
-watch(
-    () => props.activeTab,
-    (newTab) => {
-        console.log("handleTabChange", newTab);
-        console.log("newTab", newTab);
-        activeTab.value = newTab;
-    },
-    { immediate: true }
-);
 </script>
