@@ -179,25 +179,21 @@ const logout = () => {
             </nav>
 
             <!-- Main Content -->
-            <div class="flex flex-col flex-1 ml-40 overflow-y-auto">
-                <div>
-                    <!-- Page Heading -->
-                    <header
-                        v-if="$slots.header"
-                        class="bg-white shadow dark:bg-gray-800"
-                    >
-                        <div
-                            class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8"
-                        >
-                            <slot name="header" />
-                        </div>
-                    </header>
+            <div class="flex flex-col w-full h-full ml-40 overflow-y-auto">
+                <!-- Page Heading -->
+                <header
+                    v-if="$slots.header"
+                    class="bg-white shadow dark:bg-gray-800"
+                >
+                    <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                        <slot name="header" />
+                    </div>
+                </header>
 
-                    <!-- Page Content -->
-                    <main class="flex-1">
-                        <slot />
-                    </main>
-                </div>
+                <!-- Page Content -->
+                <main class="flex-1 w-full h-full overflow-hidden">
+                    <slot />
+                </main>
             </div>
         </div>
     </div>

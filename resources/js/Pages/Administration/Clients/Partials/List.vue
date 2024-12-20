@@ -2,7 +2,7 @@
     <Card class="flex flex-col">
         <CardContent class="flex-1 p-6">
             <div class="flex">
-                <h1 class="text-2xl font-bold">Liste des utilisateurs</h1>
+                <h1 class="text-2xl font-bold">Liste des clients</h1>
                 <UserCreate />
             </div>
             <div class="flex items-center gap-2 py-4">
@@ -60,7 +60,7 @@
                             <TableRow
                                 v-for="row in table.getRowModel().rows"
                                 :key="row.id"
-                                @click="selectUser(row.original)"
+                                @click="selectClient(row.original)"
                                 class="cursor-pointer hover:bg-blue-100"
                             >
                                 <TableCell
@@ -149,10 +149,10 @@ import {
 import { Badge } from "@/Components/ui//badge";
 import UserCreate from "@/Pages/Administration/Users/Partials/Create.vue";
 
-const emit = defineEmits(["user-selected"]);
+const emit = defineEmits(["client-selected"]);
 
 const props = defineProps({
-    users: {
+    clients: {
         type: Array,
         required: true,
     },
@@ -206,7 +206,7 @@ const columns = [
         },
     },
     {
-        accessorKey: "role",
+        accessorKey: "phone",
         header: ({ column }) => {
             return h(
                 Button,
@@ -215,34 +215,9 @@ const columns = [
                     onClick: () =>
                         column.toggleSorting(column.getIsSorted() === "asc"),
                 },
-                () => ["Rôle", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+                () => ["Phone", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
             );
         },
-    },
-    {
-        accessorKey: "isActive",
-        header: ({ column }) => {
-            return h(
-                Button,
-                {
-                    variant: "ghost",
-                    onClick: () =>
-                        column.toggleSorting(column.getIsSorted() === "asc"),
-                },
-                () => ["Statut", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
-            );
-        },
-        cell: ({ row }) =>
-            h(
-                Badge,
-                {
-                    // class: `px-2 py-1 text-xs text-white ${
-                    //     row.original.isActive ? "bg-green-500" : "bg-red-500"
-                    // }`,
-                    variant: row.original.isActive ? "success" : "danger",
-                },
-                () => (row.original.isActive ? "Actif" : "Inactif")
-            ),
     },
 ];
 
@@ -253,7 +228,7 @@ const globalFilter = ref("");
 
 const table = useVueTable({
     get data() {
-        return props.users;
+        return props.clients;
     },
     get columns() {
         return columns;
@@ -269,12 +244,6 @@ const table = useVueTable({
         valueUpdater(updaterOrValue, columnVisibility),
     onGlobalFilterChange: (updaterOrValue) =>
         valueUpdater(updaterOrValue, globalFilter),
-    // globalFilterFn: (row, columnId, value) => {
-    //     const search = value.toLowerCase();
-    //     return Object.values(row.original).some((cellValue) =>
-    //         String(cellValue).toLowerCase().includes(search)
-    //     );
-    // },
 
     state: {
         get sorting() {
@@ -292,7 +261,7 @@ const table = useVueTable({
     },
 });
 
-const selectUser = (user) => {
-    emit("user-selected", user);
+const selectClient = (client) => {
+    emit("client-selected", client);
 };
 </script>
