@@ -66,7 +66,7 @@ import { Input } from "@/Components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/Components/ui/button";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 const props = defineProps({
     modelValue: Boolean, // Remplace isDeviceModalOpen
@@ -83,9 +83,25 @@ const filteredDevices = computed(() => {
     );
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const selectedDeviceName = computed(() => {
+    const selectedDevice = props.devices.find(
+        (d) => d.id === props.form.deviceId
+    );
+    return selectedDevice ? selectedDevice.name : "";
+});
+
+const emit = defineEmits(["update:modelValue", "update:selectedDeviceName"]);
 
 const closeDeviceModal = () => {
     emit("update:modelValue", false);
+    emit("update:selectedDeviceName", selectedDeviceName.value);
 };
+
+// Émettre la mise à jour du nom quand l'appareil change
+watch(
+    () => props.form.deviceId,
+    () => {
+        emit("update:selectedDeviceName", selectedDeviceName.value);
+    }
+);
 </script>

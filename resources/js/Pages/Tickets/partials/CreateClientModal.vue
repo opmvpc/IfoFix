@@ -59,14 +59,20 @@ import { computed } from "vue";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
+import { useForm } from "@inertiajs/vue3";
 
 const props = defineProps({
     modelValue: Boolean,
-    newClientForm: Object,
-    form: Object,
 });
 
 const emit = defineEmits(["update:modelValue"]);
+
+const newClientForm = useForm({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+});
 
 const isNewClientModalOpen = computed({
     get: () => props.modelValue,
@@ -79,9 +85,9 @@ const closeNewClientModal = () => {
 };
 
 const submitNewClient = () => {
-    props.newClientForm.post(route("clients.store"), {
+    newClientForm.post(route("clients.store"), {
         preserveScroll: true,
-        onSuccess: (response) => {
+        onSuccess: () => {
             closeNewClientModal();
         },
     });

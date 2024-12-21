@@ -66,7 +66,7 @@ import { Input } from "@/Components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 import { Label } from "@/Components/ui/label";
 import { Button } from "@/Components/ui/button";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 const props = defineProps({
     modelValue: Boolean, // Renommé de isClientModalOpen à modelValue
@@ -85,9 +85,27 @@ const filteredClients = computed(() => {
     );
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const selectedClientName = computed(() => {
+    const selectedClient = props.clients.find(
+        (c) => c.id === props.form.clientId
+    );
+    return selectedClient
+        ? `${selectedClient.firstName} ${selectedClient.lastName}`
+        : "";
+});
+
+const emit = defineEmits(["update:modelValue", "update:selectedClientName"]);
 
 const closeClientModal = () => {
     emit("update:modelValue", false);
+    emit("update:selectedClientName", selectedClientName.value);
 };
+
+// Émettre la mise à jour du nom quand le client change
+watch(
+    () => props.form.clientId,
+    () => {
+        emit("update:selectedClientName", selectedClientName.value);
+    }
+);
 </script>
