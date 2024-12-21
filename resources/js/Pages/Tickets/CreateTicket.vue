@@ -7,28 +7,6 @@
             </Button>
         </div>
 
-        <!-- Nouvelle Modal pour les techniciens -->
-        <TechniciansModal
-            :isModalOpen="isModalOpen"
-            :form="form"
-            :technicians="technicians"
-            @update:isModalOpen="isModalOpen = $event"
-        />
-
-        <!-- Nouvelle Modal pour les clients -->
-        <ClientsModal
-            v-model="isClientModalOpen"
-            :form="form"
-            :clients="clients"
-        />
-
-        <!-- Nouvelle Modal pour les appareils -->
-        <DeviceModal
-            v-model="isDeviceModalOpen"
-            :form="form"
-            :devices="devices"
-        />
-
         <form @submit.prevent="submit" class="space-y-4">
             <div>
                 <Label for="title">Titre</Label>
@@ -168,19 +146,36 @@
             <Button type="submit" class="w-full">Créer</Button>
         </form>
 
-        <!-- Modal de création de client -->
         <CreateClientModal
-            v-model="isClientModalOpen"
+            v-model="isNewClientModalOpen"
             :newClientForm="newClientForm"
             :form="form"
         />
 
-        <!-- Modal de création d'appareil -->
         <CreateDeviceModal
             v-model="isNewDeviceModalOpen"
             :newDeviceForm="newDeviceForm"
             :brands="brands"
             :types="types"
+        />
+
+        <TechniciansModal
+            :isModalOpen="isModalOpen"
+            :form="form"
+            :technicians="technicians"
+            @update:isModalOpen="isModalOpen = $event"
+        />
+
+        <ClientsModal
+            v-model="isClientModalOpen"
+            :form="form"
+            :clients="clients"
+        />
+
+        <DeviceModal
+            v-model="isDeviceModalOpen"
+            :form="form"
+            :devices="devices"
         />
     </div>
 </template>
@@ -189,25 +184,9 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/components/ui/label";
-// import {
-//     Select,
-//     SelectContent,
-//     SelectGroup,
-//     SelectItem,
-//     SelectTrigger,
-//     SelectValue,
-// } from "@/Components/ui/select";
 import { XIcon } from "lucide-vue-next";
-import { reactive, ref, computed } from "vue";
+import { ref, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
-// import {
-//     Dialog,
-//     DialogContent,
-//     DialogHeader,
-//     DialogTitle,
-//     DialogDescription,
-//     DialogFooter,
-// } from "@/Components/ui/dialog";
 import TechniciansModal from "./partials/TechniciansModal.vue";
 import ClientsModal from "./partials/ClientsModal.vue";
 import DeviceModal from "./partials/DevicesModal.vue";
@@ -282,22 +261,6 @@ const openNewClientModal = () => {
     isNewClientModalOpen.value = true;
 };
 
-const closeNewClientModal = () => {
-    isNewClientModalOpen.value = false;
-    newClientForm.reset();
-};
-
-const submitNewClient = () => {
-    newClientForm.post(route("clients.store"), {
-        preserveScroll: true,
-        onSuccess: (response) => {
-            closeNewClientModal();
-            // Mettre à jour la liste des clients
-            form.clientId = response.props.client.id;
-        },
-    });
-};
-
 const isNewDeviceModalOpen = ref(false);
 const newDeviceForm = useForm({
     name: "",
@@ -307,22 +270,6 @@ const newDeviceForm = useForm({
 
 const openNewDeviceModal = () => {
     isNewDeviceModalOpen.value = true;
-};
-
-const closeNewDeviceModal = () => {
-    isNewDeviceModalOpen.value = false;
-    newDeviceForm.reset();
-};
-
-const submitNewDevice = () => {
-    newDeviceForm.post(route("devices.store"), {
-        preserveScroll: true,
-        onSuccess: (response) => {
-            closeNewDeviceModal();
-            // Mettre à jour la liste des appareils
-            form.deviceId = response.props.device.id;
-        },
-    });
 };
 
 const isDeviceModalOpen = ref(false);

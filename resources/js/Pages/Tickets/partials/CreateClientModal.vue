@@ -56,6 +56,9 @@ import {
     DialogFooter,
 } from "@/Components/ui/dialog";
 import { computed } from "vue";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Label } from "@/Components/ui/label";
 
 const props = defineProps({
     modelValue: Boolean,
@@ -76,11 +79,10 @@ const closeNewClientModal = () => {
 };
 
 const submitNewClient = () => {
-    newClientForm.post(route("clients.store"), {
+    props.newClientForm.post(route("clients.store"), {
         preserveScroll: true,
         onSuccess: (response) => {
             closeNewClientModal();
-            form.clientId = response.props.client.id;
         },
     });
 };
