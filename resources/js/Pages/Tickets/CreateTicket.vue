@@ -180,7 +180,7 @@
 <script setup>
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/Components/ui/label";
 import { XIcon } from "lucide-vue-next";
 import { ref, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
