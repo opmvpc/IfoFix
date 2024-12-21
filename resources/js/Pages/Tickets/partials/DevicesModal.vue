@@ -64,7 +64,7 @@ import {
 } from "@/Components/ui/dialog";
 import { Input } from "@/Components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/Components/ui/label";
 import { Button } from "@/Components/ui/button";
 import { computed, ref, watch } from "vue";
 

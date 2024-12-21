@@ -7,6 +7,7 @@ export const buttonVariants = cva(
     {
         variants: {
             variant: {
+                custom: "bg-indigo-500 text-white font-bold shadow hover:bg-indigo-600 duration-200",
                 default:
                     "bg-primary text-primary-foreground shadow hover:bg-primary/90",
                 destructive:
@@ -26,7 +27,7 @@ export const buttonVariants = cva(
             },
         },
         defaultVariants: {
-            variant: "default",
+            variant: "custom",
             size: "default",
         },
     }
