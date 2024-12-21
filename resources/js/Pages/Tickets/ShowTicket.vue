@@ -45,29 +45,14 @@ const uniqueTechnicians = computed(() =>
 
 <template>
     <AppLayout>
-        <div class="p-6">
-            <div class="flex flex-col lg:flex-row gap-6">
+        <div class="p-6 space-y-5">
+            <div class="flex flex-col gap-6">
                 <!-- Colonne des détails du ticket -->
-                <div class="bg-white rounded-lg shadow-lg p-6 flex-1">
+                <div class="bg-white rounded-lg shadow-md p-6 flex-1">
                     <div class="flex items-center justify-between gap-2 mb-6">
                         <h1 class="text-2xl font-bold">
                             Détails du Ticket #{{ ticket.id }}
                         </h1>
-                        <Button
-                            @click="
-                                showCreateIntervention = !showCreateIntervention
-                            "
-                        >
-                            <font-awesome-icon
-                                icon="fa-solid fa-plus"
-                                class="mr-2"
-                            />
-                            {{
-                                showCreateIntervention
-                                    ? "Masquer"
-                                    : "Créer une intervention"
-                            }}
-                        </Button>
                     </div>
 
                     <div class="flex flex-col gap-6">
@@ -171,8 +156,17 @@ const uniqueTechnicians = computed(() =>
             </div>
 
             <!-- Section des interventions -->
-            <div class="mt-8 ml-10">
-                <h2 class="text-xl font-bold mb-4">Interventions</h2>
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <h2 class="text-xl font-bold">Interventions</h2>
+                    <font-awesome-icon
+                        icon="fa-solid fa-plus"
+                        class="px-3 py-2 cursor-pointer transition-all hover:bg-indigo-50 rounded-md"
+                        @click="
+                            showCreateIntervention = !showCreateIntervention
+                        "
+                    />
+                </div>
 
                 <div
                     v-if="interventions && interventions.length > 0"
@@ -181,7 +175,7 @@ const uniqueTechnicians = computed(() =>
                     <div
                         v-for="intervention in interventions"
                         :key="intervention.id"
-                        class="bg-white rounded-lg shadow-lg p-4"
+                        class="bg-gray-50 rounded-lg shadow-sm p-4"
                     >
                         <div class="flex justify-between items-center">
                             <div>

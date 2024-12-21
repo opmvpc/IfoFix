@@ -196,10 +196,9 @@ const columns = [
         enableHiding: false,
         cell: ({ row }) => {
             return h(
-                Button,
+                "div",
                 {
-                    variant: "destructive",
-                    size: "sm",
+                    class: "cursor-pointer text-gray-400 hover:text-red-900",
                     onClick: () => {
                         if (
                             confirm(
@@ -210,7 +209,12 @@ const columns = [
                         }
                     },
                 },
-                () => "Supprimer"
+                [
+                    h(FontAwesomeIcon, {
+                        icon: "fa-solid fa-trash",
+                        class: "h-4 w-4 px-4",
+                    }),
+                ]
             );
         },
     },

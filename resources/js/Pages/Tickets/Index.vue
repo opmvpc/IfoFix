@@ -1,8 +1,8 @@
 <template>
     <AppLayout>
         <div class="flex flex-col gap-3 p-3">
-            <div class="flex items-start gap-4">
-                <div class="flex-1 p-4 bg-white border rounded-lg shadow">
+            <div class="flex flex-col-reverse lg:flex-row items-start gap-4">
+                <div class="flex-1 w-full p-4 bg-white border rounded-lg shadow">
                     <DataTable
                     :tickets="props.tickets"
                     :clients="clients"
@@ -23,7 +23,7 @@
             :brands="brands"
             :types="types"
             @close="showCreateForm = false"
-            class="w-96"
+            class="w-full lg:w-96"
         />
             </div>
         </div>
