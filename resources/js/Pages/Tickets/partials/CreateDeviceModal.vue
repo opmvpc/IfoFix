@@ -89,14 +89,11 @@ import {
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
+import { useForm } from "@inertiajs/vue3";
 
 const props = defineProps({
     modelValue: {
         type: Boolean,
-        required: true,
-    },
-    newDeviceForm: {
-        type: Object,
         required: true,
     },
     brands: Array,
@@ -109,8 +106,14 @@ const closeNewDeviceModal = () => {
     emit("update:modelValue", false);
 };
 
+const newDeviceForm = useForm({
+    name: "",
+    brandId: null,
+    typeId: null,
+});
+
 const submitNewDevice = () => {
-    props.newDeviceForm.post(route("devices.store"), {
+    newDeviceForm.post(route("devices.store"), {
         preserveScroll: true,
         onSuccess: (response) => {
             closeNewDeviceModal();

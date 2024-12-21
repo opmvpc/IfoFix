@@ -146,15 +146,10 @@
             <Button type="submit" class="w-full">Créer</Button>
         </form>
 
-        <CreateClientModal
-            v-model="isNewClientModalOpen"
-            :newClientForm="newClientForm"
-            :form="form"
-        />
+        <CreateClientModal v-model="isNewClientModalOpen" />
 
         <CreateDeviceModal
             v-model="isNewDeviceModalOpen"
-            :newDeviceForm="newDeviceForm"
             :brands="brands"
             :types="types"
         />
@@ -170,12 +165,14 @@
             v-model="isClientModalOpen"
             :form="form"
             :clients="clients"
+            @update:selectedClientName="selectedClientName = $event"
         />
 
         <DeviceModal
             v-model="isDeviceModalOpen"
             :form="form"
             :devices="devices"
+            @update:selectedDeviceName="selectedDeviceName = $event"
         />
     </div>
 </template>
@@ -201,10 +198,6 @@ const props = defineProps({
     types: Array, // Ajouter cette prop
 });
 
-const emit = defineEmits(["close"]);
-
-const isModalOpen = ref(false);
-
 const form = useForm({
     title: "",
     description: "",
@@ -213,28 +206,7 @@ const form = useForm({
     technicianIds: [], // Modifié pour supporter plusieurs techniciens
 });
 
-const selectedTechnicians = computed(() => {
-    return props.technicians.filter((tech) =>
-        form.technicianIds.includes(tech.id)
-    );
-});
-
-const openModal = () => {
-    isModalOpen.value = true;
-};
-
-const isClientModalOpen = ref(false);
-
-const openClientModal = () => {
-    isClientModalOpen.value = true;
-};
-
-const selectedClientName = computed(() => {
-    const selectedClient = props.clients.find((c) => c.id === form.clientId);
-    return selectedClient
-        ? `${selectedClient.firstName} ${selectedClient.lastName}`
-        : "";
-});
+const emit = defineEmits(["close"]);
 
 const submit = () => {
     form.post(route("tickets.store"), {
@@ -249,24 +221,32 @@ const submit = () => {
     });
 };
 
-const isNewClientModalOpen = ref(false);
-const newClientForm = useForm({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
+const isModalOpen = ref(false);
+
+const openModal = () => {
+    isModalOpen.value = true;
+};
+const selectedTechnicians = computed(() => {
+    return props.technicians.filter((tech) =>
+        form.technicianIds.includes(tech.id)
+    );
 });
+
+const isClientModalOpen = ref(false);
+
+const openClientModal = () => {
+    isClientModalOpen.value = true;
+};
+
+const selectedClientName = ref("");
+
+const isNewClientModalOpen = ref(false);
 
 const openNewClientModal = () => {
     isNewClientModalOpen.value = true;
 };
 
 const isNewDeviceModalOpen = ref(false);
-const newDeviceForm = useForm({
-    name: "",
-    brandId: null,
-    typeId: null,
-});
 
 const openNewDeviceModal = () => {
     isNewDeviceModalOpen.value = true;
@@ -274,10 +254,7 @@ const openNewDeviceModal = () => {
 
 const isDeviceModalOpen = ref(false);
 
-const selectedDeviceName = computed(() => {
-    const selectedDevice = props.devices.find((d) => d.id === form.deviceId);
-    return selectedDevice ? selectedDevice.name : "";
-});
+const selectedDeviceName = ref("");
 
 const openDeviceModal = () => {
     isDeviceModalOpen.value = true;
