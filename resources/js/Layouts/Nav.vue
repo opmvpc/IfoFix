@@ -8,9 +8,13 @@
         >
             <Link
                 :href="route('dashboard')"
-                class="transition-transform hover:scale-105"
+                class="flex gap-4 transition-transform hover:scale-105"
             >
                 <ApplicationMark class="block w-auto h-9" />
+                <span class="text-4xl">
+                    <span class="font-black">IFO</span>
+                    <span>fix</span>
+                </span>
             </Link>
         </div>
 
@@ -22,9 +26,9 @@
             >
                 <font-awesome-icon
                     icon="fa-solid fa-ticket"
-                    class="w-4 h-4 mr-3 group-hover:text-white"
+                    class="w-4 h-4 mr-2 group-hover:text-white"
                 />
-                <span class="text-sm font-medium group-hover:text-white"
+                <span class="text-sm font-bold group-hover:text-white"
                     >Tickets</span
                 >
             </NavLink>
@@ -36,9 +40,9 @@
             >
                 <font-awesome-icon
                     icon="fa-solid fa-users-gear"
-                    class="w-4 h-4 mr-3 group-hover:text-white"
+                    class="w-4 h-4 mr-2 group-hover:text-white"
                 />
-                <span class="text-sm font-medium group-hover:text-white"
+                <span class="text-sm font-bold group-hover:text-white"
                     >Administration</span
                 >
             </NavLink>

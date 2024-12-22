@@ -33,6 +33,7 @@ import {
     getSortedRowModel,
     useVueTable,
 } from "@tanstack/vue-table";
+
 import { ArrowUpDown, ChevronDown } from "lucide-vue-next";
 import { h, ref, watch, watchEffect } from "vue";
 import { Badge } from "@/Components/ui/badge";
@@ -178,30 +179,30 @@ const expanded = ref<ExpandedState>({});
 const globalFilter = ref("");
 
 // Ajouter cette fonction de filtrage personnalisée après la définition des colonnes
-const fuzzyFilter = (
-    row: any,
-    columnId: string,
-    value: string,
-    column: any
-) => {
-    const searchValue = value.toLowerCase();
-    const rowData = row.original;
+// const fuzzyFilter = (
+//     row: any,
+//     columnId: string,
+//     value: string,
+//     column: any
+// ) => {
+//     const searchValue = value.toLowerCase();
+//     const rowData = row.original;
 
-    // Fonction récursive pour chercher dans les objets imbriqués
-    const searchInObject = (obj: any): boolean => {
-        if (!obj) return false;
+//     // Fonction récursive pour chercher dans les objets imbriqués
+//     const searchInObject = (obj: any): boolean => {
+//         if (!obj) return false;
 
-        return Object.keys(obj).some((key) => {
-            const val = obj[key];
-            if (typeof val === "object") {
-                return searchInObject(val);
-            }
-            return String(val).toLowerCase().includes(searchValue);
-        });
-    };
+//         return Object.keys(obj).some((key) => {
+//             const val = obj[key];
+//             if (typeof val === "object") {
+//                 return searchInObject(val);
+//             }
+//             return String(val).toLowerCase().includes(searchValue);
+//         });
+//     };
 
-    return searchInObject(rowData);
-};
+//     return searchInObject(rowData);
+// };
 
 const table = useVueTable({
     data: tickets,
@@ -245,7 +246,7 @@ const table = useVueTable({
             left: ["status"],
         },
     },
-    globalFilterFn: fuzzyFilter,
+    // globalFilterFn: fuzzyFilter,
 });
 </script>
 
@@ -256,7 +257,7 @@ const table = useVueTable({
                 <h1 class="text-xl font-semibold">Tickets</h1>
                 <Button @click="$emit('buttonClick')">Ajouter un ticket</Button>
             </div>
-            <div class="flex gap-2 items-center py-4">
+            <div class="flex items-center gap-2 py-4">
                 <Input
                     class="max-w-sm"
                     placeholder="Rechercher..."
@@ -290,7 +291,7 @@ const table = useVueTable({
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                         <Button variant="outline" class="ml-auto">
-                            Columns <ChevronDown class="ml-2 h-4 w-4" />
+                            Columns <ChevronDown class="w-4 h-4 ml-2" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -313,7 +314,7 @@ const table = useVueTable({
                 </DropdownMenu>
             </div>
 
-            <div class="rounded-md border grow">
+            <div class="border rounded-md grow">
                 <Table>
                     <TableHeader>
                         <TableRow
@@ -400,7 +401,7 @@ const table = useVueTable({
                 </Table>
             </div>
 
-            <div class="flex items-center justify-end space-x-2 py-4">
+            <div class="flex items-center justify-end py-4 space-x-2">
                 <div class="flex-1 text-sm text-muted-foreground">
                     {{ table.getFilteredSelectedRowModel().rows.length }} of
                     {{ table.getFilteredRowModel().rows.length }} row(s)
