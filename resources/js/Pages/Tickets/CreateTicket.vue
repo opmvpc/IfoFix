@@ -7,161 +7,6 @@
             </Button>
         </div>
 
-        <!-- Nouvelle Modal pour les techniciens -->
-        <Dialog :open="isModalOpen" @update:open="isModalOpen = $event">
-            <DialogContent class="sm:max-w-[500px] min-h-[500px]">
-                <DialogHeader>
-                    <DialogTitle>Sélectionner des techniciens</DialogTitle>
-                    <DialogDescription>
-                        Recherchez et sélectionnez un ou plusieurs techniciens
-                    </DialogDescription>
-                </DialogHeader>
-
-                <div class="space-y-4">
-                    <Input
-                        type="search"
-                        placeholder="Rechercher un technicien..."
-                        v-model="technicianSearch"
-                    />
-
-                    <div class="h-[300px] overflow-y-auto space-y-2">
-                        <div
-                            v-for="tech in filteredTechnicians"
-                            :key="tech.id"
-                            class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
-                        >
-                            <Checkbox
-                                :id="'tech-' + tech.id"
-                                :checked="form.technicianIds.includes(tech.id)"
-                                @update:checked="toggleTechnician(tech.id)"
-                            />
-                            <Label :for="'tech-' + tech.id" class="flex-grow">
-                                {{ tech.firstName }} {{ tech.lastName }}
-                            </Label>
-                        </div>
-                    </div>
-                </div>
-
-                <DialogFooter>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        @click="closeModal"
-                    >
-                        Confirmer
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-
-        <!-- Nouvelle Modal pour les clients -->
-        <Dialog
-            :open="isClientModalOpen"
-            @update:open="isClientModalOpen = $event"
-        >
-            <DialogContent class="sm:max-w-[500px] min-h-[500px]">
-                <DialogHeader>
-                    <DialogTitle>Sélectionner un client</DialogTitle>
-                    <DialogDescription>
-                        Recherchez et sélectionnez un client
-                    </DialogDescription>
-                </DialogHeader>
-
-                <div class="space-y-4">
-                    <Input
-                        type="search"
-                        placeholder="Rechercher un client..."
-                        v-model="clientSearch"
-                    />
-
-                    <div class="h-[300px] overflow-y-auto space-y-2">
-                        <RadioGroup v-model="form.clientId">
-                            <div
-                                v-for="client in filteredClients"
-                                :key="client.id"
-                                class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
-                            >
-                                <RadioGroupItem
-                                    :value="client.id"
-                                    :id="'client-' + client.id"
-                                />
-                                <Label
-                                    :for="'client-' + client.id"
-                                    class="flex-grow cursor-pointer"
-                                >
-                                    {{ client.firstName }} {{ client.lastName }}
-                                </Label>
-                            </div>
-                        </RadioGroup>
-                    </div>
-                </div>
-
-                <DialogFooter>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        @click="closeClientModal"
-                    >
-                        Confirmer
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-
-        <!-- Nouvelle Modal pour les appareils -->
-        <Dialog
-            :open="isDeviceModalOpen"
-            @update:open="isDeviceModalOpen = $event"
-        >
-            <DialogContent class="sm:max-w-[500px] min-h-[500px]">
-                <DialogHeader>
-                    <DialogTitle>Sélectionner un appareil</DialogTitle>
-                    <DialogDescription>
-                        Recherchez et sélectionnez un appareil
-                    </DialogDescription>
-                </DialogHeader>
-
-                <div class="space-y-4">
-                    <Input
-                        type="search"
-                        placeholder="Rechercher un appareil..."
-                        v-model="deviceSearch"
-                    />
-
-                    <div class="h-[300px] overflow-y-auto space-y-2">
-                        <RadioGroup v-model="form.deviceId">
-                            <div
-                                v-for="device in filteredDevices"
-                                :key="device.id"
-                                class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
-                            >
-                                <RadioGroupItem
-                                    :value="device.id"
-                                    :id="'device-' + device.id"
-                                />
-                                <Label
-                                    :for="'device-' + device.id"
-                                    class="flex-grow cursor-pointer"
-                                >
-                                    {{ device.name }}
-                                </Label>
-                            </div>
-                        </RadioGroup>
-                    </div>
-                </div>
-
-                <DialogFooter>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        @click="closeDeviceModal"
-                    >
-                        Confirmer
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-
         <form @submit.prevent="submit" class="space-y-4">
             <div>
                 <Label for="title">Titre</Label>
@@ -301,133 +146,34 @@
             <Button type="submit" class="w-full">Créer</Button>
         </form>
 
-        <!-- Modal de création de client -->
-        <Dialog
-            :open="isNewClientModalOpen"
-            @update:open="isNewClientModalOpen = $event"
-        >
-            <DialogContent class="sm:max-w-[500px]">
-                <DialogHeader>
-                    <DialogTitle>Créer un nouveau client</DialogTitle>
-                </DialogHeader>
+        <CreateClientModal v-model="isNewClientModalOpen" />
 
-                <form @submit.prevent="submitNewClient" class="space-y-4">
-                    <div>
-                        <Label for="newClientFirstName">Prénom</Label>
-                        <Input
-                            id="newClientFirstName"
-                            v-model="newClientForm.firstName"
-                        />
-                    </div>
-                    <div>
-                        <Label for="newClientLastName">Nom</Label>
-                        <Input
-                            id="newClientLastName"
-                            v-model="newClientForm.lastName"
-                        />
-                    </div>
-                    <div>
-                        <Label for="newClientEmail">Email</Label>
-                        <Input
-                            id="newClientEmail"
-                            v-model="newClientForm.email"
-                            type="email"
-                        />
-                    </div>
-                    <div>
-                        <Label for="newClientPhone">Téléphone</Label>
-                        <Input
-                            id="newClientPhone"
-                            v-model="newClientForm.phone"
-                        />
-                    </div>
-                    <DialogFooter>
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            @click="closeNewClientModal"
-                        >
-                            Annuler
-                        </Button>
-                        <Button type="submit">Créer</Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
+        <CreateDeviceModal
+            v-model="isNewDeviceModalOpen"
+            :brands="brands"
+            :types="types"
+        />
 
-        <!-- Modal de création d'appareil -->
-        <Dialog
-            :open="isNewDeviceModalOpen"
-            @update:open="isNewDeviceModalOpen = $event"
-        >
-            <DialogContent class="sm:max-w-[500px]">
-                <DialogHeader>
-                    <DialogTitle>Créer un nouvel appareil</DialogTitle>
-                </DialogHeader>
+        <TechniciansModal
+            :isModalOpen="isModalOpen"
+            :form="form"
+            :technicians="technicians"
+            @update:isModalOpen="isModalOpen = $event"
+        />
 
-                <form @submit.prevent="submitNewDevice" class="space-y-4">
-                    <div>
-                        <Label for="newDeviceName">Nom</Label>
-                        <Input
-                            id="newDeviceName"
-                            v-model="newDeviceForm.name"
-                        />
-                    </div>
-                    <div>
-                        <Label for="newDeviceBrand">Marque</Label>
-                        <Select v-model="newDeviceForm.brandId">
-                            <SelectTrigger>
-                                <SelectValue
-                                    placeholder="Sélectionner une marque"
-                                />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem
-                                        v-for="brand in brands"
-                                        :key="brand.id"
-                                        :value="brand.id"
-                                    >
-                                        {{ brand.name }}
-                                    </SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div>
-                        <Label for="newDeviceType">Type</Label>
-                        <Select v-model="newDeviceForm.typeId">
-                            <SelectTrigger>
-                                <SelectValue
-                                    placeholder="Sélectionner un type"
-                                />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem
-                                        v-for="type in types"
-                                        :key="type.id"
-                                        :value="type.id"
-                                    >
-                                        {{ type.name }}
-                                    </SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <DialogFooter>
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            @click="closeNewDeviceModal"
-                        >
-                            Annuler
-                        </Button>
-                        <Button type="submit">Créer</Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
+        <ClientsModal
+            v-model="isClientModalOpen"
+            :form="form"
+            :clients="clients"
+            @update:selectedClientName="selectedClientName = $event"
+        />
+
+        <DeviceModal
+            v-model="isDeviceModalOpen"
+            :form="form"
+            :devices="devices"
+            @update:selectedDeviceName="selectedDeviceName = $event"
+        />
     </div>
 </template>
 
@@ -435,27 +181,14 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/Components/ui/select";
 import { XIcon } from "lucide-vue-next";
-import { reactive, ref, computed } from "vue";
+import { ref, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-} from "@/Components/ui/dialog";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
+import TechniciansModal from "./partials/TechniciansModal.vue";
+import ClientsModal from "./partials/ClientsModal.vue";
+import DeviceModal from "./partials/DevicesModal.vue";
+import CreateClientModal from "./partials/CreateClientModal.vue";
+import CreateDeviceModal from "./partials/CreateDeviceModal.vue";
 
 const props = defineProps({
     devices: Array,
@@ -463,35 +196,6 @@ const props = defineProps({
     clients: Array, // Nouvelle prop
     brands: Array, // Ajouter cette prop
     types: Array, // Ajouter cette prop
-});
-
-console.log(props.brands);
-
-const emit = defineEmits(["close"]);
-
-const isModalOpen = ref(false);
-const technicianSearch = ref("");
-
-const filteredTechnicians = computed(() => {
-    return props.technicians.filter(
-        (tech) =>
-            tech.firstName
-                .toLowerCase()
-                .includes(technicianSearch.value.toLowerCase()) ||
-            tech.lastName
-                .toLowerCase()
-                .includes(technicianSearch.value.toLowerCase())
-    );
-});
-
-const clientSearch = ref("");
-const filteredClients = computed(() => {
-    if (!clientSearch.value) return props.clients;
-    return props.clients.filter((client) =>
-        `${client.firstName} ${client.lastName}`
-            .toLowerCase()
-            .includes(clientSearch.value.toLowerCase())
-    );
 });
 
 const form = useForm({
@@ -502,52 +206,7 @@ const form = useForm({
     technicianIds: [], // Modifié pour supporter plusieurs techniciens
 });
 
-const selectedTechnicians = computed(() => {
-    return props.technicians.filter((tech) =>
-        form.technicianIds.includes(tech.id)
-    );
-});
-
-const toggleTechnician = (techId) => {
-    const currentIds = [...form.technicianIds];
-    const index = currentIds.indexOf(techId);
-
-    if (index === -1) {
-        currentIds.push(techId);
-    } else {
-        currentIds.splice(index, 1);
-    }
-
-    form.technicianIds = currentIds;
-};
-
-const openModal = () => {
-    isModalOpen.value = true;
-};
-
-const closeModal = () => {
-    isModalOpen.value = false;
-};
-
-const isClientModalOpen = ref(false);
-const selectedClientName = computed(() => {
-    const selectedClient = props.clients.find((c) => c.id === form.clientId);
-    return selectedClient
-        ? `${selectedClient.firstName} ${selectedClient.lastName}`
-        : "";
-});
-
-const openClientModal = () => {
-    isClientModalOpen.value = true;
-};
-
-const closeClientModal = () => {
-    isClientModalOpen.value = false;
-};
-
-const selectClient = (clientId) => {
-    closeClientModal();
-};
+const emit = defineEmits(["close"]);
 
 const submit = () => {
     form.post(route("tickets.store"), {
@@ -562,81 +221,42 @@ const submit = () => {
     });
 };
 
-const isNewClientModalOpen = ref(false);
-const newClientForm = useForm({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
+const isModalOpen = ref(false);
+
+const openModal = () => {
+    isModalOpen.value = true;
+};
+const selectedTechnicians = computed(() => {
+    return props.technicians.filter((tech) =>
+        form.technicianIds.includes(tech.id)
+    );
 });
+
+const isClientModalOpen = ref(false);
+
+const openClientModal = () => {
+    isClientModalOpen.value = true;
+};
+
+const selectedClientName = ref("");
+
+const isNewClientModalOpen = ref(false);
 
 const openNewClientModal = () => {
     isNewClientModalOpen.value = true;
 };
 
-const closeNewClientModal = () => {
-    isNewClientModalOpen.value = false;
-    newClientForm.reset();
-};
-
-const submitNewClient = () => {
-    newClientForm.post(route("clients.store"), {
-        preserveScroll: true,
-        onSuccess: (response) => {
-            closeNewClientModal();
-            // Mettre à jour la liste des clients
-            form.clientId = response.props.client.id;
-        },
-    });
-};
-
 const isNewDeviceModalOpen = ref(false);
-const newDeviceForm = useForm({
-    name: "",
-    brandId: null,
-    typeId: null,
-});
 
 const openNewDeviceModal = () => {
     isNewDeviceModalOpen.value = true;
 };
 
-const closeNewDeviceModal = () => {
-    isNewDeviceModalOpen.value = false;
-    newDeviceForm.reset();
-};
-
-const submitNewDevice = () => {
-    newDeviceForm.post(route("devices.store"), {
-        preserveScroll: true,
-        onSuccess: (response) => {
-            closeNewDeviceModal();
-            // Mettre à jour la liste des appareils
-            form.deviceId = response.props.device.id;
-        },
-    });
-};
-
 const isDeviceModalOpen = ref(false);
-const deviceSearch = ref("");
 
-const filteredDevices = computed(() => {
-    if (!deviceSearch.value) return props.devices;
-    return props.devices.filter((device) =>
-        device.name.toLowerCase().includes(deviceSearch.value.toLowerCase())
-    );
-});
-
-const selectedDeviceName = computed(() => {
-    const selectedDevice = props.devices.find((d) => d.id === form.deviceId);
-    return selectedDevice ? selectedDevice.name : "";
-});
+const selectedDeviceName = ref("");
 
 const openDeviceModal = () => {
     isDeviceModalOpen.value = true;
-};
-
-const closeDeviceModal = () => {
-    isDeviceModalOpen.value = false;
 };
 </script>

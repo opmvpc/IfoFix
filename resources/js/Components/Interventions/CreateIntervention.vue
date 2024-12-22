@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4 border rounded-lg bg-white shadow">
+    <div class="p-4 border rounded-lg bg-white shadow-md">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-semibold">Nouvelle Intervention</h2>
             <Button variant="ghost" @click="$emit('close')">

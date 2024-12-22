@@ -187,8 +187,18 @@ const uniqueTechnicians = computed(() =>
             </div>
 
             <!-- Section des interventions -->
-            <div class="mt-8 ml-10">
-                <h2 class="mb-4 text-xl font-bold">Interventions</h2>
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <h2 class="text-xl font-bold">Interventions</h2>
+                    <font-awesome-icon
+                        icon="fa-solid fa-plus"
+                        class="px-3 py-2 cursor-pointer transition-all hover:bg-indigo-50 rounded-md"
+                        @click="
+                            showCreateIntervention = !showCreateIntervention
+                        "
+                    />
+                </div>
+
 
                 <div
                     v-if="interventions && interventions.length > 0"
@@ -197,7 +207,7 @@ const uniqueTechnicians = computed(() =>
                     <div
                         v-for="intervention in interventions"
                         :key="intervention.id"
-                        class="p-4 bg-white rounded-lg shadow-lg"
+                        class="bg-gray-50 rounded-lg shadow-sm p-4"
                     >
                         <div class="flex items-center justify-between">
                             <div>

@@ -35,11 +35,20 @@ import {
 } from "@tanstack/vue-table";
 
 import { ArrowUpDown, ChevronDown } from "lucide-vue-next";
-import { h, ref, watch, watchEffect } from "vue";
+import { computed, h, ref, watch, watchEffect } from "vue";
 import { Badge } from "@/Components/ui/badge";
 import { router } from "@inertiajs/vue3";
 import Switch from "@/Components/ui/switch/Switch.vue";
 // import DropdownAction from "./DataTableDemoColumn.vue";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/Components/ui/select";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 export interface Payment {
     id: string;
@@ -62,7 +71,44 @@ const props = defineProps({
 const tickets = ref(props.tickets);
 watchEffect(() => {
     tickets.value = props.tickets;
-    console.log("tickets", tickets.value);
+});
+
+// refactoring filter btn
+const selectedTechnician = ref(null);
+const selectedDevice = ref(null);
+const selectedBrand = ref(null);
+const selectedType = ref(null);
+
+const filteredTickets = computed(() => {
+    let tickets = props.tickets;
+    if (props.pendingTickets) {
+        tickets = tickets.filter((ticket) => !ticket.isFinished);
+    }
+    if (props.deliveredTickets) {
+        tickets = tickets.filter((ticket) => ticket.isDelivered);
+    }
+    if (selectedTechnician.value) {
+        tickets = tickets.filter(
+            (ticket) => ticket.user.id === selectedTechnician.value
+        );
+    }
+    if (selectedDevice.value) {
+        tickets = tickets.filter(
+            (ticket) => ticket.device.id === selectedDevice.value
+        );
+    }
+    if (selectedBrand.value) {
+        tickets = tickets.filter(
+            (ticket) => ticket.device.brandId === selectedBrand.value
+        );
+    }
+
+    if (selectedType.value) {
+        tickets = tickets.filter(
+            (ticket) => ticket.device.typeId === selectedType.value
+        );
+    }
+    return tickets;
 });
 
 const columns = [
@@ -151,10 +197,9 @@ const columns = [
         enableHiding: false,
         cell: ({ row }) => {
             return h(
-                Button,
+                "div",
                 {
-                    variant: "destructive",
-                    size: "sm",
+                    class: "cursor-pointer text-gray-400 hover:text-red-900",
                     onClick: () => {
                         if (
                             confirm(
@@ -165,7 +210,12 @@ const columns = [
                         }
                     },
                 },
-                () => "Supprimer"
+                [
+                    h(FontAwesomeIcon, {
+                        icon: "fa-solid fa-trash",
+                        class: "h-4 w-4 px-4",
+                    }),
+                ]
             );
         },
     },
@@ -205,7 +255,7 @@ const globalFilter = ref("");
 // };
 
 const table = useVueTable({
-    data: tickets,
+    data: filteredTickets,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -255,7 +305,11 @@ const table = useVueTable({
         <div class="w-full">
             <div class="flex items-center gap-2">
                 <h1 class="text-xl font-semibold">Tickets</h1>
-                <Button @click="$emit('buttonClick')">Ajouter un ticket</Button>
+                <font-awesome-icon
+                    icon="fa-solid fa-plus"
+                    class="h-4 w-4 cursor-pointer"
+                    @click="$emit('buttonClick')"
+                />
             </div>
             <div class="flex items-center gap-2 py-4">
                 <Input
@@ -312,6 +366,76 @@ const table = useVueTable({
                         </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+            </div>
+            <div class="mb-4 flex gap-2">
+                <Select v-model="selectedTechnician">
+                    <SelectTrigger>
+                        <SelectValue placeholder="Technicien" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem :value="aucun"> Aucun </SelectItem>
+                            <SelectItem
+                                v-for="(technician, index) in props.technicians"
+                                :key="index"
+                                :value="technician.id"
+                            >
+                                {{ technician.firstName }}
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+
+                <Select v-model="selectedDevice">
+                    <SelectTrigger>
+                        <SelectValue placeholder="Model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem :value="aucun"> Aucun </SelectItem>
+                            <SelectItem
+                                v-for="(device, index) in props.devices"
+                                :key="index"
+                                :value="device.id"
+                                >{{ device.name }}
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+
+                <Select v-model="selectedBrand">
+                    <SelectTrigger>
+                        <SelectValue placeholder="Marque" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem :value="aucun"> Aucun </SelectItem>
+                            <SelectItem
+                                v-for="(brand, index) in props.brands"
+                                :key="index"
+                                :value="brand.id"
+                                >{{ brand.name }}
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+
+                <Select v-model="selectedType">
+                    <SelectTrigger>
+                        <SelectValue placeholder="Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem :value="aucun"> Aucun </SelectItem>
+                            <SelectItem
+                                v-for="(type, index) in props.types"
+                                :key="index"
+                                :value="type.id"
+                                >{{ type.name }}
+                            </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
             </div>
 
             <div class="border rounded-md grow">
