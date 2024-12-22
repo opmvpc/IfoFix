@@ -23,6 +23,7 @@ import {
     DialogTrigger,
 } from "@/Components/ui/dialog";
 import { Checkbox } from "@/Components/ui/checkbox";
+import BackButton from "@/Components/BackButton.vue";
 
 const props = defineProps({
     intervention: {
@@ -92,7 +93,10 @@ const toggleUser = (userId) => {
                 <form @submit.prevent="submit">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Modifier l'intervention</CardTitle>
+                            <div class="flex items-center justify-between">
+                                <BackButton />
+                                <CardTitle>Modifier l'intervention</CardTitle>
+                            </div>
                             <CardDescription>
                                 Créée le {{ intervention.created_at }}
                             </CardDescription>
@@ -100,7 +104,19 @@ const toggleUser = (userId) => {
                         <CardContent>
                             <div class="grid gap-6">
                                 <div class="grid gap-2">
-                                    <Label for="description">Description</Label>
+                                    <div
+                                        class="flex items-center justify-start gap-3"
+                                    >
+                                        <Label for="description"
+                                            >Description</Label
+                                        >
+                                        <span
+                                            v-if="form.errors.description"
+                                            class="text-xs text-red-500"
+                                        >
+                                            {{ form.errors.description }}
+                                        </span>
+                                    </div>
                                     <Textarea
                                         id="description"
                                         v-model="form.description"
@@ -110,9 +126,19 @@ const toggleUser = (userId) => {
                                 </div>
 
                                 <div class="grid gap-2">
-                                    <Label for="duration"
-                                        >Durée de l'intervention</Label
+                                    <div
+                                        class="flex items-center justify-start gap-3"
                                     >
+                                        <Label for="duration"
+                                            >Durée de l'intervention</Label
+                                        >
+                                        <span
+                                            v-if="form.errors.duration"
+                                            class="text-xs text-red-500"
+                                        >
+                                            {{ form.errors.duration }}
+                                        </span>
+                                    </div>
                                     <Input
                                         id="duration"
                                         type="time"
@@ -122,7 +148,17 @@ const toggleUser = (userId) => {
                                 </div>
 
                                 <div class="grid gap-2">
-                                    <Label for="date">Date</Label>
+                                    <div
+                                        class="flex items-center justify-start gap-3"
+                                    >
+                                        <Label for="date">Date</Label>
+                                        <span
+                                            v-if="form.errors.date"
+                                            class="text-xs text-red-500"
+                                        >
+                                            {{ form.errors.date }}
+                                        </span>
+                                    </div>
                                     <Input
                                         id="date"
                                         type="date"
@@ -236,15 +272,6 @@ const toggleUser = (userId) => {
                         </CardFooter>
                     </Card>
                 </form>
-                <div v-if="form.errors" class="mb-4">
-                    <div
-                        v-for="(error, key) in form.errors"
-                        :key="key"
-                        class="text-red-500"
-                    >
-                        {{ error }}
-                    </div>
-                </div>
             </div>
         </div>
     </AppLayout>

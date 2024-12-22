@@ -9,6 +9,7 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
+import BackButton from "@/Components/BackButton.vue";
 
 const props = defineProps({
     ticket: Object,
@@ -50,6 +51,8 @@ const uniqueTechnicians = computed(() =>
                 <!-- Colonne des détails du ticket -->
                 <div class="bg-white rounded-lg shadow-md p-6 flex-1">
                     <div class="flex items-center justify-between gap-2 mb-6">
+                        <BackButton />
+
                         <h1 class="text-2xl font-bold">
                             Détails du Ticket #{{ ticket.id }}
                         </h1>
