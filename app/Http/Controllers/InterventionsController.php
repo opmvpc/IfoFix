@@ -67,11 +67,14 @@ class InterventionsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'description' => 'required|string',
-            'duration' => 'required|integer',
-            'date' => 'required|date',
-            'technicianId' => 'required|array', // Changé de technician_ids à technician_id
-            'technicianId.*' => 'exists:users,id',
+            // 'description' => 'required|string',
+            // 'duration' => 'required|integer',
+            // 'date' => 'required|date',
+
+            // 'technicianId' => 'required|array',
+            // 'technicianId.*' => 'exists:users,id',
+
+            'technicianId' => 'required|array|exists:users,id',
             'ticketId' => 'required|exists:tickets,id'
         ]);
 
@@ -88,7 +91,7 @@ class InterventionsController extends Controller
             return response()->json(['intervention' => $intervention]);
         }
 
-        return redirect()->route('interventions.edit', $intervention)
+        return redirect()->route('tickets.show', $validated['ticketId'])
             ->with('message', 'Intervention créée avec succès');
     }
 }

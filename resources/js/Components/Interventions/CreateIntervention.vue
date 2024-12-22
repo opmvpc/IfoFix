@@ -58,7 +58,15 @@
             <Input type="hidden" v-model="form.ticketId" />
 
             <div>
-                <Label>Techniciens</Label>
+                <div class="flex items-center justify-start gap-3">
+                    <Label>Techniciens</Label>
+                    <span
+                        v-if="form.errors.technicianId"
+                        class="text-xs text-red-500"
+                    >
+                        {{ form.errors.technicianId }}
+                    </span>
+                </div>
                 <Button
                     type="button"
                     variant="outline"
@@ -90,27 +98,39 @@
                 </div>
             </div>
 
-            <div>
-                <Label for="description">Description</Label>
+            <!-- <div>
+                <div class="flex items-center justify-start gap-3">
+                    <Label for="description">Description</Label>
+                    <span
+                        v-if="form.errors.description"
+                        class="text-xs text-red-500"
+                    >
+                        {{ form.errors.description }}
+                    </span>
+                </div>
                 <Input id="description" v-model="form.description" />
-            </div>
-            <div>
-                <Label for="duration">Durée (minutes)</Label>
+            </div> -->
+            <!-- <div>
+                <div class="flex items-center justify-start gap-3">
+                    <Label for="duration">Durée (minutes)</Label>
+                    <span
+                        v-if="form.errors.duration"
+                        class="text-xs text-red-500"
+                    >
+                        {{ form.errors.duration }}
+                    </span>
+                </div>
                 <Input type="number" id="duration" v-model="form.duration" />
-            </div>
-            <div>
-                <Label for="date">Date</Label>
+            </div> -->
+            <!-- <div>
+                <div class="flex items-center justify-start gap-3">
+                    <Label for="date">Date</Label>
+                    <span v-if="form.errors.date" class="text-xs text-red-500">
+                        {{ form.errors.date }}
+                    </span>
+                </div>
                 <Input type="date" id="date" v-model="form.date" />
-            </div>
-            <div v-if="form.errors" class="space-y-2">
-                <p
-                    v-for="(error, key) in form.errors"
-                    :key="key"
-                    class="text-sm text-red-500"
-                >
-                    {{ error }}
-                </p>
-            </div>
+            </div> -->
             <Button type="submit" class="w-full" :disabled="form.processing">
                 {{ form.processing ? "Création..." : "Créer l'intervention" }}
             </Button>
@@ -151,9 +171,9 @@ const isModalOpen = ref(false);
 const searchQuery = ref("");
 
 const form = useForm({
-    description: "",
-    duration: null,
-    date: null,
+    // description: "",
+    // duration: null,
+    // date: null,
     ticketId: props.ticketId,
     technicianId: [], // C'est le seul tableau qu'on va utiliser
 });

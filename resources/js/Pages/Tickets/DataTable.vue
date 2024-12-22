@@ -49,6 +49,7 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import BackButton from "@/Components/BackButton.vue";
 
 export interface Payment {
     id: string;
@@ -303,13 +304,15 @@ const table = useVueTable({
 <template>
     <div class="flex gap-2">
         <div class="w-full">
-            <div class="flex items-center gap-2">
-                <h1 class="text-xl font-semibold">Tickets</h1>
-                <font-awesome-icon
-                    icon="fa-solid fa-plus"
-                    class="h-4 w-4 cursor-pointer"
-                    @click="$emit('buttonClick')"
-                />
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <h1 class="text-xl font-semibold">Tickets</h1>
+                    <font-awesome-icon
+                        icon="fa-solid fa-plus"
+                        class="h-4 w-4 cursor-pointer"
+                        @click="$emit('buttonClick')"
+                    />
+                </div>
             </div>
             <div class="flex items-center gap-2 py-4">
                 <Input
