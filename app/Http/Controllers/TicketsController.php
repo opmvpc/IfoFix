@@ -41,7 +41,8 @@ class TicketsController extends Controller
             'description' => 'required|string',
             'deviceId' => 'required|exists:devices,id',
             'clientId' => 'required|exists:clients,id',
-            'technicianIds' => 'nullable|array|exists:users,id,role,technician'
+            'technicianIds' => 'nullable|array|exists:users,id,role,technician',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
         $ticket = Ticket::create([
             'title' => $validated['title'],
@@ -54,6 +55,15 @@ class TicketsController extends Controller
             'isDeleted' => false,
         ]);
 
+        // Gestion des images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('ticket-images', 'public');
+                $ticket->images()->create([
+                    'imageUrl' => $path,
+                ]);
+            }
+        }
 
         if ($request->input(('technicianIds')) !== null) {
             //creation d'une intervention
@@ -82,7 +92,7 @@ class TicketsController extends Controller
     public function show(Ticket $ticket)
     {
         return Inertia::render('Tickets/ShowTicket', [
-            'ticket' => $ticket->load(['user', 'device', 'client']),
+            'ticket' => $ticket->load(['user', 'device', 'client', 'images']),
             'interventions' => $ticket->interventions()->with('users')->get(),
             'technicians' => User::where('role', 'technician')->get(),
         ]);
