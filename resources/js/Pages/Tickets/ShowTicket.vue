@@ -2,13 +2,14 @@
 import Button from "@/Components/ui/button/Button.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CreateIntervention from "@/Components/Interventions/CreateIntervention.vue";
-import { Link } from "@inertiajs/vue3";
+import { Head, Link } from "@inertiajs/vue3";
 import { ref, h, computed } from "vue";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
+import { Badge } from "@/Components/ui/badge";
 
 const props = defineProps({
     ticket: Object,
@@ -45,42 +46,89 @@ const uniqueTechnicians = computed(() =>
 
 <template>
     <AppLayout>
-        <div class="p-6 space-y-5">
-            <div class="flex flex-col gap-6">
+        <Head :title="'Détails du Ticket #' + ticket.id" />
+        <div class="p-6">
+            <div class="flex flex-col gap-6 lg:flex-row">
                 <!-- Colonne des détails du ticket -->
-                <div class="bg-white rounded-lg shadow-md p-6 flex-1">
-                    <div class="flex items-center justify-between gap-2 mb-6">
+                <div class="flex-1 p-6 bg-white rounded-lg shadow-lg">
+                    <!-- <div class="flex items-center justify-between gap-2 mb-6">
                         <h1 class="text-2xl font-bold">
                             Détails du Ticket #{{ ticket.id }}
                         </h1>
-                    </div>
+
+                    </div> -->
 
                     <div class="flex flex-col gap-6">
-                        <div class="border-b pb-4">
-                            <h2 class="text-xl font-semibold mb-2">
-                                {{ ticket.title }}
-                            </h2>
+                        <div class="pb-4 border-b">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h2 class="text-3xl font-semibold">
+                                        #{{ ticket.id }} {{ ticket.title }}
+                                    </h2>
+                                    <div class="flex items-center gap-2">
+                                        <Badge
+                                            class=""
+                                            :variant="
+                                                ticket.isFinished
+                                                    ? 'success'
+                                                    : 'warning'
+                                            "
+                                        >
+                                            {{
+                                                ticket.isFinished
+                                                    ? "Terminé"
+                                                    : "En cours"
+                                            }}
+                                        </Badge>
+                                        <span class="text-sm text-gray-600">
+                                            {{ formatDate(ticket.created_at) }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <Button
+                                    @click="
+                                        showCreateIntervention =
+                                            !showCreateIntervention
+                                    "
+                                >
+                                    <font-awesome-icon
+                                        icon="fa-solid fa-plus"
+                                        class="mr-2"
+                                    />
+                                    {{
+                                        showCreateIntervention
+                                            ? "Masquer"
+                                            : "Créer une intervention"
+                                    }}
+                                </Button>
+                            </div>
                             <p class="text-gray-600">
                                 {{ ticket.description }}
                             </p>
                         </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex-1 min-w-[200px] space-y-2">
+                                <p class="font-semibold">Appareil</p>
+                                <p>
+                                    {{ ticket.device?.name || "Non spécifié" }}
+                                </p>
+                            </div>
 
-                        <div class="flex flex-wrap gap-4">
+                            <div class="flex-1 min-w-[200px] space-y-2">
+                                <p class="font-semibold">Client</p>
+                                <p>
+                                    {{ ticket.client.firstName }}
+                                    {{ ticket.client.lastName }}
+                                </p>
+                            </div>
+
                             <div class="flex-1 min-w-[200px] space-y-2">
                                 <p class="font-semibold">Créé par</p>
                                 <div class="flex items-center">
                                     <span>{{ ticket.user.firstName }}</span>
                                 </div>
                             </div>
-
-                            <div class="flex-1 min-w-[200px] space-y-2">
-                                <p class="font-semibold">Date de création</p>
-                                <p>{{ formatDate(ticket.created_at) }}</p>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap gap-4">
-                            <div class="flex-1 min-w-[200px] space-y-2">
+                            <!-- <div class="flex-1 min-w-[200px] space-y-2">
                                 <p class="font-semibold">Status</p>
                                 <div class="flex items-center">
                                     <span
@@ -99,13 +147,13 @@ const uniqueTechnicians = computed(() =>
                                         }}
                                     </span>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="flex-1 min-w-[200px] space-y-2">
                                 <p class="font-semibold">Technicien(s)</p>
                                 <div
                                     v-if="uniqueTechnicians.length > 0"
-                                    class="flex flex-wrap gap-2"
+                                    class="flex flex-wrap h-40 gap-2"
                                 >
                                     <div
                                         v-for="technician in uniqueTechnicians"
@@ -114,7 +162,7 @@ const uniqueTechnicians = computed(() =>
                                     >
                                         <font-awesome-icon
                                             icon="fa-solid fa-user"
-                                            class="mr-2 h-3 w-3"
+                                            class="w-3 h-3 mr-2"
                                         />
                                         {{ technician.firstName }}
                                         {{ technician.lastName }}
@@ -123,23 +171,6 @@ const uniqueTechnicians = computed(() =>
                                 <div v-else class="text-gray-500">
                                     Non assigné
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap gap-4">
-                            <div class="flex-1 min-w-[200px] space-y-2">
-                                <p class="font-semibold">Appareil</p>
-                                <p>
-                                    {{ ticket.device?.name || "Non spécifié" }}
-                                </p>
-                            </div>
-
-                            <div class="flex-1 min-w-[200px] space-y-2">
-                                <p class="font-semibold">Client</p>
-                                <p>
-                                    {{ ticket.client.firstName }}
-                                    {{ ticket.client.lastName }}
-                                </p>
                             </div>
                         </div>
                     </div>
@@ -168,6 +199,7 @@ const uniqueTechnicians = computed(() =>
                     />
                 </div>
 
+
                 <div
                     v-if="interventions && interventions.length > 0"
                     class="space-y-4"
@@ -177,7 +209,7 @@ const uniqueTechnicians = computed(() =>
                         :key="intervention.id"
                         class="bg-gray-50 rounded-lg shadow-sm p-4"
                     >
-                        <div class="flex justify-between items-center">
+                        <div class="flex items-center justify-between">
                             <div>
                                 <div class="flex gap-4 text-sm text-gray-600">
                                     <span>
@@ -204,7 +236,7 @@ const uniqueTechnicians = computed(() =>
                             <div class="flex gap-3">
                                 <DropdownMenu v-if="intervention.users.length">
                                     <DropdownMenuTrigger
-                                        class="flex items-center px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200"
+                                        class="flex items-center px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-full hover:bg-blue-200"
                                     >
                                         <font-awesome-icon
                                             icon="fa-solid fa-users"
@@ -259,7 +291,7 @@ const uniqueTechnicians = computed(() =>
                     </div>
                 </div>
 
-                <div v-else class="text-gray-500 italic">
+                <div v-else class="italic text-gray-500">
                     Aucune intervention pour ce ticket
                 </div>
             </div>
