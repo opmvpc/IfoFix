@@ -98,7 +98,7 @@
                 </div>
             </div>
 
-            <div>
+            <!-- <div>
                 <div class="flex items-center justify-start gap-3">
                     <Label for="description">Description</Label>
                     <span
@@ -109,8 +109,8 @@
                     </span>
                 </div>
                 <Input id="description" v-model="form.description" />
-            </div>
-            <div>
+            </div> -->
+            <!-- <div>
                 <div class="flex items-center justify-start gap-3">
                     <Label for="duration">Durée (minutes)</Label>
                     <span
@@ -121,8 +121,8 @@
                     </span>
                 </div>
                 <Input type="number" id="duration" v-model="form.duration" />
-            </div>
-            <div>
+            </div> -->
+            <!-- <div>
                 <div class="flex items-center justify-start gap-3">
                     <Label for="date">Date</Label>
                     <span v-if="form.errors.date" class="text-xs text-red-500">
@@ -130,7 +130,7 @@
                     </span>
                 </div>
                 <Input type="date" id="date" v-model="form.date" />
-            </div>
+            </div> -->
             <Button type="submit" class="w-full" :disabled="form.processing">
                 {{ form.processing ? "Création..." : "Créer l'intervention" }}
             </Button>
@@ -171,9 +171,9 @@ const isModalOpen = ref(false);
 const searchQuery = ref("");
 
 const form = useForm({
-    description: "",
-    duration: null,
-    date: null,
+    // description: "",
+    // duration: null,
+    // date: null,
     ticketId: props.ticketId,
     technicianId: [], // C'est le seul tableau qu'on va utiliser
 });
