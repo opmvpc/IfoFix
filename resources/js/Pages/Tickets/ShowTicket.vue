@@ -2,14 +2,31 @@
 import Button from "@/Components/ui/button/Button.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CreateIntervention from "@/Components/Interventions/CreateIntervention.vue";
-import { Link } from "@inertiajs/vue3";
+import { Head, Link } from "@inertiajs/vue3";
 import { ref, h, computed } from "vue";
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "@/Components/ui/carousel";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 import BackButton from "@/Components/BackButton.vue";
+
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/Components/ui/dialog";
+
+import { Badge } from "@/Components/ui/badge";
+
 
 const props = defineProps({
     ticket: Object,
@@ -42,48 +59,156 @@ const getUniqueTechnicians = (interventions) => {
 const uniqueTechnicians = computed(() =>
     getUniqueTechnicians(props.interventions)
 );
+
+// Ajoutez cette configuration pour le carousel
+const carouselOptions = {
+    align: "start",
+};
+
+const selectedImage = ref(null);
+
+const openImageModal = (image) => {
+    selectedImage.value = image;
+};
+
+const closeImageModal = () => {
+    selectedImage.value = null;
+};
 </script>
 
 <template>
     <AppLayout>
-        <div class="p-6 space-y-5">
-            <div class="flex flex-col gap-6">
+        <Head :title="'Détails du Ticket #' + ticket.id" />
+        <div class="p-6">
+            <div class="flex flex-col gap-6 lg:flex-row">
                 <!-- Colonne des détails du ticket -->
                 <div class="bg-white rounded-lg shadow-md p-6 flex-1">
                     <div class="flex items-center justify-between gap-2 mb-6">
                         <BackButton />
-
                         <h1 class="text-2xl font-bold">
                             Détails du Ticket #{{ ticket.id }}
                         </h1>
-                    </div>
+
+                    </div> 
 
                     <div class="flex flex-col gap-6">
-                        <div class="border-b pb-4">
-                            <h2 class="text-xl font-semibold mb-2">
-                                {{ ticket.title }}
-                            </h2>
+                        <div class="pb-4 border-b">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h2 class="text-3xl font-semibold">
+                                        #{{ ticket.id }} {{ ticket.title }}
+                                    </h2>
+                                    <div class="flex items-center gap-2">
+                                        <Badge
+                                            class=""
+                                            :variant="
+                                                ticket.isFinished
+                                                    ? 'success'
+                                                    : 'warning'
+                                            "
+                                        >
+                                            {{
+                                                ticket.isFinished
+                                                    ? "Terminé"
+                                                    : "En cours"
+                                            }}
+                                        </Badge>
+                                        <span class="text-sm text-gray-600">
+                                            {{ formatDate(ticket.created_at) }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <Button
+                                    @click="
+                                        showCreateIntervention =
+                                            !showCreateIntervention
+                                    "
+                                >
+                                    <font-awesome-icon
+                                        icon="fa-solid fa-plus"
+                                        class="mr-2"
+                                    />
+                                    {{
+                                        showCreateIntervention
+                                            ? "Masquer"
+                                            : "Créer une intervention"
+                                    }}
+                                </Button>
+                            </div>
                             <p class="text-gray-600">
                                 {{ ticket.description }}
                             </p>
                         </div>
 
+
+                        <!-- Ajout du carousel ici -->
+                        <div
+                            v-if="ticket.images && ticket.images.length > 0"
+                            class="w-full mx-auto"
+                        >
+                            <Carousel
+                                class="relative w-full"
+                                :opts="carouselOptions"
+                            >
+                                <CarouselContent class="-ml-1">
+                                    <CarouselItem
+                                        v-for="image in ticket.images"
+                                        :key="image.id"
+                                        class="pl-1 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                                    >
+                                        <div
+                                            class="p-1 cursor-pointer hover:opacity-90 transition-opacity"
+                                            @click="openImageModal(image)"
+                                        >
+                                            <img
+                                                :src="`/storage/${image.imageUrl}`"
+                                                class="w-full h-48 object-cover rounded-lg"
+                                                :alt="`Image ${image.id}`"
+                                            />
+                                        </div>
+                                    </CarouselItem>
+                                </CarouselContent>
+                                <CarouselPrevious
+                                    class="absolute left-0 top-1/2 -translate-y-1/2"
+                                />
+                                <CarouselNext
+                                    class="absolute right-0 top-1/2 -translate-y-1/2"
+                                />
+                            </Carousel>
+                        </div>
+                        <div
+                            v-else
+                            class="text-gray-500 italic text-center py-4"
+                        >
+                            Aucune image pour ce ticket
+                        </div>
+
                         <div class="flex flex-wrap gap-4">
+
+                        <div class="grid grid-cols-2 gap-4">
+
+                            <div class="flex-1 min-w-[200px] space-y-2">
+                                <p class="font-semibold">Appareil</p>
+                                <p>
+                                    {{ ticket.device?.name || "Non spécifié" }}
+                                </p>
+                            </div>
+
+                            <div class="flex-1 min-w-[200px] space-y-2">
+                                <p class="font-semibold">Client</p>
+                                <p>
+                                    {{ ticket.client.firstName }}
+                                    {{ ticket.client.lastName }}
+                                </p>
+                            </div>
+
                             <div class="flex-1 min-w-[200px] space-y-2">
                                 <p class="font-semibold">Créé par</p>
                                 <div class="flex items-center">
                                     <span>{{ ticket.user.firstName }}</span>
                                 </div>
                             </div>
-
-                            <div class="flex-1 min-w-[200px] space-y-2">
-                                <p class="font-semibold">Date de création</p>
-                                <p>{{ formatDate(ticket.created_at) }}</p>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap gap-4">
-                            <div class="flex-1 min-w-[200px] space-y-2">
+                            <!-- <div class="flex-1 min-w-[200px] space-y-2">
                                 <p class="font-semibold">Status</p>
                                 <div class="flex items-center">
                                     <span
@@ -102,13 +227,13 @@ const uniqueTechnicians = computed(() =>
                                         }}
                                     </span>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="flex-1 min-w-[200px] space-y-2">
                                 <p class="font-semibold">Technicien(s)</p>
                                 <div
                                     v-if="uniqueTechnicians.length > 0"
-                                    class="flex flex-wrap gap-2"
+                                    class="flex flex-wrap h-40 gap-2"
                                 >
                                     <div
                                         v-for="technician in uniqueTechnicians"
@@ -117,7 +242,7 @@ const uniqueTechnicians = computed(() =>
                                     >
                                         <font-awesome-icon
                                             icon="fa-solid fa-user"
-                                            class="mr-2 h-3 w-3"
+                                            class="w-3 h-3 mr-2"
                                         />
                                         {{ technician.firstName }}
                                         {{ technician.lastName }}
@@ -126,23 +251,6 @@ const uniqueTechnicians = computed(() =>
                                 <div v-else class="text-gray-500">
                                     Non assigné
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap gap-4">
-                            <div class="flex-1 min-w-[200px] space-y-2">
-                                <p class="font-semibold">Appareil</p>
-                                <p>
-                                    {{ ticket.device?.name || "Non spécifié" }}
-                                </p>
-                            </div>
-
-                            <div class="flex-1 min-w-[200px] space-y-2">
-                                <p class="font-semibold">Client</p>
-                                <p>
-                                    {{ ticket.client.firstName }}
-                                    {{ ticket.client.lastName }}
-                                </p>
                             </div>
                         </div>
                     </div>
@@ -171,6 +279,7 @@ const uniqueTechnicians = computed(() =>
                     />
                 </div>
 
+
                 <div
                     v-if="interventions && interventions.length > 0"
                     class="space-y-4"
@@ -180,6 +289,7 @@ const uniqueTechnicians = computed(() =>
                         :key="intervention.id"
                         class="bg-gray-50 hover:bg-gray-100 duration-200 rounded-lg shadow-sm p-4"
                     >
+
                         <Link :href="`/interventions/${intervention.id}/edit`">
                             <div class="flex justify-between items-center">
                                 <div>
@@ -210,6 +320,36 @@ const uniqueTechnicians = computed(() =>
                                 <div class="flex gap-3">
                                     <DropdownMenu
                                         v-if="intervention.users.length"
+
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="flex gap-4 text-sm text-gray-600">
+                                    <span>
+                                        <font-awesome-icon
+                                            icon="fa-solid fa-calendar"
+                                            class="mr-2"
+                                        />
+                                        {{ formatDate(intervention.date) }}
+                                    </span>
+                                    <span>
+                                        <font-awesome-icon
+                                            icon="fa-solid fa-clock"
+                                            class="mr-2"
+                                        />
+                                        {{ intervention.duration }}
+                                        {{
+                                            intervention.duration > 1
+                                                ? "minutes"
+                                                : "minute"
+                                        }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                <DropdownMenu v-if="intervention.users.length">
+                                    <DropdownMenuTrigger
+                                        class="flex items-center px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-full hover:bg-blue-200"
+
                                     >
                                         <DropdownMenuTrigger
                                             class="flex items-center px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200"
@@ -257,10 +397,28 @@ const uniqueTechnicians = computed(() =>
                     </div>
                 </div>
 
-                <div v-else class="text-gray-500 italic">
+                <div v-else class="italic text-gray-500">
                     Aucune intervention pour ce ticket
                 </div>
             </div>
+
+            <!-- Modal pour l'affichage en grand -->
+            <Dialog :open="!!selectedImage" @update:open="closeImageModal">
+                <DialogContent
+                    class="sm:max-w-[95vw] sm:max-h-[95vh] w-[95vw] h-[95vh] p-0 overflow-hidden flex items-center justify-center"
+                >
+                    <div
+                        class="relative w-full h-full flex items-center justify-center"
+                    >
+                        <img
+                            v-if="selectedImage"
+                            :src="`/storage/${selectedImage.imageUrl}`"
+                            class="w-full h-auto max-w-[90%] max-h-[90%] object-contain"
+                            :alt="`Image en plein écran`"
+                        />
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     </AppLayout>
 </template>

@@ -2,7 +2,7 @@
     <Card class="flex flex-col">
         <CardContent class="flex-1 p-6">
             <div class="flex">
-                <h1 class="text-2xl font-bold">Liste des utilisateurs</h1>
+                <h1 class="text-2xl font-bold">Liste des techniciens</h1>
                 <UserCreate />
             </div>
             <div class="flex items-center gap-2 py-4">
