@@ -14,7 +14,11 @@
             </div>
             <div>
                 <Label for="description">Description</Label>
-                <Input id="description" v-model="form.description" />
+                <Textarea
+                    id="description"
+                    v-model="form.description"
+                    class="resize-none"
+                />
             </div>
             <div>
                 <Label for="device" class="flex items-center gap-2">
@@ -190,7 +194,7 @@
                             <button
                                 type="button"
                                 @click="removeImage(index)"
-                                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                                class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex justify-center items-center hover:bg-red-600"
                             >
                                 <font-awesome-icon
                                     icon="fa-solid fa-times"
@@ -239,6 +243,7 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { XIcon } from "lucide-vue-next";
 import { ref, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";

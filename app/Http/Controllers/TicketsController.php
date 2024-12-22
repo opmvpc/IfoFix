@@ -92,7 +92,7 @@ class TicketsController extends Controller
     public function show(Ticket $ticket)
     {
         return Inertia::render('Tickets/ShowTicket', [
-            'ticket' => $ticket->load(['user', 'device', 'client']),
+            'ticket' => $ticket->load(['user', 'device', 'client', 'images']),
             'interventions' => $ticket->interventions()->with('users')->get(),
             'technicians' => User::where('role', 'technician')->get(),
         ]);
