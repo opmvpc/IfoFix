@@ -145,8 +145,8 @@ import {
     CardDescription,
     CardContent,
     CardFooter,
-} from "@/Components/ui//card";
-import { Badge } from "@/Components/ui//badge";
+} from "@/Components/ui/card";
+import { Badge } from "@/Components/ui/badge";
 import UserCreate from "@/Pages/Administration/Users/Partials/Create.vue";
 
 const emit = defineEmits(["user-selected"]);

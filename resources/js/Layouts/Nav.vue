@@ -123,6 +123,9 @@
 
             <div class="p-4 mt-auto space-y-3">
                 <!-- Profile Management -->
+
+                <DarkModeButton />
+
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                         <Button
@@ -279,6 +282,7 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { Button } from "@/Components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import DarkModeButton from "@/Components/DarkModeButton.vue";
 // import logo from "@/assets/logo.svg";
 
 // Add the improved helper functions
