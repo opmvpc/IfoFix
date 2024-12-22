@@ -19,7 +19,7 @@
                             value="users"
                             class="w-full px-4 py-2 rounded-md hover:bg-indigo-400"
                         >
-                            Utilisateurs
+                            Techniciens
                         </TabsTrigger>
                     </Link>
                     <Link :href="route('administration', { tab: 'clients' })">

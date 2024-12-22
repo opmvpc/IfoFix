@@ -1,24 +1,16 @@
-<script setup>
-import { Head, Link, router } from "@inertiajs/vue3";
-import Nav from "@/Layouts/Nav.vue";
-
-defineProps({
-    title: String,
-});
-</script>
-
 <template>
     <div>
         <Head />
 
-        <Nav />
+        <Nav v-model="showNavigation" />
 
         <div class="flex min-h-screen bg-gray-100 dark:bg-gray-900">
             <!-- Sidebar -->
 
             <!-- Main Content -->
             <div
-                class="flex flex-col w-full h-full ml-40 overflow-y-auto lg:ml-52"
+                class="flex flex-col w-full h-full overflow-y-auto transition-all duration-300"
+                :class="showNavigation ? 'ml-40 lg:ml-52' : 'ml-0'"
             >
                 <!-- Page Heading -->
                 <header
@@ -38,3 +30,19 @@ defineProps({
         </div>
     </div>
 </template>
+
+<script setup>
+import { Head, Link, router } from "@inertiajs/vue3";
+import Nav from "@/Layouts/Nav.vue";
+import { ref, watch, onMounted } from "vue";
+
+defineProps({
+    title: String,
+});
+
+const showNavigation = ref(localStorage.getItem("navigationState") === "true");
+
+watch(showNavigation, (newValue) => {
+    localStorage.setItem("navigationState", newValue);
+});
+</script>
