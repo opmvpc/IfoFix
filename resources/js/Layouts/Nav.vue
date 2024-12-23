@@ -1,267 +1,253 @@
 <template>
     <Banner class="" />
-    <div class="fixed top-0 left-0">
-        <nav
-            class="fixed top-0 left-0 z-10 flex flex-col justify-between w-40 h-screen text-white transition-all duration-300 border-r shadow-lg lg:w-52 bg-gradient-to-b from-indigo-600 to-indigo-900"
-            :class="modelValue ? 'translate-x-0' : '-translate-x-full'"
+    <nav
+        class="absolute top-0 left-0 z-50 flex flex-col justify-between w-40 h-screen text-white transition-all duration-300 border-r shadow-lg lg:w-52 bg-gradient-to-b from-indigo-600 to-indigo-900"
+        :class="
+            modelValue
+                ? '-translate-x-full md:translate-x-0'
+                : 'translate-x-0 md:-translate-x-full'
+        "
+    >
+        <button
+            class="absolute right-0 p-2 translate-x-full bg-indigo-600 rounded-r-lg md:hidden top-4 hover:bg-indigo-700"
+            @click="toggleNavigation"
         >
-            <button
-                class="absolute right-0 z-50 p-2 translate-x-full bg-indigo-600 rounded-r-lg top-4 hover:bg-indigo-700"
-                @click="toggleNavigation"
+            <font-awesome-icon
+                icon="fa-solid fa-bars"
+                class="w-6 h-6 text-white"
+            />
+        </button>
+
+        <div
+            class="flex items-center justify-center h-20 border-b border-indigo-400"
+        >
+            <Link
+                :href="route('dashboard')"
+                class="flex gap-4 transition-transform hover:scale-105"
+            >
+                <figure class="px-4">
+                    <img src="/images/logo_3.png" alt="" />
+                </figure>
+            </Link>
+        </div>
+
+        <div class="flex flex-col flex-1 px-2 mt-6 space-y-1">
+            <NavLink
+                :href="route('tickets.index')"
+                :active="isActive(['tickets.*'])"
+                class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
             >
                 <font-awesome-icon
-                    icon="fa-solid fa-bars"
-                    class="w-6 h-6 text-white"
+                    icon="fa-solid fa-ticket"
+                    class="w-4 h-4 mr-2 group-hover:text-white"
                 />
-            </button>
-
-            <div
-                class="flex items-center justify-center h-20 border-b border-indigo-400"
-            >
-                <Link
-                    :href="route('dashboard')"
-                    class="flex gap-4 transition-transform hover:scale-105"
+                <span class="text-sm font-bold group-hover:text-white"
+                    >Tickets</span
                 >
-                    <figure class="px-4">
-                        <img src="/images/logo_3.png" alt="" />
-                    </figure>
-                </Link>
-            </div>
+            </NavLink>
 
-            <div class="flex flex-col flex-1 px-2 mt-6 space-y-1">
-                <NavLink
-                    :href="route('tickets.index')"
-                    :active="isActive(['tickets.*'])"
-                    class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
-                >
+            <div class="space-y-1 rounded-lg">
+                <div class="flex items-center px-3 py-2">
                     <font-awesome-icon
-                        icon="fa-solid fa-ticket"
-                        class="w-4 h-4 mr-2 group-hover:text-white"
+                        icon="fa-solid fa-users-gear"
+                        class="w-4 h-4 mr-2"
                     />
-                    <span class="text-sm font-bold group-hover:text-white"
-                        >Tickets</span
+                    <span class="text-sm font-bold">Administration</span>
+                </div>
+
+                <div class="pl-4 space-y-1">
+                    <NavLink
+                        :href="route('administration.stats')"
+                        :active="isActive('administration.stats')"
+                        class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
                     >
-                </NavLink>
-
-                <div class="space-y-1 rounded-lg">
-                    <div class="flex items-center px-3 py-2">
                         <font-awesome-icon
-                            icon="fa-solid fa-users-gear"
-                            class="w-4 h-4 mr-2"
+                            icon="fa-solid fa-chart-line"
+                            class="w-4 h-4 mr-2 group-hover:text-white"
                         />
-                        <span class="text-sm font-bold">Administration</span>
-                    </div>
-
-                    <div class="pl-4 space-y-1">
-                        <NavLink
-                            :href="route('administration', { tab: 'stats' })"
-                            :active="
-                                isActive('administration', { tab: 'stats' })
-                            "
-                            class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                        <span class="text-sm font-bold group-hover:text-white"
+                            >Statistiques</span
                         >
-                            <font-awesome-icon
-                                icon="fa-solid fa-chart-line"
-                                class="w-4 h-4 mr-2 group-hover:text-white"
-                            />
-                            <span
-                                class="text-sm font-bold group-hover:text-white"
-                                >Statistiques</span
-                            >
-                        </NavLink>
-                        <NavLink
-                            :href="route('administration', { tab: 'users' })"
-                            :active="
-                                isActive('administration', { tab: 'users' })
-                            "
-                            class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                    </NavLink>
+                    <NavLink
+                        :href="route('administration.users')"
+                        :active="isActive('administration.users')"
+                        class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                    >
+                        <font-awesome-icon
+                            icon="fa-solid fa-screwdriver-wrench"
+                            class="w-4 h-4 mr-2 group-hover:text-white"
+                        />
+                        <span class="text-sm font-bold group-hover:text-white"
+                            >Techniciens</span
                         >
-                            <font-awesome-icon
-                                icon="fa-solid fa-screwdriver-wrench"
-                                class="w-4 h-4 mr-2 group-hover:text-white"
-                            />
-                            <span
-                                class="text-sm font-bold group-hover:text-white"
-                                >Techniciens</span
-                            >
-                        </NavLink>
-                        <NavLink
-                            :href="route('administration', { tab: 'clients' })"
-                            :active="
-                                isActive('administration', { tab: 'clients' })
-                            "
-                            class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                    </NavLink>
+                    <NavLink
+                        :href="route('administration.clients')"
+                        :active="isActive('administration.clients')"
+                        class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                    >
+                        <font-awesome-icon
+                            icon="fa-solid fa-users"
+                            class="w-4 h-4 mr-2 group-hover:text-white"
+                        />
+                        <span class="text-sm font-bold group-hover:text-white"
+                            >Clients</span
                         >
-                            <font-awesome-icon
-                                icon="fa-solid fa-users"
-                                class="w-4 h-4 mr-2 group-hover:text-white"
-                            />
-                            <span
-                                class="text-sm font-bold group-hover:text-white"
-                                >Clients</span
-                            >
-                        </NavLink>
-                        <NavLink
-                            :href="route('administration', { tab: 'devices' })"
-                            :active="
-                                isActive('administration', { tab: 'devices' })
-                            "
-                            class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                    </NavLink>
+                    <NavLink
+                        :href="route('administration.devices')"
+                        :active="isActive('administration.devices')"
+                        class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                    >
+                        <font-awesome-icon
+                            icon="fa-solid fa-laptop"
+                            class="w-4 h-4 mr-2 group-hover:text-white"
+                        />
+                        <span class="text-sm font-bold group-hover:text-white"
+                            >Appareils</span
                         >
-                            <font-awesome-icon
-                                icon="fa-solid fa-laptop"
-                                class="w-4 h-4 mr-2 group-hover:text-white"
-                            />
-                            <span
-                                class="text-sm font-bold group-hover:text-white"
-                                >Appareils</span
-                            >
-                        </NavLink>
-                    </div>
+                    </NavLink>
                 </div>
             </div>
+        </div>
 
-            <div class="p-4 mt-auto space-y-3">
-                <!-- Profile Management -->
-                <DropdownMenu>
-                    <DropdownMenuTrigger as-child>
-                        <Button
-                            variant="secondary"
-                            class="justify-start w-full text-white bg-indigo-400 border-none hover:bg-indigo-300"
-                        >
-                            <div class="flex items-center">
-                                <div
-                                    class="flex items-center justify-center w-8 h-8 mr-2 bg-indigo-300 rounded-full"
-                                >
-                                    <font-awesome-icon
-                                        icon="fa-solid fa-user"
-                                        class="w-4 h-4 text-white"
-                                    />
-                                </div>
-                                <span class="text-sm font-medium truncate">
-                                    {{ $page.props.auth.user.firstName }}
-                                </span>
-                            </div>
-                        </Button>
-                    </DropdownMenuTrigger>
+        <div class="p-4 mt-auto space-y-3">
+            <!-- Profile Management -->
 
-                    <DropdownMenuContent class="bg-white">
-                        <DropdownMenuItem class="cursor-pointer">
-                            <font-awesome-icon
-                                icon="fa-solid fa-user-circle"
-                                class="w-4 h-4 mr-2"
-                            />
-                            <Link :href="route('profile.show')">Profile</Link>
-                        </DropdownMenuItem>
+            <DarkModeButton />
 
-                        <DropdownMenuItem
-                            v-if="$page.props.jetstream.hasApiFeatures"
-                            class="cursor-pointer"
-                        >
-                            <font-awesome-icon
-                                icon="fa-solid fa-key"
-                                class="w-4 h-4 mr-2"
-                            />
-                            <Link :href="route('api-tokens.index')"
-                                >API Tokens</Link
+            <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                    <Button
+                        variant="secondary"
+                        class="justify-start w-full text-white bg-indigo-400 border-none hover:bg-indigo-300"
+                    >
+                        <div class="flex items-center">
+                            <div
+                                class="flex items-center justify-center w-8 h-8 mr-2 bg-indigo-300 rounded-full"
                             >
-                        </DropdownMenuItem>
-
-                        <DropdownMenuSeparator />
-
-                        <DropdownMenuItem
-                            @click="logout"
-                            class="cursor-pointer"
-                        >
-                            <font-awesome-icon
-                                icon="fa-solid fa-sign-out-alt"
-                                class="w-4 h-4 mr-2"
-                            />
-                            <span>Log Out</span>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-
-                <!-- Team Management -->
-                <DropdownMenu v-if="$page.props.jetstream.hasTeamFeatures">
-                    <DropdownMenuTrigger as-child>
-                        <Button
-                            variant="secondary"
-                            class="justify-start w-full text-white bg-indigo-400 border-none hover:bg-indigo-300"
-                        >
-                            <div class="flex items-center">
-                                <div
-                                    class="flex items-center justify-center w-8 h-8 mr-2 bg-indigo-300 rounded-full"
-                                >
-                                    <font-awesome-icon
-                                        icon="fa-solid fa-users"
-                                        class="w-4 h-4 text-white"
-                                    />
-                                </div>
-                                <span class="text-sm font-medium truncate">
-                                    {{
-                                        $page.props.auth.user.current_team.name
-                                    }}
-                                </span>
+                                <font-awesome-icon
+                                    icon="fa-solid fa-user"
+                                    class="w-4 h-4 text-white"
+                                />
                             </div>
-                        </Button>
-                    </DropdownMenuTrigger>
+                            <span class="text-sm font-medium truncate">
+                                {{ $page.props.auth.user.firstName }}
+                            </span>
+                        </div>
+                    </Button>
+                </DropdownMenuTrigger>
 
-                    <DropdownMenuContent class="bg-white">
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            <Link
-                                :href="
-                                    route(
-                                        'teams.show',
-                                        $page.props.auth.user.current_team
-                                    )
-                                "
-                            >
-                                Team Settings
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            v-if="$page.props.jetstream.canCreateTeams"
-                        >
-                            <Link :href="route('teams.create')">
-                                Create New Team
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator
-                            v-if="$page.props.auth.user.all_teams.length > 1"
+                <DropdownMenuContent class="bg-white">
+                    <DropdownMenuItem class="cursor-pointer">
+                        <font-awesome-icon
+                            icon="fa-solid fa-user-circle"
+                            class="w-4 h-4 mr-2"
                         />
-                        <template
-                            v-if="$page.props.auth.user.all_teams.length > 1"
+                        <Link :href="route('profile.show')">Profile</Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                        v-if="$page.props.jetstream.hasApiFeatures"
+                        class="cursor-pointer"
+                    >
+                        <font-awesome-icon
+                            icon="fa-solid fa-key"
+                            class="w-4 h-4 mr-2"
+                        />
+                        <Link :href="route('api-tokens.index')"
+                            >API Tokens</Link
                         >
-                            <DropdownMenuLabel>Switch Teams</DropdownMenuLabel>
-                            <template
-                                v-for="team in $page.props.auth.user.all_teams"
-                                :key="team.id"
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem @click="logout" class="cursor-pointer">
+                        <font-awesome-icon
+                            icon="fa-solid fa-sign-out-alt"
+                            class="w-4 h-4 mr-2"
+                        />
+                        <span>Log Out</span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            <!-- Team Management -->
+            <DropdownMenu v-if="$page.props.jetstream.hasTeamFeatures">
+                <DropdownMenuTrigger as-child>
+                    <Button
+                        variant="secondary"
+                        class="justify-start w-full text-white bg-indigo-400 border-none hover:bg-indigo-300"
+                    >
+                        <div class="flex items-center">
+                            <div
+                                class="flex items-center justify-center w-8 h-8 mr-2 bg-indigo-300 rounded-full"
                             >
-                                <form @submit.prevent="switchToTeam(team)">
-                                    <DropdownMenuItem as="button">
-                                        <div class="flex items-center">
-                                            <font-awesome-icon
-                                                v-if="
-                                                    team.id ==
-                                                    $page.props.auth.user
-                                                        .current_team_id
-                                                "
-                                                icon="fa-solid fa-check"
-                                                class="text-green-400 me-2 size-5"
-                                            />
-                                            <div>{{ team.name }}</div>
-                                        </div>
-                                    </DropdownMenuItem>
-                                </form>
-                            </template>
+                                <font-awesome-icon
+                                    icon="fa-solid fa-users"
+                                    class="w-4 h-4 text-white"
+                                />
+                            </div>
+                            <span class="text-sm font-medium truncate">
+                                {{ $page.props.auth.user.current_team.name }}
+                            </span>
+                        </div>
+                    </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent class="bg-white">
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                        <Link
+                            :href="
+                                route(
+                                    'teams.show',
+                                    $page.props.auth.user.current_team
+                                )
+                            "
+                        >
+                            Team Settings
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        v-if="$page.props.jetstream.canCreateTeams"
+                    >
+                        <Link :href="route('teams.create')">
+                            Create New Team
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator
+                        v-if="$page.props.auth.user.all_teams.length > 1"
+                    />
+                    <template v-if="$page.props.auth.user.all_teams.length > 1">
+                        <DropdownMenuLabel>Switch Teams</DropdownMenuLabel>
+                        <template
+                            v-for="team in $page.props.auth.user.all_teams"
+                            :key="team.id"
+                        >
+                            <form @submit.prevent="switchToTeam(team)">
+                                <DropdownMenuItem as="button">
+                                    <div class="flex items-center">
+                                        <font-awesome-icon
+                                            v-if="
+                                                team.id ==
+                                                $page.props.auth.user
+                                                    .current_team_id
+                                            "
+                                            icon="fa-solid fa-check"
+                                            class="text-green-400 me-2 size-5"
+                                        />
+                                        <div>{{ team.name }}</div>
+                                    </div>
+                                </DropdownMenuItem>
+                            </form>
                         </template>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-        </nav>
-    </div>
+                    </template>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
+    </nav>
 </template>
 
 <script setup>
@@ -279,6 +265,7 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { Button } from "@/Components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import DarkModeButton from "@/Components/DarkModeButton.vue";
 // import logo from "@/assets/logo.svg";
 
 // Add the improved helper functions

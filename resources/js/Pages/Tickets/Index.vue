@@ -1,36 +1,40 @@
 <template>
     <AppLayout>
-        <div class="flex flex-col gap-3 p-3">
-            <div class="flex flex-col-reverse lg:flex-row items-start gap-4">
-                <div class="flex-1 w-full p-4 bg-white border rounded-lg shadow">
-                    <DataTable
-                    :tickets="props.tickets"
-                    :clients="clients"
-                    :devices="props.devices"
-                    :brands="props.brands"
-                    :types="props.types"
-                    :pendingTickets="pendingTickets"
-                    :deliveredTickets="deliveredTickets"
-                    @updateDeliveredTickets="deliveredTickets = $event"
-                    @updatePendingTickets="pendingTickets = $event"
-                    @button-click="buttonClick" />
-                </div>
-                <CreateTicket
-            v-if="showCreateForm"
-            :devices="devices"
-            :technicians="technicians"
-            :clients="clients"
-            :brands="brands"
-            :types="types"
-            @close="showCreateForm = false"
-            class="w-full lg:w-96"
-        />
-            </div>
+        <div
+            class="flex p-4 lg:flex-row"
+            :class="showCreateForm ? 'gap-4' : ''"
+        >
+            <DataTable
+                :tickets="props.tickets"
+                :clients="clients"
+                :devices="props.devices"
+                :brands="props.brands"
+                :types="props.types"
+                :pendingTickets="pendingTickets"
+                :deliveredTickets="deliveredTickets"
+                @updateDeliveredTickets="deliveredTickets = $event"
+                @updatePendingTickets="pendingTickets = $event"
+                @button-click="buttonClick"
+            />
+            <CreateTicket
+                :devices="devices"
+                :technicians="technicians"
+                :clients="clients"
+                :brands="brands"
+                :types="types"
+                @close="showCreateForm = false"
+                class="transition-all duration-500"
+                :class="
+                    showCreateForm
+                        ? 'translate-x-0 w-full lg:w-96'
+                        : 'translate-x-full opacity-0 w-0'
+                "
+            />
         </div>
     </AppLayout>
 </template>
 
-<script setup ">
+<script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { ref } from "vue";
 import DataTable from "./DataTable.vue";
@@ -53,5 +57,4 @@ const showCreateForm = ref(false);
 const buttonClick = () => {
     showCreateForm.value = true;
 };
-
 </script>

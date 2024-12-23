@@ -1,6 +1,6 @@
 <template>
-    <div class="duration-300 animate-in slide-in-from-right">
-        <form v-if="isClientSelected && client" @submit.prevent="submit">
+    <div v-if="client" class="duration-300 animate-in slide-in-from-right">
+        <form @submit.prevent="submit">
             <Card>
                 <CardHeader>
                     <CardTitle class="flex justify-between">
@@ -8,7 +8,7 @@
                         <span>
                             <font-awesome-icon
                                 icon="fa-solid fa-close"
-                                class="text-gray-400 cursor-pointer hover:text-gray-600"
+                                class="text-gray-400 cursor-pointer hover:text-indigo-600"
                                 @click.prevent="emit('client-selected', null)"
                             />
                         </span>
@@ -84,8 +84,11 @@
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit" :disabled="form.processing"
-                        >Mettre à jour</Button
+                    <Button
+                        type="submit"
+                        :disabled="form.processing || !isEdited()"
+                    >
+                        Mettre à jour</Button
                     >
                 </CardFooter>
             </Card>
@@ -94,7 +97,7 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { Button } from "@/Components/ui/button";
 import { Label } from "@/Components/ui/label";
@@ -116,6 +119,8 @@ const props = defineProps({
     },
 });
 
+const client = ref(props.client);
+
 // Reactive form using Inertia's useForm
 const form = useForm({
     id: "",
@@ -128,20 +133,29 @@ const form = useForm({
 // Watch for changes in the user prop and update form
 watch(
     () => props.client,
-    (newUser) => {
-        if (newUser) {
-            form.id = newUser.id;
-            form.firstName = newUser.firstName;
-            form.lastName = newUser.lastName;
-            form.email = newUser.email;
-            form.phone = newUser.phone;
+    (newClient) => {
+        if (newClient) {
+            client.value = newClient;
+            form.id = newClient.id;
+            form.firstName = newClient.firstName;
+            form.lastName = newClient.lastName;
+            form.email = newClient.email;
+            form.phone = newClient.phone;
         }
     },
     { immediate: true }
 );
 
 // Computed property to check if a client is selected
-const isClientSelected = computed(() => props.client !== null);
+
+const isEdited = () => {
+    return (
+        form.firstName !== client.value.firstName ||
+        form.lastName !== client.value.lastName ||
+        form.email !== client.value.email ||
+        form.phone !== client.value.phone
+    );
+};
 
 const submit = () => {
     if (props.client?.id) {
