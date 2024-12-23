@@ -1,8 +1,8 @@
 <type>(<component>)(<scope>): <description>
 
-Components:
+Components: (required)
 
--   Names of files
+-   Names of files (the most edited)
 
 Types:
 

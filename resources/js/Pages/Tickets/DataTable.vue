@@ -1,10 +1,4 @@
-<script setup lang="ts">
-import type {
-    ColumnFiltersState,
-    ExpandedState,
-    SortingState,
-    VisibilityState,
-} from "@tanstack/vue-table";
+<script setup>
 import { Button } from "@/Components/ui/button";
 
 import {
@@ -39,7 +33,6 @@ import { computed, h, ref, watch, watchEffect } from "vue";
 import { Badge } from "@/Components/ui/badge";
 import { router } from "@inertiajs/vue3";
 import Switch from "@/Components/ui/switch/Switch.vue";
-// import DropdownAction from "./DataTableDemoColumn.vue";
 import {
     Select,
     SelectContent,
@@ -49,14 +42,6 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import BackButton from "@/Components/BackButton.vue";
-
-export interface Payment {
-    id: string;
-    amount: number;
-    status: "pending" | "processing" | "success" | "failed";
-    email: string;
-}
 
 const props = defineProps({
     tickets: Array,
@@ -70,6 +55,7 @@ const props = defineProps({
 });
 
 const tickets = ref(props.tickets);
+
 watchEffect(() => {
     tickets.value = props.tickets;
 });
@@ -112,7 +98,7 @@ const filteredTickets = computed(() => {
     return tickets;
 });
 
-const getColumnNames = (id: string) => {
+const getColumnNames = (id) => {
     const names = {
         title: "Titre",
         isFinished: "Status",
@@ -148,9 +134,9 @@ const columns = [
             h(
                 "div",
                 {
-                    class: "capitalize cursor-pointer hover:text-blue-600",
-                    onClick: () =>
-                        router.visit(`/tickets/${row.getValue("id")}`),
+                    class: "capitalize",
+                    // onClick: () =>
+                    //     router.visit(`/tickets/${row.getValue("id")}`),
                 },
                 row.getValue("title")
             ),
@@ -210,7 +196,8 @@ const columns = [
                 "div",
                 {
                     class: "cursor-pointer text-gray-400 hover:text-red-600",
-                    onClick: () => {
+                    onClick: (event) => {
+                        event.stopPropagation();
                         if (
                             confirm(
                                 "Êtes-vous sûr de vouloir supprimer ce ticket ?"
@@ -231,11 +218,11 @@ const columns = [
     },
 ];
 
-const sorting = ref<SortingState>([]);
-const columnFilters = ref<ColumnFiltersState>([]);
-const columnVisibility = ref<VisibilityState>({});
+const sorting = ref([]);
+const columnFilters = ref([]);
+const columnVisibility = ref({});
 const rowSelection = ref({});
-const expanded = ref<ExpandedState>({});
+const expanded = ref({});
 const globalFilter = ref("");
 
 // Ajouter cette fonction de filtrage personnalisée après la définition des colonnes
@@ -315,10 +302,10 @@ const table = useVueTable({
         <div class="w-full">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <h1 class="text-xl font-semibold">Tickets</h1>
+                    <h1 class="text-2xl font-semibold">Tickets</h1>
                     <font-awesome-icon
                         icon="fa-solid fa-plus"
-                        class="w-4 h-4 cursor-pointer"
+                        class="text-xl text-gray-400 cursor-pointer hover:text-indigo-500"
                         @click="$emit('buttonClick')"
                     />
                 </div>
@@ -488,8 +475,14 @@ const table = useVueTable({
                                 :key="row.id"
                             >
                                 <TableRow
+                                    class="hover:cursor-pointer"
                                     :data-state="
                                         row.getIsSelected() && 'selected'
+                                    "
+                                    @click="
+                                        router.visit(
+                                            `/tickets/${row.original.id}`
+                                        )
                                     "
                                 >
                                     <TableCell

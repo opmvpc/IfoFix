@@ -1,9 +1,10 @@
 <template>
     <Dialog :open="isOpen" @update:open="handleOpen">
         <DialogTrigger as-child>
-            <Button variant="link">
-                <font-awesome-icon icon="fa-solid fa-plus" />
-            </Button>
+            <font-awesome-icon
+                icon="fa-solid fa-plus"
+                class="text-xl text-gray-400 cursor-pointer hover:text-indigo-500"
+            />
         </DialogTrigger>
         <DialogContent class="sm:max-w-[425px]">
             <DialogHeader>
