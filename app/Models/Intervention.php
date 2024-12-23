@@ -31,4 +31,9 @@ class Intervention extends Model
     {
         return $this->hasMany(Intervention_images::class, 'interventionId');
     }
+
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class, 'ticketId');
+    }
 }

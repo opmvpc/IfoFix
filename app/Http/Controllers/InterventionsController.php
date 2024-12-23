@@ -36,26 +36,34 @@ class InterventionsController extends Controller
 
     public function update(Request $request, Intervention $intervention)
     {
+
         $validated = $request->validate([
             'description' => 'nullable|string',
-            'duration' => 'nullable|integer',
+            'duration' => 'nullable|date_format:H:i',
             'date' => 'nullable|date',
             'isFinished' => 'boolean',
             'users' => 'array',
-            'users.*' => 'exists:users,id'
+            'users.*.id' => 'exists:users,id' // Modification ici pour valider les IDs dans le tableau d'objets users
         ]);
 
-        // Extraire les users du tableau validé
-        $users = $validated['users'] ?? [];
+        // Extraire les IDs des users du tableau validé
+        $userIds = collect($validated['users'])->pluck('id')->toArray();
         unset($validated['users']);
 
         // Mise à jour de l'intervention
         $intervention->update($validated);
 
-        // Synchroniser les utilisateurs
-        $intervention->users()->sync(collect($users)->pluck('id'));
+        // Synchroniser les utilisateurs avec les IDs
+        $intervention->users()->sync($userIds);
 
-        return redirect()->route('interventions.show', $intervention)
+        $ticket = $intervention->ticket;
+
+        // cloture the ticket if one of the interventions is finished
+        if ($intervention->isFinished) {
+            $ticket->update(['isFinished' => true]);
+        }
+
+        return redirect()->route('tickets.show', $ticket->id)
             ->with('message', 'Intervention mise à jour avec succès');
     }
 

@@ -77,30 +77,19 @@ const closeImageModal = () => {
 
 <template>
     <AppLayout>
-        <!-- <Head :title="'Détails du Ticket #' + ticket.id" /> -->
+        <Head :title="'Détails du Ticket #' + ticket.id" />
         <div class="p-6">
             <div class="flex flex-col gap-6">
                 <!-- Colonne des détails du ticket -->
                 <div class="flex-1 p-6 bg-white rounded-lg shadow-md">
-                    <!-- <div class="flex items-center justify-between gap-2 mb-6">
-                        <h1 class="text-2xl font-bold">
-                            Détails du Ticket #{{ ticket.id }}
-                        </h1>
-
-                    </div> -->
-
                     <div class="flex flex-col gap-6">
                         <div class="pb-4 border-b">
-                            <div class="flex items-center justify-between mb-4">
-                                <div
-                                    class="flex items-center justify-between gap-4"
-                                >
-                                    <BackButton />
+                            <div class="flex items-start justify-between mb-4">
+                                <BackButton />
 
+                                <div class="flex flex-col items-end">
                                     <h2 class="text-3xl font-semibold">
                                         #{{ ticket.id }} {{ ticket.title }}
-                                    </h2>
-                                    <div class="flex items-center gap-2">
                                         <Badge
                                             class=""
                                             :variant="
@@ -115,17 +104,71 @@ const closeImageModal = () => {
                                                     : "En cours"
                                             }}
                                         </Badge>
-                                        <span class="text-sm text-gray-600">
+                                    </h2>
+                                    <div class="flex items-center gap-2">
+                                        <p class="text-sm text-gray-500 italic">
+                                            Créé par
+                                            {{ ticket.user.firstName }} le
                                             {{ formatDate(ticket.created_at) }}
-                                        </span>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
+                            <p class="font-semibold">Description</p>
                             <p class="text-gray-600">
                                 {{ ticket.description }}
                             </p>
                         </div>
 
+                        <div class="flex flex-wrap gap-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="flex-1 min-w-[200px] space-y-2">
+                                    <p class="font-semibold">Appareil</p>
+                                    <p>
+                                        {{
+                                            ticket.device?.name ||
+                                            "Non spécifié"
+                                        }}
+                                    </p>
+                                </div>
+
+                                <div class="flex-1 min-w-[200px] space-y-2">
+                                    <p class="font-semibold">Client</p>
+                                    <p>
+                                        {{ ticket.client.firstName }}
+                                        {{ ticket.client.lastName }}
+                                    </p>
+                                    {{ ticket.client.phone }}
+                                </div>
+
+                                <div
+                                    class="flex-1 min-w-[200px] space-y-2 col-span-2"
+                                >
+                                    <p class="font-semibold">
+                                        Technicien(s) désigné(s)
+                                    </p>
+                                    <div
+                                        v-if="uniqueTechnicians.length > 0"
+                                        class="flex flex-wrap gap-2"
+                                    >
+                                        <Badge
+                                            v-for="technician in uniqueTechnicians"
+                                            :key="technician.id"
+                                        >
+                                            <font-awesome-icon
+                                                icon="fa-solid fa-user"
+                                                class="w-3 h-3 mr-2"
+                                            />
+                                            {{ technician.firstName }}
+                                            {{ technician.lastName }}
+                                        </Badge>
+                                    </div>
+                                    <div v-else class="text-gray-500">
+                                        Non assigné
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Ajout du carousel ici -->
                         <div
                             v-if="ticket.images && ticket.images.length > 0"
@@ -166,58 +209,6 @@ const closeImageModal = () => {
                             class="text-gray-500 italic text-center py-4"
                         >
                             Aucune image pour ce ticket
-                        </div>
-
-                        <div class="flex flex-wrap gap-4">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="flex-1 min-w-[200px] space-y-2">
-                                    <p class="font-semibold">Appareil</p>
-                                    <p>
-                                        {{
-                                            ticket.device?.name ||
-                                            "Non spécifié"
-                                        }}
-                                    </p>
-                                </div>
-
-                                <div class="flex-1 min-w-[200px] space-y-2">
-                                    <p class="font-semibold">Client</p>
-                                    <p>
-                                        {{ ticket.client.firstName }}
-                                        {{ ticket.client.lastName }}
-                                    </p>
-                                </div>
-
-                                <div class="flex-1 min-w-[200px] space-y-2">
-                                    <p class="font-semibold">Créé par</p>
-                                    <div class="flex items-center">
-                                        <span>{{ ticket.user.firstName }}</span>
-                                    </div>
-                                </div>
-
-                                <div class="flex-1 min-w-[200px] space-y-2">
-                                    <p class="font-semibold">Technicien(s)</p>
-                                    <div
-                                        v-if="uniqueTechnicians.length > 0"
-                                        class="flex flex-wrap gap-2"
-                                    >
-                                        <Badge
-                                            v-for="technician in uniqueTechnicians"
-                                            :key="technician.id"
-                                        >
-                                            <font-awesome-icon
-                                                icon="fa-solid fa-user"
-                                                class="w-3 h-3 mr-2"
-                                            />
-                                            {{ technician.firstName }}
-                                            {{ technician.lastName }}
-                                        </Badge>
-                                    </div>
-                                    <div v-else class="text-gray-500">
-                                        Non assigné
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -312,23 +303,6 @@ const closeImageModal = () => {
                                                 </div>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
-                                        <div class="flex items-center gap-4">
-                                            <span
-                                                :class="{
-                                                    'px-3 py-1 rounded-full text-sm': true,
-                                                    'bg-emerald-100 text-emerald-600':
-                                                        intervention.isFinished,
-                                                    'bg-orange-100 text-orange-600':
-                                                        !intervention.isFinished,
-                                                }"
-                                            >
-                                                {{
-                                                    intervention.isFinished
-                                                        ? "Terminé"
-                                                        : "En cours"
-                                                }}
-                                            </span>
-                                        </div>
                                     </div>
                                 </div>
                             </Link>
