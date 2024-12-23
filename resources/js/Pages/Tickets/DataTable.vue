@@ -112,6 +112,15 @@ const filteredTickets = computed(() => {
     return tickets;
 });
 
+const getColumnNames = (id: string) => {
+    const names = {
+        title: "Titre",
+        isFinished: "Status",
+        interventions: "Assigné à",
+    };
+    return names[id];
+};
+
 const columns = [
     {
         accessorKey: "id",
@@ -200,7 +209,7 @@ const columns = [
             return h(
                 "div",
                 {
-                    class: "cursor-pointer text-gray-400 hover:text-red-900",
+                    class: "cursor-pointer text-gray-400 hover:text-red-600",
                     onClick: () => {
                         if (
                             confirm(
@@ -309,7 +318,7 @@ const table = useVueTable({
                     <h1 class="text-xl font-semibold">Tickets</h1>
                     <font-awesome-icon
                         icon="fa-solid fa-plus"
-                        class="h-4 w-4 cursor-pointer"
+                        class="w-4 h-4 cursor-pointer"
                         @click="$emit('buttonClick')"
                     />
                 </div>
@@ -348,7 +357,7 @@ const table = useVueTable({
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                         <Button variant="outline" class="ml-auto">
-                            Columns <ChevronDown class="w-4 h-4 ml-2" />
+                            Colonnes <ChevronDown class="w-4 h-4 ml-2" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -365,12 +374,12 @@ const table = useVueTable({
                                 }
                             "
                         >
-                            {{ column.id }}
+                            {{ getColumnNames(column.id) }}
                         </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            <div class="mb-4 flex gap-2">
+            <div class="flex gap-2 mb-4">
                 <Select v-model="selectedTechnician">
                     <SelectTrigger>
                         <SelectValue placeholder="Technicien" />
