@@ -1,7 +1,7 @@
 <template>
-    <div class="duration-300 animate-in slide-in-from-right">
-        <form v-if="user" @submit.prevent="submit" class="">
-            <Card class="h-full">
+    <div v-if="user" class="duration-300 animate-in slide-in-from-right">
+        <form @submit.prevent="submit" class="">
+            <Card>
                 <CardHeader>
                     <CardTitle class="flex justify-between">
                         <span> Profil </span>
@@ -162,7 +162,7 @@
                         type="submit"
                         :disabled="form.processing || !isEdited()"
                     >
-                        >Mettre à jour</Button
+                        Mettre à jour</Button
                     >
                 </CardFooter>
             </Card>

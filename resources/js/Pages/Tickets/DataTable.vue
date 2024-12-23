@@ -42,6 +42,7 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { Card } from "@/Components/ui/card";
 
 const props = defineProps({
     tickets: Array,
@@ -298,263 +299,246 @@ const table = useVueTable({
 </script>
 
 <template>
-    <div class="flex gap-2">
-        <div class="w-full">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <h1 class="text-2xl font-semibold">Tickets</h1>
-                    <font-awesome-icon
-                        icon="fa-solid fa-plus"
-                        class="text-xl text-gray-400 cursor-pointer hover:text-indigo-500"
-                        @click="$emit('buttonClick')"
+    <Card class="w-full p-6">
+        <div class="flex gap-2">
+            <div class="w-full">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-2xl font-semibold">Tickets</h1>
+                        <font-awesome-icon
+                            icon="fa-solid fa-plus"
+                            class="text-xl text-gray-400 cursor-pointer hover:text-indigo-500"
+                            @click="$emit('buttonClick')"
+                        />
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 py-4">
+                    <Input
+                        type="search"
+                        class="max-w-sm"
+                        placeholder="Rechercher..."
+                        :model-value="table.getState().globalFilter"
+                        @update:model-value="table.setGlobalFilter"
                     />
-                </div>
-            </div>
-            <div class="flex items-center gap-2 py-4">
-                <Input
-                    class="max-w-sm"
-                    placeholder="Rechercher..."
-                    :model-value="table.getState().globalFilter"
-                    @update:model-value="table.setGlobalFilter"
-                />
-                <div class="flex gap-3 shrink-0">
-                    <div class="flex items-center space-x-2">
-                        <Switch
-                            :checked="pendingTickets"
-                            @update:checked="
-                                (value) => $emit('updatePendingTickets', value)
-                            "
-                            id="pending-mode"
-                        />
-                        <Label for="pending-mode">en cours</Label>
+                    <div class="flex gap-3 shrink-0">
+                        <div class="flex items-center space-x-2">
+                            <Switch
+                                :checked="pendingTickets"
+                                @update:checked="
+                                    (value) =>
+                                        $emit('updatePendingTickets', value)
+                                "
+                                id="pending-mode"
+                            />
+                            <Label for="pending-mode">en cours</Label>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <Switch
+                                :checked="deliveredTickets"
+                                @update:checked="
+                                    (value) =>
+                                        $emit('updateDeliveredTickets', value)
+                                "
+                                id="delivered-mode"
+                            />
+                            <Label for="delivered-mode">rendu</Label>
+                        </div>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <Switch
-                            :checked="deliveredTickets"
-                            @update:checked="
-                                (value) =>
-                                    $emit('updateDeliveredTickets', value)
-                            "
-                            id="delivered-mode"
-                        />
-                        <Label for="delivered-mode">rendu</Label>
-                    </div>
-                </div>
 
-                <DropdownMenu>
-                    <DropdownMenuTrigger as-child>
-                        <Button variant="outline" class="ml-auto">
-                            Colonnes <ChevronDown class="w-4 h-4 ml-2" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuCheckboxItem
-                            v-for="column in table
-                                .getAllColumns()
-                                .filter((column) => column.getCanHide())"
-                            :key="column.id"
-                            class="capitalize"
-                            :checked="column.getIsVisible()"
-                            @update:checked="
-                                (value) => {
-                                    column.toggleVisibility(!!value);
-                                }
-                            "
-                        >
-                            {{ getColumnNames(column.id) }}
-                        </DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-            <div class="flex gap-2 mb-4">
-                <Select v-model="selectedTechnician">
-                    <SelectTrigger>
-                        <SelectValue placeholder="Technicien" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem :value="aucun"> Aucun </SelectItem>
-                            <SelectItem
-                                v-for="(technician, index) in props.technicians"
-                                :key="index"
-                                :value="technician.id"
-                            >
-                                {{ technician.firstName }}
-                            </SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-
-                <Select v-model="selectedDevice">
-                    <SelectTrigger>
-                        <SelectValue placeholder="Model" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem :value="aucun"> Aucun </SelectItem>
-                            <SelectItem
-                                v-for="(device, index) in props.devices"
-                                :key="index"
-                                :value="device.id"
-                                >{{ device.name }}
-                            </SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-
-                <Select v-model="selectedBrand">
-                    <SelectTrigger>
-                        <SelectValue placeholder="Marque" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem :value="aucun"> Aucun </SelectItem>
-                            <SelectItem
-                                v-for="(brand, index) in props.brands"
-                                :key="index"
-                                :value="brand.id"
-                                >{{ brand.name }}
-                            </SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-
-                <Select v-model="selectedType">
-                    <SelectTrigger>
-                        <SelectValue placeholder="Type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem :value="aucun"> Aucun </SelectItem>
-                            <SelectItem
-                                v-for="(type, index) in props.types"
-                                :key="index"
-                                :value="type.id"
-                                >{{ type.name }}
-                            </SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </div>
-
-            <div class="border rounded-md grow">
-                <Table>
-                    <TableHeader>
-                        <TableRow
-                            v-for="headerGroup in table.getHeaderGroups()"
-                            :key="headerGroup.id"
-                        >
-                            <TableHead
-                                v-for="header in headerGroup.headers"
-                                :key="header.id"
-                                :data-pinned="header.column.getIsPinned()"
-                                :class="
-                                    cn(
-                                        {
-                                            'sticky bg-background/95':
-                                                header.column.getIsPinned(),
-                                        },
-                                        header.column.getIsPinned() === 'left'
-                                            ? 'left-0'
-                                            : 'right-0'
-                                    )
+                    <DropdownMenu>
+                        <DropdownMenuTrigger as-child>
+                            <Button variant="outline" class="ml-auto">
+                                Colonnes <ChevronDown class="w-4 h-4 ml-2" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuCheckboxItem
+                                v-for="column in table
+                                    .getAllColumns()
+                                    .filter((column) => column.getCanHide())"
+                                :key="column.id"
+                                class="capitalize"
+                                :checked="column.getIsVisible()"
+                                @update:checked="
+                                    (value) => {
+                                        column.toggleVisibility(!!value);
+                                    }
                                 "
                             >
-                                <FlexRender
-                                    v-if="!header.isPlaceholder"
-                                    :render="header.column.columnDef.header"
-                                    :props="header.getContext()"
-                                />
-                            </TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        <template v-if="table.getRowModel().rows?.length">
-                            <template
-                                v-for="row in table.getRowModel().rows"
-                                :key="row.id"
-                            >
-                                <TableRow
-                                    class="hover:cursor-pointer"
-                                    :data-state="
-                                        row.getIsSelected() && 'selected'
-                                    "
-                                    @click="
-                                        router.visit(
-                                            `/tickets/${row.original.id}`
-                                        )
-                                    "
+                                {{ getColumnNames(column.id) }}
+                            </DropdownMenuCheckboxItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+                <div class="flex gap-2 mb-4">
+                    <Select v-model="selectedTechnician">
+                        <SelectTrigger>
+                            <SelectValue placeholder="Technicien" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem :value="aucun"> Aucun </SelectItem>
+                                <SelectItem
+                                    v-for="(
+                                        technician, index
+                                    ) in props.technicians"
+                                    :key="index"
+                                    :value="technician.id"
                                 >
-                                    <TableCell
-                                        v-for="cell in row.getVisibleCells()"
-                                        :key="cell.id"
-                                        :data-pinned="cell.column.getIsPinned()"
-                                        :class="
-                                            cn(
-                                                {
-                                                    'sticky bg-background/95':
-                                                        cell.column.getIsPinned(),
-                                                },
-                                                cell.column.getIsPinned() ===
-                                                    'left'
-                                                    ? 'left-0'
-                                                    : 'right-0'
+                                    {{ technician.firstName }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <Select v-model="selectedDevice">
+                        <SelectTrigger>
+                            <SelectValue placeholder="Model" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem :value="aucun"> Aucun </SelectItem>
+                                <SelectItem
+                                    v-for="(device, index) in props.devices"
+                                    :key="index"
+                                    :value="device.id"
+                                    >{{ device.name }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <Select v-model="selectedBrand">
+                        <SelectTrigger>
+                            <SelectValue placeholder="Marque" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem :value="aucun"> Aucun </SelectItem>
+                                <SelectItem
+                                    v-for="(brand, index) in props.brands"
+                                    :key="index"
+                                    :value="brand.id"
+                                    >{{ brand.name }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <Select v-model="selectedType">
+                        <SelectTrigger>
+                            <SelectValue placeholder="Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem :value="aucun"> Aucun </SelectItem>
+                                <SelectItem
+                                    v-for="(type, index) in props.types"
+                                    :key="index"
+                                    :value="type.id"
+                                    >{{ type.name }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div class="border rounded-md grow">
+                    <Table>
+                        <TableHeader>
+                            <TableRow
+                                v-for="headerGroup in table.getHeaderGroups()"
+                                :key="headerGroup.id"
+                            >
+                                <TableHead
+                                    v-for="header in headerGroup.headers"
+                                    :key="header.id"
+                                >
+                                    <FlexRender
+                                        v-if="!header.isPlaceholder"
+                                        :render="header.column.columnDef.header"
+                                        :props="header.getContext()"
+                                    />
+                                </TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <template v-if="table.getRowModel().rows?.length">
+                                <template
+                                    v-for="row in table.getRowModel().rows"
+                                    :key="row.id"
+                                >
+                                    <TableRow
+                                        class="hover:cursor-pointer"
+                                        :data-state="
+                                            row.getIsSelected() && 'selected'
+                                        "
+                                        @click="
+                                            router.visit(
+                                                `/tickets/${row.original.id}`
                                             )
                                         "
                                     >
-                                        <FlexRender
-                                            :render="cell.column.columnDef.cell"
-                                            :props="cell.getContext()"
-                                        />
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow v-if="row.getIsExpanded()">
-                                    <TableCell
-                                        :colspan="row.getAllCells().length"
-                                    >
-                                        {{ row.original }}
-                                    </TableCell>
-                                </TableRow>
+                                        <TableCell
+                                            v-for="cell in row.getVisibleCells()"
+                                            :key="cell.id"
+                                        >
+                                            <FlexRender
+                                                :render="
+                                                    cell.column.columnDef.cell
+                                                "
+                                                :props="cell.getContext()"
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                    <!-- <TableRow v-if="row.getIsExpanded()">
+                                        <TableCell
+                                            :colspan="row.getAllCells().length"
+                                        >
+                                            {{ row.original }}
+                                        </TableCell>
+                                    </TableRow> -->
+                                </template>
                             </template>
-                        </template>
 
-                        <TableRow v-else>
-                            <TableCell
-                                :colspan="columns.length"
-                                class="h-24 text-center"
-                            >
-                                No results.
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </div>
-
-            <div class="flex items-center justify-end py-4 space-x-2">
-                <div class="flex-1 text-sm text-muted-foreground">
-                    {{ table.getFilteredSelectedRowModel().rows.length }} of
-                    {{ table.getFilteredRowModel().rows.length }} row(s)
-                    selected.
+                            <TableRow v-else>
+                                <TableCell
+                                    :colspan="columns.length"
+                                    class="h-24 text-center"
+                                >
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
                 </div>
-                <div class="space-x-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        :disabled="!table.getCanPreviousPage()"
-                        @click="table.previousPage()"
-                    >
-                        Previous
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        :disabled="!table.getCanNextPage()"
-                        @click="table.nextPage()"
-                    >
-                        Next
-                    </Button>
+
+                <div class="flex items-center justify-end py-4 space-x-2">
+                    <div class="flex-1 text-sm text-muted-foreground">
+                        {{ table.getFilteredSelectedRowModel().rows.length }} of
+                        {{ table.getFilteredRowModel().rows.length }} row(s)
+                        selected.
+                    </div>
+                    <div class="space-x-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            :disabled="!table.getCanPreviousPage()"
+                            @click="table.previousPage()"
+                        >
+                            Previous
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            :disabled="!table.getCanNextPage()"
+                            @click="table.nextPage()"
+                        >
+                            Next
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </Card>
 </template>

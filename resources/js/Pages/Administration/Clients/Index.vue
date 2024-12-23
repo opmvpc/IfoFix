@@ -1,26 +1,27 @@
 <template>
-    <div class="flex gap-2 grow">
-        <ClientsList
-            :clients="clientsList"
-            :class="[
-                'transition-all duration-300 ease-in-out',
-                selectedClient
-                    ? 'w-0 invisible opacity-0 md:w-2/3 md:visible md:opacity-100'
-                    : 'w-full',
-            ]"
-            @client-selected="setSelectedClient"
-        />
-        <ClientProfile
-            v-if="selectedClient"
-            :client="selectedClient"
-            @client-selected="setSelectedClient"
-            class="w-1/3 transition-all duration-300 ease-in-out"
-            :class="selectedClient ? 'w-full md:w-1/3' : 'w-0'"
-        />
-    </div>
+    <AppLayout title="Administration/Clients">
+        <div class="flex m-4 grow" :class="selectedClient ? 'gap-4' : ''">
+            <ClientsList
+                :clients="clientsList"
+                class="w-full transition-all duration-300 ease-in-out"
+                @client-selected="setSelectedClient"
+            />
+            <ClientProfile
+                :client="selectedClient"
+                @client-selected="setSelectedClient"
+                class="transition-all duration-300 ease-in-out"
+                :class="
+                    selectedClient
+                        ? 'translate-x-0 w-full lg:w-96'
+                        : 'translate-x-full opacity-0 w-0'
+                "
+            />
+        </div>
+    </AppLayout>
 </template>
 
 <script setup>
+import AppLayout from "@/Layouts/AppLayout.vue";
 import ClientsList from "@/Pages/Administration/Clients/Partials/List.vue";
 import ClientProfile from "@/Pages/Administration/Clients/Partials/Show.vue";
 import { ref, watch } from "vue";

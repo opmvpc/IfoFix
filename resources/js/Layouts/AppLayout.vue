@@ -23,7 +23,9 @@
                 </header>
 
                 <!-- Page Content -->
-                <main class="flex-1 w-full h-full overflow-hidden">
+                <main
+                    class="flex-1 w-full h-screen max-h-screen overflow-hidden"
+                >
                     <slot />
                 </main>
             </div>

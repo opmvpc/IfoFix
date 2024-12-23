@@ -9,16 +9,19 @@ use Inertia\Inertia;
 
 class AdministrationController extends Controller
 {
-    public function index($tab = 'stats')
+    public function users()
     {
-        return Inertia::render('Administration/Index', [
-            'activeTab' => $tab,
+        return Inertia::render('Administration/Users/Index', [
             'users' => fn() => User::all(),
+
+        ]);
+    }
+
+    public function clients()
+    {
+        return Inertia::render('Administration/Clients/Index', [
             'clients' => fn() => Client::all(),
-            'flash' => [
-                'success' => session('success'),
-                'refresh' => session('refresh')
-            ]
+
         ]);
     }
 }

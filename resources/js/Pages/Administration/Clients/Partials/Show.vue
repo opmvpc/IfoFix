@@ -1,6 +1,6 @@
 <template>
-    <div class="duration-300 animate-in slide-in-from-right">
-        <form v-if="client" @submit.prevent="submit">
+    <div v-if="client" class="duration-300 animate-in slide-in-from-right">
+        <form @submit.prevent="submit">
             <Card>
                 <CardHeader>
                     <CardTitle class="flex justify-between">

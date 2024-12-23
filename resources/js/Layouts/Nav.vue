@@ -57,8 +57,8 @@
 
                 <div class="pl-4 space-y-1">
                     <NavLink
-                        :href="route('administration', { tab: 'stats' })"
-                        :active="isActive('administration', { tab: 'stats' })"
+                        :href="route('administration.stats')"
+                        :active="isActive('administration.stats')"
                         class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
                     >
                         <font-awesome-icon
@@ -70,8 +70,8 @@
                         >
                     </NavLink>
                     <NavLink
-                        :href="route('administration', { tab: 'users' })"
-                        :active="isActive('administration', { tab: 'users' })"
+                        :href="route('administration.users')"
+                        :active="isActive('administration.users')"
                         class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
                     >
                         <font-awesome-icon
@@ -83,8 +83,8 @@
                         >
                     </NavLink>
                     <NavLink
-                        :href="route('administration', { tab: 'clients' })"
-                        :active="isActive('administration', { tab: 'clients' })"
+                        :href="route('administration.clients')"
+                        :active="isActive('administration.clients')"
                         class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
                     >
                         <font-awesome-icon
@@ -96,8 +96,8 @@
                         >
                     </NavLink>
                     <NavLink
-                        :href="route('administration', { tab: 'devices' })"
-                        :active="isActive('administration', { tab: 'devices' })"
+                        :href="route('administration.devices')"
+                        :active="isActive('administration.devices')"
                         class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
                     >
                         <font-awesome-icon

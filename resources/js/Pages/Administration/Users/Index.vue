@@ -1,24 +1,27 @@
 <template>
-    <div class="flex md:gap-2 grow">
-        <UsersList
-            :users="usersList"
-            :class="[
-                'transition-all duration-300 ease-in-out',
-                selectedUser ? 'w-0 hidden md:w-2/3 md:block' : 'w-full',
-            ]"
-            @user-selected="setSelectedUser"
-        />
-        <UserProfile
-            v-if="selectedUser"
-            :user="selectedUser"
-            @user-selected="setSelectedUser"
-            class="w-1/3 transition-all duration-300 ease-in-out"
-            :class="selectedUser ? 'w-full md:w-1/3' : 'w-0'"
-        />
-    </div>
+    <AppLayout title="Administration/Users">
+        <div class="flex m-4 grow" :class="selectedUser ? 'gap-4' : ''">
+            <UsersList
+                :users="usersList"
+                class="w-full transition-all duration-300 ease-in-out"
+                @user-selected="setSelectedUser"
+            />
+            <UserProfile
+                :user="selectedUser"
+                @user-selected="setSelectedUser"
+                class="transition-all duration-300 ease-in-out"
+                :class="
+                    selectedUser
+                        ? 'translate-x-0 w-full lg:w-96'
+                        : 'translate-x-full opacity-0 w-0'
+                "
+            />
+        </div>
+    </AppLayout>
 </template>
 
 <script setup>
+import AppLayout from "@/Layouts/AppLayout.vue";
 import UsersList from "@/Pages/Administration/Users/Partials/List.vue";
 import UserProfile from "@/Pages/Administration/Users/Partials/Show.vue";
 import { ref, watch } from "vue";
@@ -42,6 +45,7 @@ const setSelectedUser = (user) => {
 watch(
     () => users,
     (newUsers) => {
+        console.log("watch users");
         usersList.value = newUsers;
     },
     { deep: true }
