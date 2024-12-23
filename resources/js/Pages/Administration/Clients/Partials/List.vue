@@ -88,22 +88,24 @@
             </div>
 
             <div class="flex items-center justify-end py-4 space-x-2">
+                <div class="flex-1 text-sm text-muted-foreground">
+                    {{ table.getFilteredRowModel().rows.length }} client(s)
+                    affichés(s) / Total : {{ clients.length }} client(s)
+                </div>
                 <div class="space-x-2">
                     <Button
-                        variant="outline"
                         size="sm"
                         :disabled="!table.getCanPreviousPage()"
                         @click="table.previousPage()"
                     >
-                        Previous
+                        Précedent
                     </Button>
                     <Button
-                        variant="outline"
                         size="sm"
                         :disabled="!table.getCanNextPage()"
                         @click="table.nextPage()"
                     >
-                        Next
+                        Suivant
                     </Button>
                 </div>
             </div>
