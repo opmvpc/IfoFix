@@ -10,7 +10,7 @@
             <!-- Main Content -->
             <div
                 class="flex flex-col w-full h-full overflow-y-auto transition-all duration-300"
-                :class="showNavigation ? 'ml-40 lg:ml-52' : 'ml-0'"
+                :class="showNavigation ? 'ml-0 md:ml-40 lg:ml-52' : 'ml-0'"
             >
                 <!-- Page Heading -->
                 <header

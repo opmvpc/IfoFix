@@ -7,6 +7,7 @@
             </div>
             <div class="flex items-center gap-2 py-4">
                 <Input
+                    type="search"
                     class="max-w-52"
                     placeholder="Rechercher..."
                     :model-value="table.getState().globalFilter"
@@ -37,7 +38,7 @@
             </div>
 
             <div class="border rounded-md">
-                <Table class="">
+                <Table class="z-0">
                     <TableHeader>
                         <TableRow
                             v-for="headerGroup in table.getHeaderGroups()"
