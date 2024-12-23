@@ -16,7 +16,7 @@
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                         <Button variant="outline" class="ml-auto">
-                            Columns <ChevronDown class="w-4 h-4 ml-2" />
+                            Colonnes <ChevronDown class="w-4 h-4 ml-2" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -31,7 +31,7 @@
                                 (value) => column.toggleVisibility(!!value)
                             "
                         >
-                            {{ column.id }}
+                            {{ getColumnNames(column.id) }}
                         </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -292,6 +292,17 @@ const table = useVueTable({
         },
     },
 });
+
+const getColumnNames = (id) => {
+    const names = {
+        firstName: "Prénom",
+        lastName: "Nom",
+        email: "Email",
+        role: "Rôle",
+        isActive: "Statut",
+    };
+    return names[id];
+};
 
 const selectUser = (user) => {
     emit("user-selected", user);
