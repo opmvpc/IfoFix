@@ -32,6 +32,7 @@ const props = defineProps({
     interventions: Array,
     technicians: Array,
 });
+console.log(props.ticket);
 
 const showCreateIntervention = ref(false);
 
@@ -129,6 +130,23 @@ const closeImageModal = () => {
                                             ticket.device?.name ||
                                             "Non spécifié"
                                         }}
+                                        <span
+                                            v-if="
+                                                ticket.device?.brand ||
+                                                ticket.device?.type
+                                            "
+                                            class="text-gray-500"
+                                        >
+                                            ({{
+                                                ticket.device.brand?.name ||
+                                                "Marque non spécifiée"
+                                            }}
+                                            -
+                                            {{
+                                                ticket.device.type?.name ||
+                                                "Type non spécifié"
+                                            }})
+                                        </span>
                                     </p>
                                 </div>
 
