@@ -32,7 +32,6 @@ const props = defineProps({
     interventions: Array,
     technicians: Array,
 });
-console.log(props.ticket);
 
 const showCreateIntervention = ref(false);
 
@@ -90,21 +89,7 @@ const closeImageModal = () => {
 
                                 <div class="flex flex-col items-end">
                                     <h2 class="text-3xl font-semibold">
-                                        #{{ ticket.id }} {{ ticket.title }}
-                                        <Badge
-                                            class=""
-                                            :variant="
-                                                ticket.isFinished
-                                                    ? 'success'
-                                                    : 'warning'
-                                            "
-                                        >
-                                            {{
-                                                ticket.isFinished
-                                                    ? "Terminé"
-                                                    : "En cours"
-                                            }}
-                                        </Badge>
+                                        Ticket #{{ ticket.id }}
                                     </h2>
                                     <div class="flex items-center gap-2">
                                         <p class="text-sm text-gray-500 italic">
@@ -113,6 +98,21 @@ const closeImageModal = () => {
                                             {{ formatDate(ticket.created_at) }}
                                         </p>
                                     </div>
+
+                                    <Badge
+                                        class=""
+                                        :variant="
+                                            ticket.isFinished
+                                                ? 'success'
+                                                : 'warning'
+                                        "
+                                    >
+                                        {{
+                                            ticket.isFinished
+                                                ? "Terminé"
+                                                : "En cours"
+                                        }}
+                                    </Badge>
                                 </div>
                             </div>
                             <p class="font-semibold">Description</p>
@@ -122,10 +122,11 @@ const closeImageModal = () => {
                         </div>
 
                         <div class="flex flex-wrap gap-4">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="flex-1 min-w-[200px] space-y-2">
-                                    <p class="font-semibold">Appareil</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="flex-1 min-w-[200px]">
+                                    <p class="font-semibold mb-2">Appareil</p>
                                     <p>
+                                        <span class="text-xs">Modèle : </span>
                                         {{
                                             ticket.device?.name ||
                                             "Non spécifié"
@@ -137,31 +138,43 @@ const closeImageModal = () => {
                                             "
                                             class="text-gray-500"
                                         >
-                                            ({{
-                                                ticket.device.brand?.name ||
-                                                "Marque non spécifiée"
-                                            }}
-                                            -
-                                            {{
-                                                ticket.device.type?.name ||
-                                                "Type non spécifié"
-                                            }})
                                         </span>
+                                    </p>
+                                    <p>
+                                        <span class="text-xs">Marque : </span>
+                                        {{
+                                            ticket.device.brand?.name ||
+                                            "Marque non spécifiée"
+                                        }}
+                                    </p>
+                                    <p>
+                                        <span class="text-xs">Type : </span>
+                                        {{
+                                            ticket.device.type?.name ||
+                                            "Type non spécifié"
+                                        }}
+                                    </p>
+                                </div>
+
+                                <div class="flex-1 min-w-[200px]">
+                                    <p class="font-semibold mb-2">Client</p>
+                                    <p>
+                                        <span class="text-xs">Prénom : </span>
+                                        {{ ticket.client.firstName }}
+                                    </p>
+                                    <p>
+                                        <span class="text-xs">Nom : </span>
+                                        {{ ticket.client.lastName }}
+                                    </p>
+                                    <p>
+                                        <span class="text-xs"
+                                            >Téléphone :
+                                        </span>
+                                        {{ ticket.client.phone }}
                                     </p>
                                 </div>
 
                                 <div class="flex-1 min-w-[200px] space-y-2">
-                                    <p class="font-semibold">Client</p>
-                                    <p>
-                                        {{ ticket.client.firstName }}
-                                        {{ ticket.client.lastName }}
-                                    </p>
-                                    {{ ticket.client.phone }}
-                                </div>
-
-                                <div
-                                    class="flex-1 min-w-[200px] space-y-2 col-span-2"
-                                >
                                     <p class="font-semibold">
                                         Technicien(s) désigné(s)
                                     </p>
