@@ -33,6 +33,17 @@ class TicketsController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        return Inertia::render('Tickets/Create', [
+            'devices' => Device::all(),
+            'brands' => Brand::all(),
+            'types' => Type::all(),
+            'clients' => Client::all(),
+            'technicians' => User::where('role', 'technician')->get(),
+        ]);
+    }
+
 
     public function store(Request $request)
     {

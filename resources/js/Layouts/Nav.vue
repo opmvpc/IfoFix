@@ -42,6 +42,17 @@
                         >Tickets</span
                     >
                 </NavLink>
+                <div class="pl-4 space-y-1">
+                    <NavLink
+                        :href="route('tickets.create')"
+                        :active="isActive(['tickets.*'])"
+                        class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                    >
+                        <span class="text-sm font-bold group-hover:text-white"
+                            >Créer un ticket</span
+                        >
+                    </NavLink>
+                </div>
 
                 <div class="space-y-1 rounded-lg">
                     <div class="flex items-center px-3 py-2">

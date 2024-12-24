@@ -2,7 +2,7 @@
     <div class="bg-white rounded-lg shadow-md p-4">
         <div class="flex items-center gap-3 mb-4">
             <h2 class="text-xl font-bold">Interventions</h2>
-            <TooltipProvider>
+            <TooltipProvider v-if="auth.user.role === 'admin'">
                 <Tooltip>
                     <TooltipTrigger>
                         <font-awesome-icon

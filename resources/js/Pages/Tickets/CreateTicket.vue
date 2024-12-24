@@ -1,8 +1,13 @@
 <template>
     <div class="p-4 border rounded-lg bg-white shadow">
         <div class="flex justify-between items-center mb-4">
+            <BackButton v-if="params === '/tickets/create'" />
             <h2 class="text-lg font-semibold">Nouveau Ticket</h2>
-            <Button variant="ghost" @click="$emit('close')">
+            <Button
+                variant="ghost"
+                @click="$emit('close')"
+                v-if="params !== '/tickets/create'"
+            >
                 <XIcon class="h-4 w-4" />
             </Button>
         </div>
@@ -252,6 +257,7 @@ import ClientsModal from "./partials/ClientsModal.vue";
 import DeviceModal from "./partials/DevicesModal.vue";
 import CreateClientModal from "./partials/CreateClientModal.vue";
 import CreateDeviceModal from "./partials/CreateDeviceModal.vue";
+import BackButton from "@/Components/BackButton.vue";
 
 const props = defineProps({
     devices: Array,
@@ -349,4 +355,6 @@ const removeImage = (index) => {
     selectedImages.value.splice(index, 1);
     form.images = selectedImages.value;
 };
+const params = window.location.pathname;
+console.log(params);
 </script>
