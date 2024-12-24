@@ -24,6 +24,7 @@ import {
 } from "@/Components/ui/dialog";
 import { Checkbox } from "@/Components/ui/checkbox";
 import BackButton from "@/Components/BackButton.vue";
+import { formatDate } from "@/lib/utils";
 
 const props = defineProps({
     intervention: {
@@ -88,7 +89,7 @@ const toggleUser = (userId) => {
 
 <template>
     <AppLayout title="Modifier l'intervention">
-        <div class="py-12">
+        <div class="py-6">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <form @submit.prevent="submit">
                     <Card>
@@ -97,8 +98,11 @@ const toggleUser = (userId) => {
                                 <BackButton />
                                 <CardTitle>Modifier l'intervention</CardTitle>
                             </div>
-                            <CardDescription>
-                                Créée le {{ intervention.created_at }}
+                            <CardDescription
+                                class="text-sm text-gray-500 italic text-right"
+                            >
+                                Créé le
+                                {{ formatDate(intervention.created_at) }}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -122,6 +126,7 @@ const toggleUser = (userId) => {
                                         v-model="form.description"
                                         placeholder="Description de l'intervention"
                                         rows="5"
+                                        class="resize-none"
                                     />
                                 </div>
 
@@ -180,14 +185,12 @@ const toggleUser = (userId) => {
                                 </div>
 
                                 <div class="grid gap-2">
-                                    <div
-                                        class="flex items-center justify-between"
-                                    >
+                                    <div class="flex items-center">
                                         <Label>Intervenants</Label>
                                         <Dialog>
                                             <DialogTrigger asChild>
                                                 <Button
-                                                    variant="outline"
+                                                    variant="ghost"
                                                     size="icon"
                                                     class="h-8 w-8"
                                                 >

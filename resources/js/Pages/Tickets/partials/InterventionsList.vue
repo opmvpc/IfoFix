@@ -120,7 +120,7 @@ const emit = defineEmits(["create-intervention"]);
 
 const getInterventionUrl = (intervention) => {
     const canEdit =
-        props.auth.role === "admin" ||
+        props.auth.user.role === "admin" ||
         intervention.users.some((user) => user.id === props.auth.user.id);
 
     return `/interventions/${intervention.id}/${canEdit ? "edit" : ""}`;
