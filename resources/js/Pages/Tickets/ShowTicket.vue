@@ -26,6 +26,12 @@ import {
 
 import { Badge } from "@/Components/ui/badge";
 import BackButton from "@/Components/BackButton.vue";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/Components/ui/tooltip";
 
 const props = defineProps({
     ticket: Object,
@@ -256,13 +262,31 @@ const closeImageModal = () => {
                 <div class="bg-white rounded-lg shadow-md p-4">
                     <div class="flex items-center gap-3 mb-4">
                         <h2 class="text-xl font-bold">Interventions</h2>
-                        <font-awesome-icon
-                            icon="fa-solid fa-plus"
-                            class="px-3 py-2 cursor-pointer transition-all hover:bg-indigo-50 rounded-md"
-                            @click="
-                                showCreateIntervention = !showCreateIntervention
-                            "
-                        />
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <font-awesome-icon
+                                        icon="fa-solid fa-plus"
+                                        :class="`px-3 py-2 transition-all rounded-md ${
+                                            ticket.isFinished
+                                                ? 'text-gray-400 cursor-not-allowed'
+                                                : 'cursor-pointer hover:bg-indigo-50'
+                                        }`"
+                                        @click="
+                                            !ticket.isFinished &&
+                                                (showCreateIntervention =
+                                                    !showCreateIntervention)
+                                        "
+                                    />
+                                </TooltipTrigger>
+                                <TooltipContent v-if="ticket.isFinished">
+                                    <p>
+                                        Impossible de créer une intervention sur
+                                        un ticket résolu
+                                    </p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     </div>
 
                     <div
