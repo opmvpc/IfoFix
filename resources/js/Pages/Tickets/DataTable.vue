@@ -443,7 +443,7 @@ const table = useVueTable({
                     </Select>
                 </div>
 
-                <div class="border rounded-md grow dark:border-border/90">
+                <div class="">
                     <Table>
                         <TableHeader>
                             <TableRow
