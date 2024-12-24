@@ -23,6 +23,7 @@ const props = defineProps({
     ticket: Object,
     interventions: Array,
     technicians: Array,
+    auth: Object,
 });
 
 const showCreateIntervention = ref(false);
@@ -240,6 +241,8 @@ const closeImageModal = () => {
                 <InterventionsList
                     :ticket="ticket"
                     :interventions="interventions"
+                    :auth="auth"
+                    @create-intervention="showCreateIntervention = true"
                 />
 
                 <!-- Modal pour l'affichage en grand -->

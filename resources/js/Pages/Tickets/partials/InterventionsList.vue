@@ -12,11 +12,7 @@
                                     ? 'text-gray-400 cursor-not-allowed'
                                     : 'cursor-pointer hover:bg-indigo-50'
                             }`"
-                            @click="
-                                !props.ticket.isFinished &&
-                                    (showCreateIntervention =
-                                        !showCreateIntervention)
-                            "
+                            @click="$emit('create-intervention')"
                         />
                     </TooltipTrigger>
                     <TooltipContent v-if="props.ticket.isFinished">
@@ -38,7 +34,7 @@
                 :key="intervention.id"
                 class="bg-gray-50 rounded-lg shadow-sm p-4 hover:bg-gray-100 duration-200"
             >
-                <Link :href="`/interventions/${intervention.id}/edit`">
+                <Link :href="getInterventionUrl(intervention)">
                     <div class="flex items-center justify-between">
                         <div>
                             <div class="flex gap-4 text-sm text-gray-600">
@@ -114,8 +110,19 @@ import {
 } from "@/Components/ui/tooltip";
 import { formatDate } from "@/lib/utils";
 import { Link } from "@inertiajs/vue3";
+
 const props = defineProps({
     ticket: Object,
     interventions: Array,
+    auth: Object,
 });
+const emit = defineEmits(["create-intervention"]);
+
+const getInterventionUrl = (intervention) => {
+    const canEdit =
+        props.auth.role === "admin" ||
+        intervention.users.some((user) => user.id === props.auth.user.id);
+
+    return `/interventions/${intervention.id}/${canEdit ? "edit" : ""}`;
+};
 </script>
