@@ -12,3 +12,7 @@ export function valueUpdater(updaterOrValue, ref) {
         ref.value = updaterOrValue;
     }
 }
+
+export function formatDate(date) {
+    return new Date(date).toLocaleDateString("fr-FR");
+}
