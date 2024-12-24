@@ -65,14 +65,14 @@ const closeImageModal = () => {
         <Head :title="'Détails du Ticket #' + ticket.id" />
         <div class="p-6">
             <div class="flex flex-col gap-6">
+                <BackButton class="self-start" />
+
                 <!-- Colonne des détails du ticket -->
                 <div class="flex-1 p-6 bg-white rounded-lg shadow-md">
                     <div class="flex flex-col gap-6">
                         <div class="pb-4 border-b">
                             <div class="flex items-start justify-between mb-4">
-                                <BackButton />
-
-                                <div class="flex flex-col items-end">
+                                <div class="flex flex-col items-start">
                                     <h2 class="text-3xl font-semibold">
                                         Détails du ticket #{{ ticket.id }}
                                     </h2>
@@ -82,22 +82,21 @@ const closeImageModal = () => {
                                             {{ ticket.user.firstName }} le
                                             {{ formatDate(ticket.created_at) }}
                                         </p>
+                                        <Badge
+                                            class=""
+                                            :variant="
+                                                ticket.isFinished
+                                                    ? 'success'
+                                                    : 'warning'
+                                            "
+                                        >
+                                            {{
+                                                ticket.isFinished
+                                                    ? "Terminé"
+                                                    : "En cours"
+                                            }}
+                                        </Badge>
                                     </div>
-
-                                    <Badge
-                                        class=""
-                                        :variant="
-                                            ticket.isFinished
-                                                ? 'success'
-                                                : 'warning'
-                                        "
-                                    >
-                                        {{
-                                            ticket.isFinished
-                                                ? "Terminé"
-                                                : "En cours"
-                                        }}
-                                    </Badge>
                                 </div>
                             </div>
                             <p class="font-semibold">Description</p>
@@ -106,7 +105,9 @@ const closeImageModal = () => {
                             </p>
                         </div>
 
-                        <div class="flex flex-wrap gap-4">
+                        <div
+                            class="flex flex-wrap gap-4 border-border border-b"
+                        >
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div class="flex-1 min-w-[200px]">
                                     <p class="font-semibold mb-2">Appareil</p>

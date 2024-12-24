@@ -12,7 +12,11 @@
                                     ? 'text-gray-400 cursor-not-allowed'
                                     : 'cursor-pointer hover:bg-indigo-50'
                             }`"
-                            @click="$emit('create-intervention')"
+                            @click="
+                                !props.ticket.isFinished
+                                    ? $emit('create-intervention')
+                                    : ''
+                            "
                         />
                     </TooltipTrigger>
                     <TooltipContent v-if="props.ticket.isFinished">

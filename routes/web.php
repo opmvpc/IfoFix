@@ -32,6 +32,8 @@ Route::middleware([
 
     Route::resource('tickets', TicketsController::class);
     Route::resource('interventions', InterventionsController::class);
+    Route::patch('/interventions/{intervention}/cloturer', [InterventionsController::class, 'cloturer'])->name('interventions.cloturer');
+
     Route::resource('devices', ModelsController::class);
     // Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
     Route::get('/administration/{tab?}', [AdministrationController::class, 'index'])->name('administration')->where('tab', 'stats|users|clients|devices');;

@@ -15,6 +15,7 @@ class Ticket extends Model
         'title',
         'description',
         'isFinished',
+        'isChecked',
         'isDelivered',
         'isDeleted',
 
