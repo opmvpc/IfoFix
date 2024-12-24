@@ -1,13 +1,16 @@
 <template>
     <Banner class="" />
     <nav
-        class="absolute top-0 left-0 z-50 flex flex-col justify-between w-40 h-screen text-white transition-all duration-300 border-r shadow-lg lg:w-52 bg-gradient-to-b from-indigo-600 to-indigo-900"
+        class="absolute top-0 left-0 z-50 flex flex-col justify-between w-40 h-screen text-white transition-all duration-300 border-r shadow-lg border-border lg:w-52"
         :class="
             modelValue
                 ? '-translate-x-full md:translate-x-0'
                 : 'translate-x-0 md:-translate-x-full'
         "
     >
+        <div
+            class="absolute top-0 left-0 w-full h-full -z-10 bg-gradient-to-b from-indigo-600 dark:from-indigo-800 dark:via-indigo-950 to-indigo-900 dark:to-indigo-950 dark:brightness-50"
+        ></div>
         <button
             class="absolute right-0 p-2 translate-x-full bg-indigo-600 rounded-r-lg md:hidden top-4 hover:bg-indigo-700"
             @click="toggleNavigation"
@@ -19,7 +22,7 @@
         </button>
 
         <div
-            class="flex items-center justify-center h-20 border-b border-indigo-400"
+            class="flex items-center justify-center h-20 border-b dark:border-indigo-400"
         >
             <Link
                 :href="route('dashboard')"
@@ -35,7 +38,7 @@
             <NavLink
                 :href="route('tickets.index')"
                 :active="isActive(['tickets.*'])"
-                class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                class="flex items-center px-3 py-2 transition-all rounded-lg group"
             >
                 <font-awesome-icon
                     icon="fa-solid fa-ticket"
@@ -59,7 +62,7 @@
                     <NavLink
                         :href="route('administration.stats')"
                         :active="isActive('administration.stats')"
-                        class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                        class="flex items-center px-3 py-2 transition-all rounded-lg group"
                     >
                         <font-awesome-icon
                             icon="fa-solid fa-chart-line"
@@ -72,7 +75,7 @@
                     <NavLink
                         :href="route('administration.users')"
                         :active="isActive('administration.users')"
-                        class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                        class="flex items-center px-3 py-2 transition-all rounded-lg group"
                     >
                         <font-awesome-icon
                             icon="fa-solid fa-screwdriver-wrench"
@@ -85,7 +88,7 @@
                     <NavLink
                         :href="route('administration.clients')"
                         :active="isActive('administration.clients')"
-                        class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                        class="flex items-center px-3 py-2 transition-all rounded-lg group"
                     >
                         <font-awesome-icon
                             icon="fa-solid fa-users"
@@ -98,7 +101,7 @@
                     <NavLink
                         :href="route('administration.devices')"
                         :active="isActive('administration.devices')"
-                        class="flex items-center px-3 py-2 transition-all rounded-lg hover:bg-indigo-400 group"
+                        class="flex items-center px-3 py-2 transition-all rounded-lg group"
                     >
                         <font-awesome-icon
                             icon="fa-solid fa-laptop"

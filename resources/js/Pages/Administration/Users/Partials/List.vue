@@ -37,7 +37,7 @@
                 </DropdownMenu>
             </div>
 
-            <div class="border rounded-md">
+            <div class="border rounded-md dark:border-border/90">
                 <Table class="z-0">
                     <TableHeader>
                         <TableRow

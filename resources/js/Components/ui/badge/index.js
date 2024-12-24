@@ -7,13 +7,13 @@ export const badgeVariants = cva(
     {
         variants: {
             variant: {
-                default: "bg-gray-100 text-gray-600",
-                primary: "bg-blue-100 text-blue-600",
-                secondary: "bg-gray-100 text-gray-600",
-                success: "bg-emerald-100 text-emerald-600",
-                danger: "bg-red-100 text-red-600",
-                warning: "bg-orange-100 text-orange-600",
-                info: "bg-blue-100 text-blue-600",
+                default: "badge-default",
+                primary: "badge-primary",
+                secondary: "badge-secondary",
+                success: "badge-success",
+                danger: "badge-danger",
+                warning: "badge-warning",
+                info: "badge-info",
             },
         },
         defaultVariants: {
