@@ -74,7 +74,7 @@ const closeImageModal = () => {
 
                                 <div class="flex flex-col items-end">
                                     <h2 class="text-3xl font-semibold">
-                                        Ticket #{{ ticket.id }}
+                                        Détails du ticket #{{ ticket.id }}
                                     </h2>
                                     <div class="flex items-center gap-2">
                                         <p class="text-sm text-gray-500 italic">
