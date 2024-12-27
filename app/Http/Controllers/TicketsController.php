@@ -9,8 +9,7 @@ use App\Models\Intervention;
 use App\Models\Ticket;
 use App\Models\Type;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request; // Correction ici : bon import de Request
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
