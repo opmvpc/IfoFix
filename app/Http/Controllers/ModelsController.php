@@ -6,7 +6,6 @@ use App\Models\Device;
 use App\Models\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Inertia\Inertia;
 
 class ModelsController extends Controller
 {
@@ -29,7 +28,7 @@ class ModelsController extends Controller
             'typeId' => $request->typeId,
         ]);
 
-        return redirect()->route('tickets.index')
+        return redirect()->back()
             ->with('message', 'Modèle créé avec succès');
     }
 }

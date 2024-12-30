@@ -2,7 +2,9 @@
     <div class="p-4 border rounded-lg bg-white shadow">
         <div class="flex justify-between items-center mb-4">
             <BackButton v-if="params === '/tickets/create'" />
-            <h2 class="text-lg font-semibold">Modifier Ticket</h2>
+            <h2 class="text-lg font-semibold">
+                Modifier Ticket #{{ ticket.id }}
+            </h2>
             <Button
                 variant="ghost"
                 @click="$emit('close')"
@@ -210,7 +212,7 @@
                     </div>
                 </div>
             </div>
-            <Button type="submit" class="w-full">Créer</Button>
+            <Button type="submit" class="w-full">Mettre à jour</Button>
         </form>
 
         <CreateClientModal v-model="isNewClientModalOpen" />
@@ -222,10 +224,10 @@
         />
 
         <TechniciansModal
-            :isModalOpen="isModalOpen"
+            v-model="isModalOpen"
             :form="form"
             :technicians="technicians"
-            @update:isModalOpen="isModalOpen = $event"
+            @update:selectedTechnicians="updateSelectedTechnicians"
         />
 
         <ClientsModal
@@ -260,56 +262,83 @@ import CreateDeviceModal from "./CreateDeviceModal.vue";
 import BackButton from "@/Components/BackButton.vue";
 
 const props = defineProps({
+    ticket: Object,
     devices: Array,
     technicians: Array,
-    clients: Array, // Nouvelle prop
-    brands: Array, // Ajouter cette prop
-    types: Array, // Ajouter cette prop
+    techniciansIntervention: Array,
+    clients: Array,
+    brands: Array,
+    types: Array,
 });
-console.log(props.devices);
+console.log(props.techniciansIntervention);
 
+// Initialiser le formulaire avec les données du ticket
 const form = useForm({
-    title: "",
-    description: "",
-    deviceId: null,
-    clientId: null, // Modifié de client à clientId
-    technicianIds: [], // Modifié pour supporter plusieurs techniciens
-    images: [], // Ajout du champ images
+    title: props.ticket?.title || "",
+    description: props.ticket?.description || "",
+    deviceId: props.ticket?.device?.id || null,
+    clientId: props.ticket?.client?.id || null,
+    technicianIds: props.techniciansIntervention?.map((tech) => tech.id) || [],
+    images: [],
 });
 
-const emit = defineEmits(["close"]);
+// Initialiser les noms sélectionnés
+const selectedDeviceName = ref(props.ticket?.device?.name || "");
+const selectedClientName = ref(
+    props.ticket?.client
+        ? `${props.ticket.client.firstName} ${props.ticket.client.lastName}`
+        : ""
+);
 
+// Modifier la fonction submit pour faire une mise à jour au lieu d'une création
 const submit = () => {
-    form.post(route("tickets.store"), {
+    form.put(route("tickets.update", props.ticket.id), {
         preserveScroll: true,
         onSuccess: () => {
             form.reset();
             emit("close");
         },
         onError: (errors) => {
-            console.error("Erreur lors de la soumission:", errors);
+            console.error("Erreur lors de la mise à jour:", errors);
         },
     });
 };
+
+const emit = defineEmits(["close"]);
 
 const isModalOpen = ref(false);
 
 const openModal = () => {
     isModalOpen.value = true;
 };
-const selectedTechnicians = computed(() => {
-    return props.technicians.filter((tech) =>
-        form.technicianIds.includes(tech.id)
+
+const selectedTechnicians = ref(props.techniciansIntervention || []);
+
+const updateSelectedTechnicians = (techs) => {
+    selectedTechnicians.value = techs;
+};
+
+const toggleTechnician = (techId) => {
+    const currentIds = [...form.technicianIds];
+    const index = currentIds.indexOf(techId);
+
+    if (index === -1) {
+        currentIds.push(techId);
+    } else {
+        currentIds.splice(index, 1);
+    }
+
+    form.technicianIds = currentIds;
+    selectedTechnicians.value = props.technicians.filter((tech) =>
+        currentIds.includes(tech.id)
     );
-});
+};
 
 const isClientModalOpen = ref(false);
 
 const openClientModal = () => {
     isClientModalOpen.value = true;
 };
-
-const selectedClientName = ref("");
 
 const isNewClientModalOpen = ref(false);
 
@@ -324,8 +353,6 @@ const openNewDeviceModal = () => {
 };
 
 const isDeviceModalOpen = ref(false);
-
-const selectedDeviceName = ref("");
 
 const openDeviceModal = () => {
     isDeviceModalOpen.value = true;

@@ -22,6 +22,10 @@ import EditTicket from "./partials/EditTicket.vue";
 
 const props = defineProps({
     ticket: Object,
+    devices: Array,
+    clients: Array,
+    brands: Array,
+    types: Array,
     interventions: Array,
     technicians: Array,
     auth: Object,
@@ -267,12 +271,15 @@ const showEditForm = ref(false);
                     </div>
                     <EditTicket
                         v-if="showEditForm"
-                        :devices="props.devices"
+                        :ticket="ticket"
+                        :devices="devices"
                         :technicians="technicians"
+                        :techniciansIntervention="uniqueTechnicians"
                         :clients="clients"
                         :brands="brands"
                         :types="types"
                         @close="showEditForm = false"
+                        class="w-full lg:w-96"
                     />
                 </div>
                 <!-- Colonne du formulaire de création d'intervention -->
