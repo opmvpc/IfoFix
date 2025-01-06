@@ -3,11 +3,6 @@
         <CardHeader>Modeles</CardHeader>
         <CardContent>
             <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableHeader>Modeles</TableHeader>
-                    </TableRow>
-                </TableHead>
                 <TableBody>
                     <TableRow
                         v-for="device in props.devices"

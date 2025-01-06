@@ -3,16 +3,11 @@
         <CardHeader>Marques</CardHeader>
         <CardContent>
             <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableHeader>Marques</TableHeader>
-                    </TableRow>
-                </TableHead>
                 <TableBody>
                     <TableRow
                         v-for="brand in props.brands"
                         :key="brand.id"
-                        @click="() => emit('brand-selected', brand)"
+                        @click="() => setSelected(brand)"
                     >
                         <TableCell>{{ brand.name }}</TableCell>
                     </TableRow>
@@ -33,6 +28,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/Components/ui/table";
+import { ref } from "vue";
 
 const props = defineProps({
     brands: {
@@ -42,4 +38,16 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["brand-selected"]);
+
+const selectedBrand = ref(null);
+
+const setSelected = (brand) => {
+    if (selectedBrand.value && selectedBrand.value.id === brand.id) {
+        selectedBrand.value = null;
+        emit("brand-selected", null);
+        return;
+    }
+    emit("brand-selected", brand);
+    selectedBrand.value = brand;
+};
 </script>

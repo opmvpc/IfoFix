@@ -3,11 +3,6 @@
         <CardHeader>Types</CardHeader>
         <CardContent>
             <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableHeader>Type</TableHeader>
-                    </TableRow>
-                </TableHead>
                 <TableBody>
                     <TableRow
                         v-for="type in props.types"
