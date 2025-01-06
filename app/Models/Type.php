@@ -17,4 +17,9 @@ class Type extends Model
     {
         return $this->hasMany(Device::class, 'deviceId');
     }
+
+    public function brands()
+    {
+        return $this->hasManyThrough(Brand::class, Device::class, 'typeId', 'id', 'id', 'brandId');
+    }
 }
