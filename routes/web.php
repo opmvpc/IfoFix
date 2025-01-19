@@ -32,6 +32,8 @@ Route::middleware([
 
     Route::resource('tickets', TicketsController::class);
     Route::resource('interventions', InterventionsController::class);
+    Route::patch('/interventions/{intervention}/cloturer', [InterventionsController::class, 'cloturer'])->name('interventions.cloturer');
+
     Route::resource('devices', ModelsController::class);
     // Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
 

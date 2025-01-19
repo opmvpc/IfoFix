@@ -9,8 +9,7 @@ use App\Models\Intervention;
 use App\Models\Ticket;
 use App\Models\Type;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request; // Correction ici : bon import de Request
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -30,6 +29,17 @@ class TicketsController extends Controller
             'brands' => Brand::all(),
             'types' => Type::all(),
             'clients' => Client::all(),
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Tickets/Create', [
+            'devices' => Device::all(),
+            'brands' => Brand::all(),
+            'types' => Type::all(),
+            'clients' => Client::all(),
+            'technicians' => User::where('role', 'technician')->get(),
         ]);
     }
 
@@ -92,9 +102,58 @@ class TicketsController extends Controller
     public function show(Ticket $ticket)
     {
         return Inertia::render('Tickets/ShowTicket', [
-            'ticket' => $ticket->load(['user', 'device', 'client', 'images']),
-            'interventions' => $ticket->interventions()->with('users')->get(),
+            'ticket' => $ticket->load(['user', 'device.brand', 'device.type', 'client', 'images']),
+            'devices' => Device::all(),
+            'brands' => Brand::all(),
+            'types' => Type::all(),
+            'clients' => Client::all(),
+            'interventions' => $ticket->interventions()->with('users')->orderBy('created_at', 'desc')->get(),
             'technicians' => User::where('role', 'technician')->get(),
         ]);
+    }
+
+    public function update(Request $request, Ticket $ticket)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'deviceId' => 'required|exists:devices,id',
+            'clientId' => 'required|exists:clients,id',
+            'technicianIds' => 'nullable|array|exists:users,id,role,technician',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        // Mise à jour des informations de base du ticket
+        $ticket->update([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'deviceId' => $validated['deviceId'],
+            'clientId' => $validated['clientId'],
+        ]);
+
+        // Gestion des nouvelles images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('ticket-images', 'public');
+                $ticket->images()->create([
+                    'imageUrl' => $path,
+                ]);
+            }
+        }
+
+        // Gestion des techniciens
+        if ($request->has('technicianIds')) {
+            // Récupérer l'intervention existante ou en créer une nouvelle
+            $intervention = $ticket->interventions()->first() ?? Intervention::create([
+                'ticketId' => $ticket->id,
+                'isFinished' => false,
+                'isDeleted' => false,
+            ]);
+
+            // Mettre à jour les techniciens assignés
+            $intervention->users()->sync($request->input('technicianIds'));
+        }
+
+        return redirect()->back()->with('success', 'Ticket mis à jour avec succès');
     }
 }

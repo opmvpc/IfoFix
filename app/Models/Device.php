@@ -17,11 +17,11 @@ class Device extends Model
 
     public function brand()
     {
-        return $this->belongsTo(Brand::class, 'deviceId');
+        return $this->belongsTo(Brand::class, 'brandId');
     }
 
     public function type()
     {
-        return $this->belongsTo(Type::class, 'deviceId');
+        return $this->belongsTo(Type::class, 'typeId');
     }
 }

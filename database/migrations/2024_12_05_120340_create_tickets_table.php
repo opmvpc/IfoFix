@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->boolean('isFinished')->default(false);
+            $table->boolean('isChecked')->default(false);
             $table->boolean('isDelivered')->default(false);
             $table->boolean('isDeleted')->default(false);
             $table->timestamps();

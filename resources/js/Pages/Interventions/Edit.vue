@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { useForm } from "@inertiajs/vue3";
+import { Link, useForm } from "@inertiajs/vue3";
 import {
     Card,
     CardHeader,
@@ -24,6 +24,8 @@ import {
 } from "@/Components/ui/dialog";
 import { Checkbox } from "@/Components/ui/checkbox";
 import BackButton from "@/Components/BackButton.vue";
+import { formatDate } from "@/lib/utils";
+import { Badge } from "@/Components/ui/badge";
 
 const props = defineProps({
     intervention: {
@@ -56,8 +58,16 @@ watch(
 // Pour s'assurer que la valeur initiale est aussi un boolean
 form.isFinished = Boolean(form.isFinished);
 
-const submit = () => {
+const submitUpdate = () => {
     form.patch(route("interventions.update", props.intervention.id), {
+        onSuccess: () => {
+            // Optionnel : Afficher un message de succès
+            console.log("Intervention mise à jour avec succès");
+        },
+    });
+};
+const submitCloture = () => {
+    form.patch(route("interventions.cloturer", props.intervention.id), {
         onSuccess: () => {
             // Optionnel : Afficher un message de succès
             console.log("Intervention mise à jour avec succès");
@@ -84,21 +94,51 @@ const toggleUser = (userId) => {
         selectedUsers.value.has(user.id)
     );
 };
+
+// Ajout des refs pour la gestion des images
+const imagePreviewUrls = ref([]);
+const selectedImages = ref([]);
+
+const handleImageUpload = (event) => {
+    const files = Array.from(event.target.files);
+    files.forEach((file) => {
+        if (file.size > 2 * 1024 * 1024) {
+            alert("Chaque image ne doit pas dépasser 2MB");
+            return;
+        }
+        selectedImages.value.push(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreviewUrls.value.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    });
+    form.images = selectedImages.value;
+};
+
+const removeImage = (index) => {
+    imagePreviewUrls.value.splice(index, 1);
+    selectedImages.value.splice(index, 1);
+    form.images = selectedImages.value;
+};
 </script>
 
 <template>
     <AppLayout title="Modifier l'intervention">
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="p-6 space-y-6">
+            <BackButton />
+            <div>
                 <form @submit.prevent="submit">
                     <Card>
                         <CardHeader>
                             <div class="flex items-center justify-between">
-                                <BackButton />
                                 <CardTitle>Modifier l'intervention</CardTitle>
                             </div>
-                            <CardDescription>
-                                Créée le {{ intervention.created_at }}
+                            <CardDescription
+                                class="text-sm text-gray-500 italic"
+                            >
+                                Créé le
+                                {{ formatDate(intervention.created_at) }}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -122,6 +162,7 @@ const toggleUser = (userId) => {
                                         v-model="form.description"
                                         placeholder="Description de l'intervention"
                                         rows="5"
+                                        class="resize-none"
                                     />
                                 </div>
 
@@ -180,14 +221,12 @@ const toggleUser = (userId) => {
                                 </div>
 
                                 <div class="grid gap-2">
-                                    <div
-                                        class="flex items-center justify-between"
-                                    >
+                                    <div class="flex items-center">
                                         <Label>Intervenants</Label>
                                         <Dialog>
                                             <DialogTrigger asChild>
                                                 <Button
-                                                    variant="outline"
+                                                    variant="ghost"
                                                     size="icon"
                                                     class="h-8 w-8"
                                                 >
@@ -242,33 +281,119 @@ const toggleUser = (userId) => {
                                             </DialogContent>
                                         </Dialog>
                                     </div>
-                                    <div class="mt-2 space-y-2">
-                                        <div
+                                    <div
+                                        v-if="form.users.length > 0"
+                                        class="flex flex-wrap gap-2"
+                                    >
+                                        <Badge
                                             v-for="user in form.users"
                                             :key="user.id"
-                                            class="flex items-center space-x-2"
                                         >
                                             <font-awesome-icon
                                                 icon="fa-solid fa-user"
-                                                class="text-gray-400"
+                                                class="w-3 h-3 mr-2"
                                             />
-                                            <span>{{ user.firstName }}</span>
+                                            {{ user.firstName }}
+                                            {{ user.lastName }}
+                                        </Badge>
+                                    </div>
+                                    <div v-else class="text-gray-500 italic">
+                                        Aucun intervenant sélectionné
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <Label for="images">Images</Label>
+                                    <label
+                                        class="flex flex-col w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50"
+                                    >
+                                        <div
+                                            class="flex flex-col items-center justify-center pt-5 pb-6"
+                                        >
+                                            <font-awesome-icon
+                                                icon="fa-solid fa-cloud-arrow-up"
+                                                class="w-8 h-8 mb-3 text-gray-400"
+                                            />
+                                            <p class="text-sm text-gray-500">
+                                                Cliquez ou glissez des images
+                                                ici
+                                            </p>
+                                            <p class="text-xs text-gray-500">
+                                                (JPG, PNG, GIF jusqu'à 2MB)
+                                            </p>
+                                        </div>
+                                        <input
+                                            type="file"
+                                            class="hidden"
+                                            multiple
+                                            accept="image/*"
+                                            @change="handleImageUpload"
+                                        />
+                                    </label>
+                                    <!-- Prévisualisation des images -->
+                                    <div
+                                        v-if="imagePreviewUrls.length"
+                                        class="mt-4 grid grid-cols-4 gap-4"
+                                    >
+                                        <div
+                                            v-for="(
+                                                url, index
+                                            ) in imagePreviewUrls"
+                                            :key="index"
+                                            class="relative"
+                                        >
+                                            <img
+                                                :src="url"
+                                                class="w-full h-24 object-cover rounded-lg"
+                                            />
+                                            <button
+                                                type="button"
+                                                @click="removeImage(index)"
+                                                class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex justify-center items-center hover:bg-red-600"
+                                            >
+                                                <font-awesome-icon
+                                                    icon="fa-solid fa-times"
+                                                    class="w-3 h-3"
+                                                />
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </CardContent>
-                        <CardFooter class="flex justify-end space-x-2">
+                        <CardFooter class="flex justify-between space-x-2">
                             <Button
-                                type="button"
-                                variant="outline"
+                                @click.prevent="submitCloture"
                                 :href="route('interventions.index')"
+                                class="self-start"
                             >
-                                Annuler
+                                Clôturer l'intervention
                             </Button>
-                            <Button type="submit" :disabled="form.processing">
-                                Clôturer
-                            </Button>
+                            <div class="flex gap-2">
+                                <Link
+                                    :href="
+                                        route(
+                                            'tickets.show',
+                                            intervention.ticketId
+                                        )
+                                    "
+                                >
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        :href="route('interventions.index')"
+                                    >
+                                        Annuler
+                                    </Button>
+                                </Link>
+                                <Button
+                                    variant="outline"
+                                    @click.prevent="submitUpdate"
+                                    :disabled="form.processing"
+                                >
+                                    Modifier
+                                </Button>
+                            </div>
                         </CardFooter>
                     </Card>
                 </form>

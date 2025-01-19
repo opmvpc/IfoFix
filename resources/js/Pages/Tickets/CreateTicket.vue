@@ -1,13 +1,19 @@
 <template>
-    <Card>
-        <CardHeader>
+<Card>
+    <CardHeader>
             <CardTitle class="flex justify-between">
-                <span class="font-semibold">Nouveau Ticket</span>
-                <font-awesome-icon
-                    icon="fa-solid fa-close"
-                    class="text-gray-400 cursor-pointer hover:text-indigo-600"
-                    @click.prevent="emit('close', null)"
-                />
+                <!-- <div class="p-4 bg-white border rounded-lg shadow"> -->
+                <div class="flex items-center justify-between mb-4">
+                    <BackButton v-if="params === '/tickets/create'" />
+                    <h2 class="text-lg font-semibold">Nouveau Ticket</h2>
+                    <Button
+                        variant="ghost"
+                        @click="$emit('close')"
+                        v-if="params !== '/tickets/create'"
+                    >
+                        <XIcon class="w-4 h-4" />
+                    </Button>
+                </div>
             </CardTitle>
         </CardHeader>
         <CardContent>
@@ -259,6 +265,7 @@ import ClientsModal from "./partials/ClientsModal.vue";
 import DeviceModal from "./partials/DevicesModal.vue";
 import CreateClientModal from "./partials/CreateClientModal.vue";
 import CreateDeviceModal from "./partials/CreateDeviceModal.vue";
+import BackButton from "@/Components/BackButton.vue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 
 const props = defineProps({
@@ -357,4 +364,6 @@ const removeImage = (index) => {
     selectedImages.value.splice(index, 1);
     form.images = selectedImages.value;
 };
+const params = window.location.pathname;
+console.log(params);
 </script>

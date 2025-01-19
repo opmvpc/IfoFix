@@ -1,6 +1,9 @@
 <template>
-    <Dialog :open="isModalOpen" @update:open="isModalOpen = $event">
-        <DialogContent class="sm:max-w-[500px] min-h-[500px]">
+    <Dialog
+        :open="modelValue"
+        @update:open="$emit('update:modelValue', $event)"
+    >
+        <DialogContent class="sm:max-w-[425px] min-h-[500px]">
             <DialogHeader>
                 <DialogTitle>Sélectionner des techniciens</DialogTitle>
                 <DialogDescription>
@@ -36,7 +39,11 @@
             </div>
 
             <DialogFooter>
-                <Button type="button" variant="secondary" @click="closeModal">
+                <Button
+                    type="button"
+                    variant="secondary"
+                    @click="confirmAndClose"
+                >
                     Confirmer
                 </Button>
             </DialogFooter>
@@ -45,7 +52,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import {
     Dialog,
     DialogContent,
@@ -60,19 +67,10 @@ import { Label } from "@/Components/ui/label";
 import { Button } from "@/Components/ui/button";
 
 const props = defineProps({
-    isModalOpen: Boolean,
+    modelValue: Boolean,
     form: Object,
     technicians: Array,
 });
-
-const isModalOpen = ref(false);
-
-watch(
-    () => props.isModalOpen,
-    (value) => {
-        isModalOpen.value = value;
-    }
-);
 
 const technicianSearch = ref("");
 
@@ -88,6 +86,8 @@ const filteredTechnicians = computed(() => {
     );
 });
 
+const emit = defineEmits(["update:modelValue", "update:selectedTechnicians"]);
+
 const toggleTechnician = (techId) => {
     const currentIds = [...props.form.technicianIds];
     const index = currentIds.indexOf(techId);
@@ -99,12 +99,15 @@ const toggleTechnician = (techId) => {
     }
 
     props.form.technicianIds = currentIds;
+
+    // Émettre les techniciens sélectionnés
+    const selectedTechs = props.technicians.filter((tech) =>
+        currentIds.includes(tech.id)
+    );
+    emit("update:selectedTechnicians", selectedTechs);
 };
 
-const emit = defineEmits(["update:isModalOpen"]);
-
-const closeModal = () => {
-    isModalOpen.value = false;
-    emit("update:isModalOpen", false);
+const confirmAndClose = () => {
+    emit("update:modelValue", false);
 };
 </script>
