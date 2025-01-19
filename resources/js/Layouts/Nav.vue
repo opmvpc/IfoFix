@@ -49,7 +49,10 @@
                 >
             </NavLink>
 
-            <div class="space-y-1 rounded-lg">
+            <div
+                class="space-y-1 rounded-lg"
+                v-if="$page.props.auth.user.role === 'admin'"
+            >
                 <div class="flex items-center px-3 py-2">
                     <font-awesome-icon
                         icon="fa-solid fa-users-gear"
@@ -59,7 +62,7 @@
                 </div>
 
                 <div class="pl-4 space-y-1">
-                    <NavLink
+                    <!-- <NavLink
                         :href="route('administration.stats')"
                         :active="isActive('administration.stats')"
                         class="flex items-center px-3 py-2 transition-all rounded-lg group"
@@ -71,7 +74,7 @@
                         <span class="text-sm font-bold group-hover:text-white"
                             >Statistiques</span
                         >
-                    </NavLink>
+                    </NavLink> -->
                     <NavLink
                         :href="route('administration.users')"
                         :active="isActive('administration.users')"

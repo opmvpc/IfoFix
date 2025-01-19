@@ -16,43 +16,39 @@
                 </CardHeader>
                 <CardContent>
                     <div class="grid grid-cols-1 gap-6">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <Input type="hidden" v-model="form.id" />
-                                <div class="space-y-2">
-                                    <Label>Prénom</Label>
-                                    <Input
-                                        type="text"
-                                        placeholder="Prénom"
-                                        v-model="form.firstName"
-                                        class="capitalize"
-                                    />
-                                    <p
-                                        v-if="form.errors.firstName"
-                                        class="text-sm text-red-500"
-                                    >
-                                        {{ form.errors.firstName }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="space-y-2">
-                                    <Label>Nom</Label>
-                                    <Input
-                                        type="text"
-                                        placeholder="Nom"
-                                        v-model="form.lastName"
-                                        class="capitalize"
-                                    />
-                                    <p
-                                        v-if="form.errors.lastName"
-                                        class="text-sm text-red-500"
-                                    >
-                                        {{ form.errors.lastName }}
-                                    </p>
-                                </div>
-                            </div>
+                        <Input type="hidden" v-model="form.id" />
+                        <div class="space-y-2">
+                            <Label>Prénom</Label>
+                            <Input
+                                type="text"
+                                placeholder="Prénom"
+                                v-model="form.firstName"
+                                class="capitalize"
+                            />
+                            <p
+                                v-if="form.errors.firstName"
+                                class="text-sm text-red-500"
+                            >
+                                {{ form.errors.firstName }}
+                            </p>
                         </div>
+
+                        <div class="space-y-2">
+                            <Label>Nom</Label>
+                            <Input
+                                type="text"
+                                placeholder="Nom"
+                                v-model="form.lastName"
+                                class="capitalize"
+                            />
+                            <p
+                                v-if="form.errors.lastName"
+                                class="text-sm text-red-500"
+                            >
+                                {{ form.errors.lastName }}
+                            </p>
+                        </div>
+
                         <div class="space-y-2">
                             <Label>Email</Label>
                             <Input
