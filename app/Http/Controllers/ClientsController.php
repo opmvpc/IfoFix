@@ -11,12 +11,6 @@ class ClientsController extends Controller
 
     use PasswordValidationRules;
 
-    public function index()
-    {
-        $clients = Client::all();
-        return response()->json($clients);
-    }
-
     public function store(Request $request)
     {
         $validatedData = $request->validate([

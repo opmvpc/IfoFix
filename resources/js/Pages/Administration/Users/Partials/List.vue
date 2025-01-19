@@ -1,12 +1,13 @@
 <template>
     <Card class="flex flex-col">
         <CardContent class="flex-1 p-6">
-            <div class="flex">
+            <div class="flex items-center gap-2">
                 <h1 class="text-2xl font-bold">Liste des techniciens</h1>
                 <UserCreate />
             </div>
             <div class="flex items-center gap-2 py-4">
                 <Input
+                    type="search"
                     class="max-w-52"
                     placeholder="Rechercher..."
                     :model-value="table.getState().globalFilter"
@@ -15,7 +16,7 @@
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                         <Button variant="outline" class="ml-auto">
-                            Columns <ChevronDown class="w-4 h-4 ml-2" />
+                            Colonnes <ChevronDown class="w-4 h-4 ml-2" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -30,14 +31,14 @@
                                 (value) => column.toggleVisibility(!!value)
                             "
                         >
-                            {{ column.id }}
+                            {{ getColumnNames(column.id) }}
                         </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
 
-            <div class="border rounded-md">
-                <Table class="">
+            <div class="">
+                <Table class="z-0">
                     <TableHeader>
                         <TableRow
                             v-for="headerGroup in table.getHeaderGroups()"
@@ -87,22 +88,24 @@
             </div>
 
             <div class="flex items-center justify-end py-4 space-x-2">
+                <div class="flex-1 text-sm text-muted-foreground">
+                    {{ table.getFilteredRowModel().rows.length }} technicien(s)
+                    affichés(s) / Total : {{ users.length }} technicien(s)
+                </div>
                 <div class="space-x-2">
                     <Button
-                        variant="outline"
                         size="sm"
                         :disabled="!table.getCanPreviousPage()"
                         @click="table.previousPage()"
                     >
-                        Previous
+                        Précedent
                     </Button>
                     <Button
-                        variant="outline"
                         size="sm"
                         :disabled="!table.getCanNextPage()"
                         @click="table.nextPage()"
                     >
-                        Next
+                        Suivant
                     </Button>
                 </div>
             </div>
@@ -145,8 +148,8 @@ import {
     CardDescription,
     CardContent,
     CardFooter,
-} from "@/Components/ui//card";
-import { Badge } from "@/Components/ui//badge";
+} from "@/Components/ui/card";
+import { Badge } from "@/Components/ui/badge";
 import UserCreate from "@/Pages/Administration/Users/Partials/Create.vue";
 
 const emit = defineEmits(["user-selected"]);
@@ -291,6 +294,17 @@ const table = useVueTable({
         },
     },
 });
+
+const getColumnNames = (id) => {
+    const names = {
+        firstName: "Prénom",
+        lastName: "Nom",
+        email: "Email",
+        role: "Rôle",
+        isActive: "Statut",
+    };
+    return names[id];
+};
 
 const selectUser = (user) => {
     emit("user-selected", user);

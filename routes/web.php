@@ -36,7 +36,11 @@ Route::middleware([
 
     Route::resource('devices', ModelsController::class);
     // Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
-    Route::get('/administration/{tab?}', [AdministrationController::class, 'index'])->name('administration')->where('tab', 'stats|users|clients|devices');;
+
+    Route::get('/administration/stats', [AdministrationController::class, 'stats'])->name('administration.stats');
+    Route::get('/administration/users', [AdministrationController::class, 'users'])->name('administration.users');
+    Route::get('/administration/clients', [AdministrationController::class, 'clients'])->name('administration.clients');
+    Route::get('/administration/devices', [AdministrationController::class, 'devices'])->name('administration.devices');
     Route::get('/users', [UsersController::class, 'index'])->name('users.index');
     Route::post('/users', [UsersController::class, 'store'])->name('users.store');
     Route::put('/users', [UsersController::class, 'edit'])->name('users.edit');

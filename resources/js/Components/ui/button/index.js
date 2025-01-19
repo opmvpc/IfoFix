@@ -7,7 +7,7 @@ export const buttonVariants = cva(
     {
         variants: {
             variant: {
-                custom: "bg-indigo-500 text-white font-bold shadow hover:bg-indigo-600 duration-200",
+                custom: "bg-indigo-500 text-white font-bold shadow hover:bg-indigo-600 duration-200 dark:bg-indigo-600",
                 default:
                     "bg-primary text-primary-foreground shadow hover:bg-primary/90",
                 destructive:

@@ -1,14 +1,14 @@
 <template>
-    <div class="duration-300 animate-in slide-in-from-right">
-        <form v-if="user" @submit.prevent="submit" class="">
-            <Card class="h-full">
+    <div v-if="user" class="duration-300 animate-in slide-in-from-right">
+        <form @submit.prevent="submit" class="">
+            <Card>
                 <CardHeader>
                     <CardTitle class="flex justify-between">
                         <span> Profil </span>
                         <span>
                             <font-awesome-icon
                                 icon="fa-solid fa-close"
-                                class="text-gray-400 cursor-pointer hover:text-gray-600"
+                                class="text-gray-400 cursor-pointer hover:text-indigo-600"
                                 @click.prevent="emit('user-selected', null)"
                             />
                         </span>
@@ -158,8 +158,11 @@
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit" :disabled="form.processing"
-                        >Mettre à jour</Button
+                    <Button
+                        type="submit"
+                        :disabled="form.processing || !isEdited()"
+                    >
+                        Mettre à jour</Button
                     >
                 </CardFooter>
             </Card>
@@ -172,6 +175,7 @@ import { ref, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { Button } from "@/Components/ui/button";
 import { Label } from "@/Components/ui/label";
+import { Input } from "@/Components/ui/input";
 import {
     Card,
     CardHeader,
@@ -179,7 +183,6 @@ import {
     CardContent,
     CardFooter,
 } from "@/Components/ui/card";
-import { Input } from "@/Components/ui/input";
 import {
     Select,
     SelectContent,
@@ -210,6 +213,16 @@ const form = useForm({
 
 const user = ref(props.user);
 
+const isEdited = () => {
+    return (
+        form.firstName !== user.value.firstName ||
+        form.lastName !== user.value.lastName ||
+        form.email !== user.value.email ||
+        form.role !== user.value.role ||
+        form.isActive !== String(user.value.isActive)
+    );
+};
+
 watch(
     () => props.user,
     (newUser) => {
@@ -227,7 +240,7 @@ watch(
 );
 
 const submit = () => {
-    if (user) {
+    if (user && isEdited()) {
         form.put(route("users.edit"), {
             preserveScroll: true,
             preserveState: true,

@@ -1,12 +1,13 @@
 <template>
     <Card class="flex flex-col">
         <CardContent class="flex-1 p-6">
-            <div class="flex">
+            <div class="flex items-center gap-2">
                 <h1 class="text-2xl font-bold">Liste des clients</h1>
                 <UserCreate />
             </div>
             <div class="flex items-center gap-2 py-4">
                 <Input
+                    type="search"
                     class="max-w-52"
                     placeholder="Rechercher..."
                     :model-value="table.getState().globalFilter"
@@ -15,7 +16,7 @@
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                         <Button variant="outline" class="ml-auto">
-                            Columns <ChevronDown class="w-4 h-4 ml-2" />
+                            Colonnes <ChevronDown class="w-4 h-4 ml-2" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -30,13 +31,13 @@
                                 (value) => column.toggleVisibility(!!value)
                             "
                         >
-                            {{ column.id }}
+                            {{ getColumnNames(column.id) }}
                         </DropdownMenuCheckboxItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
 
-            <div class="border rounded-md">
+            <div class="">
                 <Table class="">
                     <TableHeader>
                         <TableRow
@@ -87,22 +88,24 @@
             </div>
 
             <div class="flex items-center justify-end py-4 space-x-2">
+                <div class="flex-1 text-sm text-muted-foreground">
+                    {{ table.getFilteredRowModel().rows.length }} client(s)
+                    affichés(s) / Total : {{ clients.length }} client(s)
+                </div>
                 <div class="space-x-2">
                     <Button
-                        variant="outline"
                         size="sm"
                         :disabled="!table.getCanPreviousPage()"
                         @click="table.previousPage()"
                     >
-                        Previous
+                        Précedent
                     </Button>
                     <Button
-                        variant="outline"
                         size="sm"
                         :disabled="!table.getCanNextPage()"
                         @click="table.nextPage()"
                     >
-                        Next
+                        Suivant
                     </Button>
                 </div>
             </div>
@@ -215,7 +218,7 @@ const columns = [
                     onClick: () =>
                         column.toggleSorting(column.getIsSorted() === "asc"),
                 },
-                () => ["Phone", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+                () => ["Téléphone", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
             );
         },
     },
@@ -260,6 +263,15 @@ const table = useVueTable({
         },
     },
 });
+const getColumnNames = (id) => {
+    const names = {
+        firstName: "Prénom",
+        lastName: "Nom",
+        email: "Email",
+        phone: "Téléphone",
+    };
+    return names[id];
+};
 
 const selectClient = (client) => {
     emit("client-selected", client);

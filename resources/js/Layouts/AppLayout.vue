@@ -2,15 +2,15 @@
     <div>
         <Head />
 
-        <Nav v-model="showNavigation" />
-
-        <div class="flex min-h-screen bg-gray-100 dark:bg-gray-900">
-            <!-- Sidebar -->
-
+        <div class="relative flex min-h-screen">
+            <div
+                class="absolute w-full h-full -z-10 bg-gradient-to-b from-indigo-50 to-indigo-100 dark:from-indigo-950 dark:via-indigo-950 dark:to-indigo-950 dark:brightness-75"
+            ></div>
+            <Nav v-model="showNavigation" />
             <!-- Main Content -->
             <div
                 class="flex flex-col w-full h-full overflow-y-auto transition-all duration-300"
-                :class="showNavigation ? 'ml-40 lg:ml-52' : 'ml-0'"
+                :class="showNavigation ? 'ml-0 md:ml-40 lg:ml-52' : 'ml-0'"
             >
                 <!-- Page Heading -->
                 <header
@@ -23,7 +23,9 @@
                 </header>
 
                 <!-- Page Content -->
-                <main class="flex-1 w-full h-full overflow-hidden">
+                <main
+                    class="flex-1 w-full h-screen max-h-screen overflow-hidden"
+                >
                     <slot />
                 </main>
             </div>

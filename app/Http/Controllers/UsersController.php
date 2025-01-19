@@ -11,12 +11,6 @@ class UsersController extends Controller
 
     use PasswordValidationRules;
 
-    public function index()
-    {
-        $users = User::all();
-        return response()->json($users);
-    }
-
     public function store(Request $request)
     {
         $validatedData = $request->validate([
