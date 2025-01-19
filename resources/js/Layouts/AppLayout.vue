@@ -42,7 +42,7 @@ defineProps({
     title: String,
 });
 
-const showNavigation = ref(localStorage.getItem("navigationState") === "true");
+const showNavigation = ref(localStorage.getItem("navigationState") !== "false");
 
 watch(showNavigation, (newValue) => {
     localStorage.setItem("navigationState", newValue);

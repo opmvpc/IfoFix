@@ -34,4 +34,16 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["brand-selected"]);
+
+const selectedBrand = ref(null);
+
+const setSelected = (brand) => {
+    if (selectedBrand.value && selectedBrand.value.id === brand.id) {
+        selectedBrand.value = null;
+        emit("brand-selected", null);
+        return;
+    }
+    emit("brand-selected", brand);
+    selectedBrand.value = brand;
+};
 </script>
