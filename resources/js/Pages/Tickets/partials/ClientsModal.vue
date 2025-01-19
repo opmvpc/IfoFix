@@ -19,14 +19,14 @@
                 />
 
                 <div class="h-[300px] overflow-y-auto space-y-2">
-                    <RadioGroup v-model="props.form.clientId">
+                    <RadioGroup v-model="selectedClientId">
                         <div
                             v-for="client in filteredClients"
                             :key="client.id"
-                            class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
+                            class="flex items-center p-2 space-x-2 rounded hover:bg-gray-100"
                         >
                             <RadioGroupItem
-                                :value="client.id"
+                                :value="String(client.id)"
                                 :id="'client-' + client.id"
                             />
                             <Label
@@ -75,6 +75,14 @@ const props = defineProps({
 });
 
 const clientSearch = ref("");
+
+// Add computed property for handling string/number conversion
+const selectedClientId = computed({
+    get: () => String(props.form.clientId),
+    set: (value) => {
+        props.form.clientId = Number(value);
+    },
+});
 
 const filteredClients = computed(() => {
     if (!clientSearch.value) return props.clients;

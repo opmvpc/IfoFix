@@ -1,5 +1,6 @@
 <script setup>
 import { Button } from "@/Components/ui/button";
+import { Label } from "@/Components/ui/label"; // Add this import
 
 import {
     DropdownMenu,
@@ -62,38 +63,56 @@ watchEffect(() => {
 });
 
 // refactoring filter btn
-const selectedTechnician = ref(null);
-const selectedDevice = ref(null);
-const selectedBrand = ref(null);
-const selectedType = ref(null);
+const AUCUN_VALUE = "none";
+
+const selectedTechnician = ref(AUCUN_VALUE);
+const selectedDevice = ref(AUCUN_VALUE);
+const selectedBrand = ref(AUCUN_VALUE);
+const selectedType = ref(AUCUN_VALUE);
+
+// Update switch refs to use localStorage
+const pendingTickets = ref(
+    JSON.parse(localStorage.getItem("pendingTickets")) || false
+);
+const deliveredTickets = ref(
+    JSON.parse(localStorage.getItem("deliveredTickets")) || false
+);
+
+// Add watchers for switches
+watch(pendingTickets, (newValue) => {
+    localStorage.setItem("pendingTickets", JSON.stringify(newValue));
+});
+
+watch(deliveredTickets, (newValue) => {
+    localStorage.setItem("deliveredTickets", JSON.stringify(newValue));
+});
 
 const filteredTickets = computed(() => {
     let tickets = props.tickets;
-    if (props.pendingTickets) {
+    if (pendingTickets.value) {
         tickets = tickets.filter((ticket) => !ticket.isFinished);
     }
-    if (props.deliveredTickets) {
+    if (deliveredTickets.value) {
         tickets = tickets.filter((ticket) => ticket.isDelivered);
     }
-    if (selectedTechnician.value) {
+    if (selectedTechnician.value && selectedTechnician.value !== AUCUN_VALUE) {
         tickets = tickets.filter(
-            (ticket) => ticket.user.id === selectedTechnician.value
+            (ticket) => ticket.user.id === parseInt(selectedTechnician.value)
         );
     }
-    if (selectedDevice.value) {
+    if (selectedDevice.value && selectedDevice.value !== AUCUN_VALUE) {
         tickets = tickets.filter(
-            (ticket) => ticket.device.id === selectedDevice.value
+            (ticket) => ticket.device.id === parseInt(selectedDevice.value)
         );
     }
-    if (selectedBrand.value) {
+    if (selectedBrand.value && selectedBrand.value !== AUCUN_VALUE) {
         tickets = tickets.filter(
-            (ticket) => ticket.device.brandId === selectedBrand.value
+            (ticket) => ticket.device.brandId === parseInt(selectedBrand.value)
         );
     }
-
-    if (selectedType.value) {
+    if (selectedType.value && selectedType.value !== AUCUN_VALUE) {
         tickets = tickets.filter(
-            (ticket) => ticket.device.typeId === selectedType.value
+            (ticket) => ticket.device.typeId === parseInt(selectedType.value)
         );
     }
     return tickets;
@@ -160,10 +179,11 @@ const columns = [
             return h(
                 Badge,
                 {
-                    class:
-                        status === "Terminé"
-                            ? "px-2 py-1 bg-emerald-100 text-emerald-600"
-                            : "px-2 py-1 bg-orange-100 text-orange-600",
+                    variant: status === "Terminé" ? "success" : "warning",
+                    // class:
+                    //     status === "Terminé"
+                    //         ? "px-2 py-1 bg-emerald-100 text-emerald-600"
+                    //         : "px-2 py-1 bg-orange-100 text-orange-600",
                 },
                 () => status
             );
@@ -221,7 +241,21 @@ const columns = [
 
 const sorting = ref([]);
 const columnFilters = ref([]);
-const columnVisibility = ref({});
+
+// Update columnVisibility to use localStorage
+const columnVisibility = ref(
+    JSON.parse(localStorage.getItem("columnVisibility")) || {}
+);
+
+// Add watcher for columnVisibility
+watch(
+    columnVisibility,
+    (newValue) => {
+        localStorage.setItem("columnVisibility", JSON.stringify(newValue));
+    },
+    { deep: true }
+);
+
 const rowSelection = ref({});
 const expanded = ref({});
 const globalFilter = ref("");
@@ -263,8 +297,14 @@ const table = useVueTable({
     onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),
     onColumnFiltersChange: (updaterOrValue) =>
         valueUpdater(updaterOrValue, columnFilters),
-    onColumnVisibilityChange: (updaterOrValue) =>
-        valueUpdater(updaterOrValue, columnVisibility),
+    onColumnVisibilityChange: (updaterOrValue) => {
+        valueUpdater(updaterOrValue, columnVisibility);
+        // Save to localStorage whenever visibility changes
+        localStorage.setItem(
+            "columnVisibility",
+            JSON.stringify(columnVisibility.value)
+        );
+    },
     onRowSelectionChange: (updaterOrValue) =>
         valueUpdater(updaterOrValue, rowSelection),
     onExpandedChange: (updaterOrValue) =>
@@ -325,8 +365,9 @@ const table = useVueTable({
                             <Switch
                                 :checked="pendingTickets"
                                 @update:checked="
-                                    (value) =>
-                                        $emit('updatePendingTickets', value)
+                                    (value) => {
+                                        pendingTickets = value;
+                                    }
                                 "
                                 id="pending-mode"
                             />
@@ -336,8 +377,9 @@ const table = useVueTable({
                             <Switch
                                 :checked="deliveredTickets"
                                 @update:checked="
-                                    (value) =>
-                                        $emit('updateDeliveredTickets', value)
+                                    (value) => {
+                                        deliveredTickets = value;
+                                    }
                                 "
                                 id="delivered-mode"
                             />
@@ -377,13 +419,13 @@ const table = useVueTable({
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem :value="aucun"> Aucun </SelectItem>
+                                <SelectItem :value="AUCUN_VALUE"
+                                    >Aucun</SelectItem
+                                >
                                 <SelectItem
-                                    v-for="(
-                                        technician, index
-                                    ) in props.technicians"
-                                    :key="index"
-                                    :value="technician.id"
+                                    v-for="technician in props.technicians"
+                                    :key="technician.id"
+                                    :value="String(technician.id)"
                                 >
                                     {{ technician.firstName }}
                                 </SelectItem>
@@ -397,12 +439,15 @@ const table = useVueTable({
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem :value="aucun"> Aucun </SelectItem>
+                                <SelectItem :value="AUCUN_VALUE"
+                                    >Aucun</SelectItem
+                                >
                                 <SelectItem
-                                    v-for="(device, index) in props.devices"
-                                    :key="index"
-                                    :value="device.id"
-                                    >{{ device.name }}
+                                    v-for="device in props.devices"
+                                    :key="device.id"
+                                    :value="String(device.id)"
+                                >
+                                    {{ device.name }}
                                 </SelectItem>
                             </SelectGroup>
                         </SelectContent>
@@ -414,12 +459,15 @@ const table = useVueTable({
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem :value="aucun"> Aucun </SelectItem>
+                                <SelectItem :value="AUCUN_VALUE"
+                                    >Aucun</SelectItem
+                                >
                                 <SelectItem
-                                    v-for="(brand, index) in props.brands"
-                                    :key="index"
-                                    :value="brand.id"
-                                    >{{ brand.name }}
+                                    v-for="brand in props.brands"
+                                    :key="brand.id"
+                                    :value="String(brand.id)"
+                                >
+                                    {{ brand.name }}
                                 </SelectItem>
                             </SelectGroup>
                         </SelectContent>
@@ -431,12 +479,15 @@ const table = useVueTable({
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem :value="aucun"> Aucun </SelectItem>
+                                <SelectItem :value="AUCUN_VALUE"
+                                    >Aucun</SelectItem
+                                >
                                 <SelectItem
-                                    v-for="(type, index) in props.types"
-                                    :key="index"
-                                    :value="type.id"
-                                    >{{ type.name }}
+                                    v-for="type in props.types"
+                                    :key="type.id"
+                                    :value="String(type.id)"
+                                >
+                                    {{ type.name }}
                                 </SelectItem>
                             </SelectGroup>
                         </SelectContent>

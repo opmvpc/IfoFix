@@ -9,6 +9,7 @@ export default {
         "./storage/framework/views/*.php",
         "./resources/views/**/*.blade.php",
         "./resources/js/**/*.{ts,tsx,vue}",
+        "./node_modules/@chadcn/ui/dist/**/*.js",
     ],
 
     theme: {
@@ -37,6 +38,10 @@ export default {
                 destructive: {
                     DEFAULT: "hsl(var(--destructive))",
                     foreground: "hsl(var(--destructive-foreground))",
+                },
+                success: {
+                    DEFAULT: "hsl(var(--success))",
+                    foreground: "hsl(var(--success-foreground))",
                 },
                 muted: {
                     DEFAULT: "hsl(var(--muted))",
@@ -90,5 +95,5 @@ export default {
         },
     },
 
-    plugins: [forms, require("tailwindcss-animate")],
+    plugins: [require("tailwindcss-animate"), forms],
 };

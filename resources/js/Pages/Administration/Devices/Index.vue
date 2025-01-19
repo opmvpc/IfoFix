@@ -26,7 +26,19 @@
                     <!-- Main Content -->
                     <div class="grid grid-cols-1 gap-4 grow lg:grid-cols-3">
                         <div>
-                            <h3 class="mb-2 text-lg font-semibold">Types</h3>
+                            <div class="flex items-center gap-4 mb-2">
+                                <h3 class="text-lg font-semibold">Types</h3>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    @click="openDialog('type')"
+                                >
+                                    <font-awesome-icon
+                                        icon="fa-solid fa-plus"
+                                        class="w-4 h-4"
+                                    />
+                                </Button>
+                            </div>
                             <Types
                                 :types="filteredTypes"
                                 :selectedType="selectedType"
@@ -35,7 +47,19 @@
                         </div>
 
                         <div>
-                            <h3 class="mb-2 text-lg font-semibold">Marques</h3>
+                            <div class="flex items-center gap-4 mb-2">
+                                <h3 class="text-lg font-semibold">Marques</h3>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    @click="openDialog('brand')"
+                                >
+                                    <font-awesome-icon
+                                        icon="fa-solid fa-plus"
+                                        class="w-4 h-4"
+                                    />
+                                </Button>
+                            </div>
                             <Brands
                                 :brands="filteredBrands"
                                 :selectedBrand="selectedBrand"
@@ -44,9 +68,23 @@
                         </div>
 
                         <div>
-                            <h3 class="mb-2 text-lg font-semibold">Modèles</h3>
+                            <div class="flex items-center gap-4 mb-2">
+                                <h3 class="text-lg font-semibold">Modèles</h3>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    @click="openDialog('device')"
+                                >
+                                    <font-awesome-icon
+                                        icon="fa-solid fa-plus"
+                                        class="w-4 h-4"
+                                    />
+                                </Button>
+                            </div>
                             <Models
                                 :devices="filteredDevices"
+                                :brands="originalBrands"
+                                :types="originalTypes"
                                 :selectedDevice="selectedDevice"
                                 @device-selected="handleDeviceSelect"
                             />
@@ -55,11 +93,23 @@
                 </CardContent>
             </Card>
         </div>
+
+        <EditDialog
+            v-model:isOpen="isDialogOpen"
+            :initial-name="''"
+            :initial-type="null"
+            :initial-brand="null"
+            :types="originalTypes"
+            :brands="originalBrands"
+            :item-type="dialogType"
+            @save="handleCreate"
+        />
     </AppLayout>
 </template>
 
 <script setup>
 import { Input } from "@/Components/ui/input";
+import { Button } from "@/Components/ui/button";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Brands from "./Partials/Brands.vue";
 import Models from "./Partials/Models.vue";
@@ -67,6 +117,8 @@ import Types from "./Partials/Types.vue";
 import { ref, computed } from "vue";
 import { Card, CardHeader } from "@/Components/ui/card";
 import CardContent from "@/Components/ui/card/CardContent.vue";
+import EditDialog from "@/Components/EditDialog.vue";
+import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
     types: {
@@ -191,5 +243,45 @@ const handleBrandSelect = (brand) => {
 
 const handleDeviceSelect = (device) => {
     selectedDevice.value = device.id;
+};
+
+// Add these new refs
+const isDialogOpen = ref(false);
+const dialogType = ref("");
+
+// Add these new functions
+const openDialog = (type) => {
+    dialogType.value = type;
+    isDialogOpen.value = true;
+};
+
+const handleCreate = (data) => {
+    const routes = {
+        type: "/types",
+        brand: "/brands",
+        device: "/devices",
+    };
+
+    router.post(routes[dialogType.value], data, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (response) => {
+            // Update local state based on the type of item created
+            if (dialogType.value === "type" && response?.props?.types) {
+                originalTypes.value = response.props.types;
+            } else if (
+                dialogType.value === "brand" &&
+                response?.props?.brands
+            ) {
+                originalBrands.value = response.props.brands;
+            } else if (
+                dialogType.value === "device" &&
+                response?.props?.devices
+            ) {
+                originalDevices.value = response.props.devices;
+            }
+            isDialogOpen.value = false;
+        },
+    });
 };
 </script>

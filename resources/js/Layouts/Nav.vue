@@ -145,7 +145,7 @@
                     </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent class="bg-white">
+                <DropdownMenuContent>
                     <DropdownMenuItem class="cursor-pointer">
                         <font-awesome-icon
                             icon="fa-solid fa-user-circle"

@@ -72,7 +72,10 @@ const showEditForm = ref(false);
         <Head :title="'Détails du Ticket #' + ticket.id" />
         <div class="p-6">
             <div class="flex flex-col gap-6">
-                <BackButton class="self-start" />
+                <BackButton
+                    class="self-start"
+                    :route="route('tickets.index')"
+                />
 
                 <!-- Colonne des détails du ticket -->
                 <div class="flex gap-5">
@@ -102,7 +105,7 @@ const showEditForm = ref(false);
                                         </div>
                                         <div class="flex items-center gap-2">
                                             <p
-                                                class="text-sm text-gray-500 italic"
+                                                class="text-sm italic text-gray-500"
                                             >
                                                 Créé par
                                                 {{ ticket.user.firstName }} le
@@ -136,13 +139,13 @@ const showEditForm = ref(false);
                             </div>
 
                             <div
-                                class="flex flex-wrap gap-4 border-border border-b"
+                                class="flex flex-wrap gap-4 border-b border-border"
                             >
                                 <div
-                                    class="grid grid-cols-1 md:grid-cols-3 gap-4"
+                                    class="grid grid-cols-1 gap-4 md:grid-cols-3"
                                 >
                                     <div class="flex-1 min-w-[200px]">
-                                        <p class="font-semibold mb-2">
+                                        <p class="mb-2 font-semibold">
                                             Appareil
                                         </p>
                                         <p>
@@ -181,7 +184,7 @@ const showEditForm = ref(false);
                                     </div>
 
                                     <div class="flex-1 min-w-[200px]">
-                                        <p class="font-semibold mb-2">Client</p>
+                                        <p class="mb-2 font-semibold">Client</p>
                                         <p>
                                             <span class="text-xs"
                                                 >Prénom :
@@ -242,28 +245,28 @@ const showEditForm = ref(false);
                                             class="pl-1 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
                                         >
                                             <div
-                                                class="p-1 cursor-pointer hover:opacity-90 transition-opacity"
+                                                class="p-1 transition-opacity cursor-pointer hover:opacity-90"
                                                 @click="openImageModal(image)"
                                             >
                                                 <img
                                                     :src="`/storage/${image.imageUrl}`"
-                                                    class="w-full h-48 object-cover rounded-lg"
+                                                    class="object-cover w-full h-48 rounded-lg"
                                                     :alt="`Image ${image.id}`"
                                                 />
                                             </div>
                                         </CarouselItem>
                                     </CarouselContent>
                                     <CarouselPrevious
-                                        class="absolute left-0 top-1/2 -translate-y-1/2"
+                                        class="absolute left-0 -translate-y-1/2 top-1/2"
                                     />
                                     <CarouselNext
-                                        class="absolute right-0 top-1/2 -translate-y-1/2"
+                                        class="absolute right-0 -translate-y-1/2 top-1/2"
                                     />
                                 </Carousel>
                             </div>
                             <div
                                 v-else
-                                class="text-gray-500 italic text-center py-4"
+                                class="py-4 italic text-center text-gray-500"
                             >
                                 Aucune image pour ce ticket
                             </div>
@@ -305,11 +308,15 @@ const showEditForm = ref(false);
                         class="sm:max-w-[95vw] sm:max-h-[95vh] w-[95vw] h-[95vh] p-0 overflow-hidden flex items-center justify-center"
                     >
                         <div
-                            class="relative w-full h-full flex items-center justify-center"
+                            class="relative flex items-center justify-center w-full h-full"
                         >
                             <img
                                 v-if="selectedImage"
-                                :src="`/storage/${selectedImage.imageUrl}`"
+                                :src="
+                                    selectedImage.imageUrl.startsWith('public/')
+                                        ? `/${selectedImage.imageUrl}`
+                                        : `/storage/${selectedImage.imageUrl}`
+                                "
                                 class="w-full h-auto max-w-[90%] max-h-[90%] object-contain"
                                 :alt="`Image en plein écran`"
                             />

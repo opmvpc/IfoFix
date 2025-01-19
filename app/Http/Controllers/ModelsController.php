@@ -22,13 +22,41 @@ class ModelsController extends Controller
             return back()->withErrors($validator->errors());
         }
 
-        $device = Device::create([
+        Device::create([
             'name' => $request->name,
             'brandId' => $request->brandId,
             'typeId' => $request->typeId,
         ]);
 
-        return redirect()->back()
-            ->with('message', 'Modèle créé avec succès');
+        return back()->with('message', 'Modèle créé avec succès')
+            ->with('devices', Device::all());
+    }
+
+    public function update(Request $request, Device $device)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'brandId' => 'required|exists:brands,id',
+            'typeId' => 'required|exists:types,id',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
+        }
+
+        $device->update([
+            'name' => $request->name,
+            'brandId' => $request->brandId,
+            'typeId' => $request->typeId,
+        ]);
+
+        return back()->with('message', 'Modèle mis à jour avec succès');
+    }
+
+    public function destroy(Device $device)
+    {
+        $device->delete();
+        return back()->with('message', 'Modèle supprimé avec succès')
+            ->with('devices', Device::all());
     }
 }

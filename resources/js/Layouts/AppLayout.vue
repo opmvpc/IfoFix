@@ -30,21 +30,46 @@
                 </main>
             </div>
         </div>
+
+        <!-- Add Toaster component at root level -->
+        <Toaster />
     </div>
 </template>
 
 <script setup>
 import { Head, Link, router } from "@inertiajs/vue3";
 import Nav from "@/Layouts/Nav.vue";
-import { ref, watch, onMounted } from "vue";
+import { ref, watch } from "vue";
+import { Toaster } from "@/Components/ui/toast";
+import { useToast } from "@/Components/ui/toast/use-toast";
 
 defineProps({
     title: String,
 });
 
+const { toast } = useToast();
 const showNavigation = ref(localStorage.getItem("navigationState") !== "false");
 
 watch(showNavigation, (newValue) => {
     localStorage.setItem("navigationState", newValue);
+});
+
+// Watch for flash messages from the backend
+router.on("success", (event) => {
+    if (event?.detail?.page?.props?.flash?.success) {
+        toast({
+            variant: "success",
+            title: event.detail.page.props.flash.success,
+        });
+    }
+});
+
+router.on("error", (event) => {
+    if (event?.detail?.page?.props?.flash?.error) {
+        toast({
+            variant: "destructive",
+            title: event.detail.page.props.flash.error,
+        });
+    }
 });
 </script>

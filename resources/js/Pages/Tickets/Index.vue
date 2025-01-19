@@ -10,8 +10,6 @@
                 :devices="props.devices"
                 :brands="props.brands"
                 :types="props.types"
-                :pendingTickets="pendingTickets"
-                :deliveredTickets="deliveredTickets"
                 @updateDeliveredTickets="deliveredTickets = $event"
                 @updatePendingTickets="pendingTickets = $event"
                 @button-click="buttonClick"
@@ -50,8 +48,6 @@ const props = defineProps({
     messages: String,
 });
 
-const pendingTickets = ref(true);
-const deliveredTickets = ref(false);
 const showCreateForm = ref(false);
 
 const buttonClick = () => {

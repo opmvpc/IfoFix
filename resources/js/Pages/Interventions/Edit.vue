@@ -40,7 +40,7 @@ const props = defineProps({
 
 const form = useForm({
     description: props.intervention.description,
-    duration: props.intervention.duration,
+    duration: props.intervention.duration || "00:00", // Set default value
     date: props.intervention.date,
     isFinished: props.intervention.isFinished,
     users: props.intervention.users,
@@ -135,7 +135,7 @@ const removeImage = (index) => {
                                 <CardTitle>Modifier l'intervention</CardTitle>
                             </div>
                             <CardDescription
-                                class="text-sm text-gray-500 italic"
+                                class="text-sm italic text-gray-500"
                             >
                                 Créé le
                                 {{ formatDate(intervention.created_at) }}
@@ -184,7 +184,8 @@ const removeImage = (index) => {
                                         id="duration"
                                         type="time"
                                         v-model="form.duration"
-                                        placeholder="Durée en minutes"
+                                        placeholder="00:00"
+                                        :value="form.duration || '00:00'"
                                     />
                                 </div>
 
@@ -228,7 +229,7 @@ const removeImage = (index) => {
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
-                                                    class="h-8 w-8"
+                                                    class="w-8 h-8"
                                                 >
                                                     <font-awesome-icon
                                                         icon="fa-solid fa-plus"
@@ -297,7 +298,7 @@ const removeImage = (index) => {
                                             {{ user.lastName }}
                                         </Badge>
                                     </div>
-                                    <div v-else class="text-gray-500 italic">
+                                    <div v-else class="italic text-gray-500">
                                         Aucun intervenant sélectionné
                                     </div>
                                 </div>
@@ -333,7 +334,7 @@ const removeImage = (index) => {
                                     <!-- Prévisualisation des images -->
                                     <div
                                         v-if="imagePreviewUrls.length"
-                                        class="mt-4 grid grid-cols-4 gap-4"
+                                        class="grid grid-cols-4 gap-4 mt-4"
                                     >
                                         <div
                                             v-for="(
@@ -344,12 +345,12 @@ const removeImage = (index) => {
                                         >
                                             <img
                                                 :src="url"
-                                                class="w-full h-24 object-cover rounded-lg"
+                                                class="object-cover w-full h-24 rounded-lg"
                                             />
                                             <button
                                                 type="button"
                                                 @click="removeImage(index)"
-                                                class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex justify-center items-center hover:bg-red-600"
+                                                class="absolute flex items-center justify-center w-5 h-5 text-xs text-white bg-red-500 rounded-full -top-2 -right-2 hover:bg-red-600"
                                             >
                                                 <font-awesome-icon
                                                     icon="fa-solid fa-times"

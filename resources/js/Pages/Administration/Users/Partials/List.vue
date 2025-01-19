@@ -148,7 +148,7 @@ import {
     useVueTable,
 } from "@tanstack/vue-table";
 import { ArrowUpDown, ChevronDown } from "lucide-vue-next";
-import { h, ref, watch } from "vue";
+import { h, ref, watch, onMounted } from "vue";
 import {
     Card,
     CardHeader,
@@ -262,6 +262,25 @@ const columnFilters = ref([]);
 const columnVisibility = ref({});
 const globalFilter = ref("");
 
+// Load saved column visibility on mount
+onMounted(() => {
+    const saved = localStorage.getItem("users-column-visibility");
+    if (saved) {
+        columnVisibility.value = JSON.parse(saved);
+    }
+});
+
+// Save column visibility changes
+watch(
+    columnVisibility,
+    (newValue) => {
+        localStorage.setItem(
+            "users-column-visibility",
+            JSON.stringify(newValue)
+        );
+    },
+    { deep: true }
+);
 const table = useVueTable({
     get data() {
         return props.users;
@@ -305,6 +324,7 @@ const table = useVueTable({
 
 const getColumnNames = (id) => {
     const names = {
+
         firstName: "Prénom",
         lastName: "Nom",
         email: "Email",
@@ -313,6 +333,12 @@ const getColumnNames = (id) => {
     };
     return names[id];
 };
+
+const selectUser = (user) => {
+    emit("user-selected", user);
+};
+</script>
+
 
 const selectUser = (user) => {
     emit("user-selected", user);

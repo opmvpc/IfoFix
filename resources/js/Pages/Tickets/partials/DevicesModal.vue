@@ -19,14 +19,14 @@
                 />
 
                 <div class="h-[300px] overflow-y-auto space-y-2">
-                    <RadioGroup v-model="props.form.deviceId">
+                    <RadioGroup v-model="selectedDeviceId">
                         <div
                             v-for="device in filteredDevices"
                             :key="device.id"
-                            class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
+                            class="flex items-center p-2 space-x-2 rounded hover:bg-gray-100"
                         >
                             <RadioGroupItem
-                                :value="device.id"
+                                :value="String(device.id)"
                                 :id="'device-' + device.id"
                             />
                             <Label
@@ -69,12 +69,18 @@ import { Button } from "@/Components/ui/button";
 import { computed, ref, watch } from "vue";
 
 const props = defineProps({
-    modelValue: Boolean, // Remplace isDeviceModalOpen
+    modelValue: Boolean,
     form: Object,
     devices: Array,
 });
 
 const deviceSearch = ref("");
+const selectedDeviceId = computed({
+    get: () => String(props.form.deviceId),
+    set: (value) => {
+        props.form.deviceId = Number(value);
+    },
+});
 
 const filteredDevices = computed(() => {
     if (!deviceSearch.value) return props.devices;

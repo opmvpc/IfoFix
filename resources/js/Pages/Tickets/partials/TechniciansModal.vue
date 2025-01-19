@@ -22,7 +22,7 @@
                     <div
                         v-for="tech in filteredTechnicians"
                         :key="tech.id"
-                        class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
+                        class="flex items-center p-2 space-x-2 rounded hover:bg-gray-100"
                     >
                         <Checkbox
                             :id="'tech-' + tech.id"

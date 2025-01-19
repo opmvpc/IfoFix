@@ -148,7 +148,7 @@ import {
     useVueTable,
 } from "@tanstack/vue-table";
 import { ArrowUpDown, ChevronDown } from "lucide-vue-next";
-import { h, ref, watch } from "vue";
+import { h, ref, watch, onMounted } from "vue";
 import {
     Card,
     CardHeader,
@@ -236,6 +236,19 @@ const sorting = ref([]);
 const columnFilters = ref([]);
 const columnVisibility = ref({});
 const globalFilter = ref("");
+
+// Load saved column visibility on mount
+onMounted(() => {
+    const saved = localStorage.getItem('clients-column-visibility');
+    if (saved) {
+        columnVisibility.value = JSON.parse(saved);
+    }
+});
+
+// Save column visibility changes
+watch(columnVisibility, (newValue) => {
+    localStorage.setItem('clients-column-visibility', JSON.stringify(newValue));
+}, { deep: true });
 
 const table = useVueTable({
     get data() {

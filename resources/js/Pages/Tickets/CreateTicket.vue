@@ -1,6 +1,6 @@
 <template>
-<Card>
-    <CardHeader>
+    <Card>
+        <CardHeader>
             <CardTitle class="flex justify-between">
                 <!-- <div class="p-4 bg-white border rounded-lg shadow"> -->
                 <div class="flex items-center justify-between mb-4">
@@ -54,25 +54,6 @@
                             }}</span>
                             <font-awesome-icon icon="fa-solid fa-laptop" />
                         </Button>
-
-                        <div
-                            v-if="form.deviceId"
-                            class="flex items-center justify-between p-2 rounded-md bg-gray-50"
-                        >
-                            <span class="text-sm">
-                                {{ selectedDeviceName }}
-                            </span>
-                            <button
-                                type="button"
-                                @click="form.deviceId = null"
-                                class="text-gray-500 hover:text-gray-700"
-                            >
-                                <font-awesome-icon
-                                    icon="fa-solid fa-times"
-                                    class="w-3 h-3"
-                                />
-                            </button>
-                        </div>
                     </div>
                 </div>
                 <div>
@@ -99,26 +80,6 @@
                             }}</span>
                             <font-awesome-icon icon="fa-solid fa-user" />
                         </Button>
-
-                        <!-- Affichage du client sélectionné -->
-                        <div
-                            v-if="form.clientId"
-                            class="flex items-center justify-between p-2 rounded-md bg-gray-50"
-                        >
-                            <span class="text-sm">
-                                {{ selectedClientName }}
-                            </span>
-                            <button
-                                type="button"
-                                @click="form.clientId = null"
-                                class="text-gray-500 hover:text-gray-700"
-                            >
-                                <font-awesome-icon
-                                    icon="fa-solid fa-times"
-                                    class="w-3 h-3"
-                                />
-                            </button>
-                        </div>
                     </div>
                 </div>
                 <div>
@@ -161,10 +122,21 @@
                 </div>
                 <div>
                     <Label for="images">Images</Label>
-                    <div class="mt-2">
+                    <div
+                        class="mt-2"
+                        @dragenter.prevent="handleDragEnter"
+                        @dragleave.prevent="handleDragLeave"
+                        @dragover.prevent
+                        @drop.prevent="handleFileDrop"
+                    >
                         <div class="flex items-center justify-center w-full">
                             <label
-                                class="flex flex-col w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50"
+                                class="flex flex-col w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors duration-200"
+                                :class="{
+                                    'border-primary bg-primary/10': isDragging,
+                                    'hover:bg-gray-50 border-gray-300':
+                                        !isDragging,
+                                }"
                             >
                                 <div
                                     class="flex flex-col items-center justify-center pt-5 pb-6"
@@ -172,9 +144,14 @@
                                     <font-awesome-icon
                                         icon="fa-solid fa-cloud-arrow-up"
                                         class="w-8 h-8 mb-3 text-gray-400"
+                                        :class="{ 'text-primary': isDragging }"
                                     />
                                     <p class="text-sm text-gray-500">
-                                        Cliquez ou glissez des images ici
+                                        {{
+                                            isDragging
+                                                ? "Déposez les images ici"
+                                                : "Cliquez ou glissez des images ici"
+                                        }}
                                     </p>
                                     <p class="text-xs text-gray-500">
                                         (JPG, PNG, GIF jusqu'à 2MB)
@@ -230,10 +207,10 @@
         />
 
         <TechniciansModal
-            :isModalOpen="isModalOpen"
+            v-model="isModalOpen"
             :form="form"
             :technicians="technicians"
-            @update:isModalOpen="isModalOpen = $event"
+            @update:selectedTechnicians="updateSelectedTechnicians"
         />
 
         <ClientsModal
@@ -256,7 +233,7 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/Components/ui/textarea";
 import { XIcon } from "lucide-vue-next";
 import { ref, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
@@ -365,5 +342,49 @@ const removeImage = (index) => {
     form.images = selectedImages.value;
 };
 const params = window.location.pathname;
-console.log(params);
+
+const updateSelectedTechnicians = (techs) => {
+    selectedTechnicians.value = techs;
+};
+
+const isDragging = ref(false);
+let dragCounter = ref(0);
+
+const handleDragEnter = (e) => {
+    e.preventDefault();
+    dragCounter.value++;
+    if (dragCounter.value === 1) {
+        isDragging.value = true;
+    }
+};
+
+const handleDragLeave = (e) => {
+    e.preventDefault();
+    dragCounter.value--;
+    if (dragCounter.value === 0) {
+        isDragging.value = false;
+    }
+};
+
+const handleFileDrop = (event) => {
+    isDragging.value = false;
+    dragCounter.value = 0;
+    const files = Array.from(event.dataTransfer.files).filter((file) =>
+        file.type.startsWith("image/")
+    );
+
+    files.forEach((file) => {
+        if (file.size > 2 * 1024 * 1024) {
+            alert("Chaque image ne doit pas dépasser 2MB");
+            return;
+        }
+        selectedImages.value.push(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreviewUrls.value.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    });
+    form.images = selectedImages.value;
+};
 </script>

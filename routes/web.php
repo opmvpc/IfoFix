@@ -3,10 +3,12 @@
 
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AdministrationController;
+use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\InterventionsController;
 use App\Http\Controllers\ModelsController;
 use App\Http\Controllers\TicketsController;
+use App\Http\Controllers\TypesController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +38,17 @@ Route::middleware([
 
     Route::resource('devices', ModelsController::class);
     // Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
+
+    Route::put('/types/{type}', [TypesController::class, 'update'])->name('types.update');
+    Route::put('/brands/{brand}', [BrandsController::class, 'update'])->name('brands.update');
+    Route::put('/devices/{device}', [ModelsController::class, 'update'])->name('devices.update');
+
+    Route::post('/types', [TypesController::class, 'store'])->name('types.store');
+    Route::post('/brands', [BrandsController::class, 'store'])->name('brands.store');
+
+    Route::delete('/types/{type}', [TypesController::class, 'destroy'])->name('types.destroy');
+    Route::delete('/devices/{device}', [ModelsController::class, 'destroy'])->name('devices.destroy');
+    Route::delete('/brands/{brand}', [BrandsController::class, 'destroy'])->name('brands.destroy');
 
     Route::get('/administration/stats', [AdministrationController::class, 'stats'])->name('administration.stats');
     Route::get('/administration/users', [AdministrationController::class, 'users'])->name('administration.users');

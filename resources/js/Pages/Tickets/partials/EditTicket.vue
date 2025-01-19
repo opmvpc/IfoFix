@@ -1,6 +1,6 @@
 <template>
-    <div class="p-4 border rounded-lg bg-white shadow">
-        <div class="flex justify-between items-center mb-4">
+    <div class="p-4 bg-white border rounded-lg shadow">
+        <div class="flex items-center justify-between mb-4">
             <BackButton v-if="params === '/tickets/create'" />
             <h2 class="text-lg font-semibold">
                 Modifier Ticket #{{ ticket.id }}
@@ -10,7 +10,7 @@
                 @click="$emit('close')"
                 v-if="params !== '/tickets/create'"
             >
-                <XIcon class="h-4 w-4" />
+                <XIcon class="w-4 h-4" />
             </Button>
         </div>
 
@@ -44,32 +44,13 @@
                         type="button"
                         variant="outline"
                         @click="openDeviceModal"
-                        class="w-full justify-between"
+                        class="justify-between w-full"
                     >
                         <span>{{
                             selectedDeviceName || "Sélectionner un appareil"
                         }}</span>
                         <font-awesome-icon icon="fa-solid fa-laptop" />
                     </Button>
-
-                    <div
-                        v-if="form.deviceId"
-                        class="flex items-center justify-between p-2 bg-gray-50 rounded-md"
-                    >
-                        <span class="text-sm">
-                            {{ selectedDeviceName }}
-                        </span>
-                        <button
-                            type="button"
-                            @click="form.deviceId = null"
-                            class="text-gray-500 hover:text-gray-700"
-                        >
-                            <font-awesome-icon
-                                icon="fa-solid fa-times"
-                                class="h-3 w-3"
-                            />
-                        </button>
-                    </div>
                 </div>
             </div>
             <div>
@@ -89,33 +70,13 @@
                         type="button"
                         variant="outline"
                         @click="openClientModal"
-                        class="w-full justify-between"
+                        class="justify-between w-full"
                     >
                         <span>{{
                             selectedClientName || "Sélectionner un client"
                         }}</span>
                         <font-awesome-icon icon="fa-solid fa-user" />
                     </Button>
-
-                    <!-- Affichage du client sélectionné -->
-                    <div
-                        v-if="form.clientId"
-                        class="flex items-center justify-between p-2 bg-gray-50 rounded-md"
-                    >
-                        <span class="text-sm">
-                            {{ selectedClientName }}
-                        </span>
-                        <button
-                            type="button"
-                            @click="form.clientId = null"
-                            class="text-gray-500 hover:text-gray-700"
-                        >
-                            <font-awesome-icon
-                                icon="fa-solid fa-times"
-                                class="h-3 w-3"
-                            />
-                        </button>
-                    </div>
                 </div>
             </div>
             <div>
@@ -124,7 +85,7 @@
                     type="button"
                     variant="outline"
                     @click="openModal"
-                    class="w-full justify-between"
+                    class="justify-between w-full"
                 >
                     Sélectionner des techniciens
                     <font-awesome-icon icon="fa-solid fa-users" />
@@ -133,7 +94,7 @@
                 <!-- Liste des techniciens sélectionnés -->
                 <div
                     v-if="selectedTechnicians.length"
-                    class="mt-2 flex flex-wrap gap-2"
+                    class="flex flex-wrap gap-2 mt-2"
                 >
                     <div
                         v-for="tech in selectedTechnicians"
@@ -148,7 +109,7 @@
                         >
                             <font-awesome-icon
                                 icon="fa-solid fa-times"
-                                class="h-3 w-3"
+                                class="w-3 h-3"
                             />
                         </button>
                     </div>
@@ -156,10 +117,20 @@
             </div>
             <div>
                 <Label for="images">Images</Label>
-                <div class="mt-2">
+                <div
+                    class="mt-2"
+                    @dragenter.prevent="handleDragEnter"
+                    @dragleave.prevent="handleDragLeave"
+                    @dragover.prevent
+                    @drop.prevent="handleFileDrop"
+                >
                     <div class="flex items-center justify-center w-full">
                         <label
-                            class="flex flex-col w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50"
+                            class="flex flex-col w-full h-32 transition-colors duration-200 border-2 border-dashed rounded-lg cursor-pointer"
+                            :class="{
+                                'border-primary bg-primary/10': isDragging,
+                                'hover:bg-gray-50 border-gray-300': !isDragging,
+                            }"
                         >
                             <div
                                 class="flex flex-col items-center justify-center pt-5 pb-6"
@@ -167,9 +138,14 @@
                                 <font-awesome-icon
                                     icon="fa-solid fa-cloud-arrow-up"
                                     class="w-8 h-8 mb-3 text-gray-400"
+                                    :class="{ 'text-primary': isDragging }"
                                 />
                                 <p class="text-sm text-gray-500">
-                                    Cliquez ou glissez des images ici
+                                    {{
+                                        isDragging
+                                            ? "Déposez les images ici"
+                                            : "Cliquez ou glissez des images ici"
+                                    }}
                                 </p>
                                 <p class="text-xs text-gray-500">
                                     (JPG, PNG, GIF jusqu'à 2MB)
@@ -187,7 +163,7 @@
                     <!-- Prévisualisation des images -->
                     <div
                         v-if="imagePreviewUrls.length"
-                        class="mt-4 grid grid-cols-4 gap-4"
+                        class="grid grid-cols-4 gap-4 mt-4"
                     >
                         <div
                             v-for="(url, index) in imagePreviewUrls"
@@ -196,12 +172,12 @@
                         >
                             <img
                                 :src="url"
-                                class="w-full h-24 object-cover rounded-lg"
+                                class="object-cover w-full h-24 rounded-lg"
                             />
                             <button
                                 type="button"
                                 @click="removeImage(index)"
-                                class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex justify-center items-center hover:bg-red-600"
+                                class="absolute flex items-center justify-center w-5 h-5 text-xs text-white bg-red-500 rounded-full -top-2 -right-2 hover:bg-red-600"
                             >
                                 <font-awesome-icon
                                     icon="fa-solid fa-times"
@@ -270,16 +246,18 @@ const props = defineProps({
     brands: Array,
     types: Array,
 });
-console.log(props.techniciansIntervention);
 
-// Initialiser le formulaire avec les données du ticket
+// Modify form initialization
 const form = useForm({
     title: props.ticket?.title || "",
     description: props.ticket?.description || "",
-    deviceId: props.ticket?.device?.id || null,
-    clientId: props.ticket?.client?.id || null,
-    technicianIds: props.techniciansIntervention?.map((tech) => tech.id) || [],
+    deviceId: props.ticket?.device?.id || "",
+    clientId: props.ticket?.client?.id || "",
+    technicianIds: Array.isArray(props.techniciansIntervention)
+        ? props.techniciansIntervention.map((tech) => tech.id)
+        : [],
     images: [],
+    existingImages: props.ticket?.images || [],
 });
 
 // Initialiser les noms sélectionnés
@@ -290,12 +268,105 @@ const selectedClientName = ref(
         : ""
 );
 
-// Modifier la fonction submit pour faire une mise à jour au lieu d'une création
+// Update the image handling functions
+const imagePreviewUrls = ref(
+    props.ticket?.images?.map((image) =>
+        image.imageUrl.startsWith("public/")
+            ? `/${image.imageUrl}`
+            : `/storage/${image.imageUrl}`
+    ) || []
+);
+
+const selectedImages = ref([]);
+const existingImages = ref(props.ticket?.images || []);
+
+const updateFormImages = () => {
+    form.existingImages = existingImages.value;
+    form.images = selectedImages.value;
+};
+
+const handleImageUpload = (event) => {
+    const files = Array.from(event.target.files);
+    files.forEach((file) => {
+        if (file.size > 2 * 1024 * 1024) {
+            alert("Chaque image ne doit pas dépasser 2MB");
+            return;
+        }
+        selectedImages.value.push(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreviewUrls.value.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    });
+    updateFormImages();
+};
+
+const removeImage = (index) => {
+    if (index < existingImages.value.length) {
+        // Removing an existing image
+        existingImages.value.splice(index, 1);
+        imagePreviewUrls.value.splice(index, 1);
+    } else {
+        // Removing a newly uploaded image
+        const newImageIndex = index - existingImages.value.length;
+        imagePreviewUrls.value.splice(index, 1);
+        selectedImages.value.splice(newImageIndex, 1);
+    }
+    updateFormImages();
+};
+const emit = defineEmits(["close"]);
+
+// Update submit function
 const submit = () => {
-    form.put(route("tickets.update", props.ticket.id), {
+    if (!form.title || !form.description || !form.deviceId || !form.clientId) {
+        alert("Veuillez remplir tous les champs obligatoires");
+        return;
+    }
+
+    form.transform((data) => {
+        // Create a new FormData object
+        const formData = new FormData();
+
+        // Basic fields
+        formData.append("_method", "PUT");
+        formData.append("title", form.title);
+        formData.append("description", form.description);
+        formData.append("deviceId", form.deviceId);
+        formData.append("clientId", form.clientId);
+
+        // Technicians
+        if (form.technicianIds?.length) {
+            form.technicianIds.forEach((id) => {
+                formData.append("technicianIds[]", id);
+            });
+        }
+
+        // Existing images
+        if (existingImages.value?.length) {
+            formData.append("images", JSON.stringify(existingImages.value));
+        }
+
+        // New images
+        if (selectedImages.value?.length) {
+            selectedImages.value.forEach((file, index) => {
+                formData.append(`images[${index}]`, file);
+            });
+        }
+
+        // Log the FormData entries
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ": " + pair[1]);
+        }
+
+        return formData;
+    });
+
+    form.post(route("tickets.update", props.ticket.id), {
         preserveScroll: true,
+        forceFormData: true,
         onSuccess: () => {
-            form.reset();
+            console.log("Ticket mis à jour avec succès");
             emit("close");
         },
         onError: (errors) => {
@@ -304,18 +375,21 @@ const submit = () => {
     });
 };
 
-const emit = defineEmits(["close"]);
-
 const isModalOpen = ref(false);
 
 const openModal = () => {
     isModalOpen.value = true;
 };
 
-const selectedTechnicians = ref(props.techniciansIntervention || []);
+const selectedTechnicians = ref(
+    Array.isArray(props.techniciansIntervention)
+        ? props.techniciansIntervention
+        : []
+);
 
 const updateSelectedTechnicians = (techs) => {
     selectedTechnicians.value = techs;
+    form.technicianIds = techs.map((tech) => tech.id);
 };
 
 const toggleTechnician = (techId) => {
@@ -358,11 +432,32 @@ const openDeviceModal = () => {
     isDeviceModalOpen.value = true;
 };
 
-const imagePreviewUrls = ref([]);
-const selectedImages = ref([]);
+const isDragging = ref(false);
+let dragCounter = ref(0);
 
-const handleImageUpload = (event) => {
-    const files = Array.from(event.target.files);
+const handleDragEnter = (e) => {
+    e.preventDefault();
+    dragCounter.value++;
+    if (dragCounter.value === 1) {
+        isDragging.value = true;
+    }
+};
+
+const handleDragLeave = (e) => {
+    e.preventDefault();
+    dragCounter.value--;
+    if (dragCounter.value === 0) {
+        isDragging.value = false;
+    }
+};
+
+const handleFileDrop = (event) => {
+    isDragging.value = false;
+    dragCounter.value = 0;
+    const files = Array.from(event.dataTransfer.files).filter((file) =>
+        file.type.startsWith("image/")
+    );
+
     files.forEach((file) => {
         if (file.size > 2 * 1024 * 1024) {
             alert("Chaque image ne doit pas dépasser 2MB");
@@ -375,14 +470,9 @@ const handleImageUpload = (event) => {
         };
         reader.readAsDataURL(file);
     });
-    form.images = selectedImages.value;
+    updateFormImages();
 };
 
-const removeImage = (index) => {
-    imagePreviewUrls.value.splice(index, 1);
-    selectedImages.value.splice(index, 1);
-    form.images = selectedImages.value;
-};
 const params = window.location.pathname;
 console.log(params);
 </script>

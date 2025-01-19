@@ -114,6 +114,7 @@ class TicketsController extends Controller
 
     public function update(Request $request, Ticket $ticket)
     {
+        // dd($request->all());
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
