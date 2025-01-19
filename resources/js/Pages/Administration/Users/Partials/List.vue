@@ -324,7 +324,6 @@ const table = useVueTable({
 
 const getColumnNames = (id) => {
     const names = {
-
         firstName: "Prénom",
         lastName: "Nom",
         email: "Email",
@@ -333,12 +332,6 @@ const getColumnNames = (id) => {
     };
     return names[id];
 };
-
-const selectUser = (user) => {
-    emit("user-selected", user);
-};
-</script>
-
 
 const selectUser = (user) => {
     emit("user-selected", user);

@@ -22,7 +22,7 @@ class TypesController extends Controller
             'name' => $request->name,
         ]);
 
-        return back()->with('message', 'Type créé avec succès')
+        return back()->with('success', 'Type créé avec succès')
             ->with('types', Type::all());
     }
 
@@ -40,13 +40,13 @@ class TypesController extends Controller
             'name' => $request->name,
         ]);
 
-        return back()->with('message', 'Type mis à jour avec succès');
+        return back()->with('success', 'Type mis à jour avec succès');
     }
 
     public function destroy(Type $type)
     {
         $type->delete();
-        return back()->with('message', 'Type supprimé avec succès')
+        return back()->with('success', 'Type supprimé avec succès')
             ->with('types', Type::all());
     }
 }

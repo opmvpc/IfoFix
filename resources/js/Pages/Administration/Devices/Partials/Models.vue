@@ -6,7 +6,7 @@
         :initial-brand="editingBrandId"
         :types="types"
         :brands="brands"
-        item-type="appareil"
+        item-type="Appareil"
         @save="updateDevice"
     />
     <Table>

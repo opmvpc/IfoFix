@@ -28,7 +28,7 @@ class ModelsController extends Controller
             'typeId' => $request->typeId,
         ]);
 
-        return back()->with('message', 'Modèle créé avec succès')
+        return back()->with('success', 'Modèle créé avec succès')
             ->with('devices', Device::all());
     }
 
@@ -50,13 +50,13 @@ class ModelsController extends Controller
             'typeId' => $request->typeId,
         ]);
 
-        return back()->with('message', 'Modèle mis à jour avec succès');
+        return back()->with('success', 'Modèle mis à jour avec succès');
     }
 
     public function destroy(Device $device)
     {
         $device->delete();
-        return back()->with('message', 'Modèle supprimé avec succès')
+        return back()->with('success', 'Modèle supprimé avec succès')
             ->with('devices', Device::all());
     }
 }

@@ -2,7 +2,7 @@
     <EditDialog
         v-model:isOpen="isDialogOpen"
         :initial-name="editingName"
-        item-type="marque"
+        item-type="Marque"
         @save="updateName"
     />
     <Table>

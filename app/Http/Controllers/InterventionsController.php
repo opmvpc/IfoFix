@@ -71,7 +71,7 @@ class InterventionsController extends Controller
         }
 
         return redirect()->route('tickets.show', $ticket->id)
-            ->with('message', 'Intervention mise à jour avec succès');
+            ->with('success', 'Intervention mise à jour avec succès');
     }
 
     public function update(Request $request, Intervention $intervention)
@@ -104,7 +104,7 @@ class InterventionsController extends Controller
             $ticket->update(['isFinished' => false]);
         }
         return redirect()->route('tickets.show', $ticket->id)
-            ->with('message', 'Intervention mise à jour avec succès');
+            ->with('success', 'Intervention mise à jour avec succès');
     }
 
     public function create()
@@ -129,6 +129,6 @@ class InterventionsController extends Controller
         $intervention->users()->attach($technicianIds);
 
         return redirect()->route('tickets.show', $validated['ticketId'])
-            ->with('message', 'Intervention créée avec succès');
+            ->with('success', 'Intervention créée avec succès');
     }
 }

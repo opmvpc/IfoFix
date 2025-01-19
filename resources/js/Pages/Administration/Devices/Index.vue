@@ -31,7 +31,7 @@
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    @click="openDialog('type')"
+                                    @click="openDialog('Type')"
                                 >
                                     <font-awesome-icon
                                         icon="fa-solid fa-plus"
@@ -52,7 +52,7 @@
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    @click="openDialog('brand')"
+                                    @click="openDialog('Marque')"
                                 >
                                     <font-awesome-icon
                                         icon="fa-solid fa-plus"
@@ -73,7 +73,7 @@
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    @click="openDialog('device')"
+                                    @click="openDialog('Modéle')"
                                 >
                                     <font-awesome-icon
                                         icon="fa-solid fa-plus"
