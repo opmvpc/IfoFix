@@ -15,7 +15,7 @@ class Type extends Model
 
     public function devices()
     {
-        return $this->hasMany(Device::class, 'deviceId');
+        return $this->hasMany(Device::class, 'typeId');
     }
 
     public function brands()

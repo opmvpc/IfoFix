@@ -2,7 +2,8 @@
     <Dialog :open="isOpen" @update:open="handleOpen">
         <DialogTrigger as-child>
             <font-awesome-icon
-                icon="text-xl text-gray-400 cursor-pointer hover:text-indigo-500"
+                icon="fa-solid fa-plus"
+                class="text-xl text-gray-400 cursor-pointer hover:text-indigo-500"
             />
         </DialogTrigger>
         <DialogContent class="sm:max-w-[425px]">
@@ -14,29 +15,23 @@
             </DialogHeader>
             <form @submit.prevent="onSubmit">
                 <div class="grid grid-cols-1 gap-6">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <div class="space-y-2">
-                                <Label>Prénom</Label>
-                                <Input
-                                    type="text"
-                                    placeholder="Prénom"
-                                    v-model="form.firstName"
-                                />
-                                <InputError :message="form.errors.firstName" />
-                            </div>
-                        </div>
-                        <div>
-                            <div class="space-y-2">
-                                <Label>Nom</Label>
-                                <Input
-                                    type="text"
-                                    placeholder="Nom"
-                                    v-model="form.lastName"
-                                />
-                                <InputError :message="form.errors.lastName" />
-                            </div>
-                        </div>
+                    <div class="space-y-2">
+                        <Label>Prénom</Label>
+                        <Input
+                            type="text"
+                            placeholder="Prénom"
+                            v-model="form.firstName"
+                        />
+                        <InputError :message="form.errors.firstName" />
+                    </div>
+                    <div class="space-y-2">
+                        <Label>Nom</Label>
+                        <Input
+                            type="text"
+                            placeholder="Nom"
+                            v-model="form.lastName"
+                        />
+                        <InputError :message="form.errors.lastName" />
                     </div>
                     <div class="space-y-2">
                         <Label>Email</Label>

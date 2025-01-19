@@ -61,4 +61,22 @@ class UsersController extends Controller
             'refresh' => 'users' // Indicateur de refresh
         ]);
     }
+
+    public function editPassword(Request $request)
+    {
+        $validatedData = $request->validate([
+            'id' => 'required | integer',
+            'password' => $this->passwordRules(),
+            'password_confirmation' => 'required | same:password',
+        ]);
+
+        $user = User::find($validatedData['id']);
+        $user->password = bcrypt($validatedData['password']);
+        $user->save();
+
+        return redirect()->back()->with([
+            'success' => 'Mot de passe mis à jour',
+            'refresh' => 'users' // Indicateur de refresh
+        ]);
+    }
 }

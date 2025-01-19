@@ -6,13 +6,21 @@
                 <UserCreate />
             </div>
             <div class="flex items-center gap-2 py-4">
-                <Input
-                    type="search"
-                    class="max-w-52"
-                    placeholder="Rechercher..."
-                    :model-value="table.getState().globalFilter"
-                    @update:model-value="table.setGlobalFilter"
-                />
+                <div class="flex items-center space-x-2">
+                    <div class="relative flex-1 max-w-52">
+                        <Input
+                            type="search"
+                            class="pl-10"
+                            placeholder="Rechercher..."
+                            :model-value="table.getState().globalFilter"
+                            @update:model-value="table.setGlobalFilter"
+                        />
+                        <font-awesome-icon
+                            icon="fa-solid fa-search"
+                            class="absolute text-gray-500 -translate-y-1/2 left-3 top-1/2"
+                        />
+                    </div>
+                </div>
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
                         <Button variant="outline" class="ml-auto">

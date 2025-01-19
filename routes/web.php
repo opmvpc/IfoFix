@@ -42,6 +42,7 @@ Route::middleware([
     Route::get('/users', [UsersController::class, 'index'])->name('users.index');
     Route::post('/users', [UsersController::class, 'store'])->name('users.store');
     Route::put('/users', [UsersController::class, 'edit'])->name('users.edit');
+    Route::put('/users/password', [UsersController::class, 'editPassword'])->name('users.edit.password');
     Route::get('/clients', [ClientsController::class, 'index'])->name('clients.index');
     Route::post('/clients', [ClientsController::class, 'store'])->name('clients.store');
     Route::put('/clients', [ClientsController::class, 'edit'])->name('clients.edit');
