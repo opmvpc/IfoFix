@@ -1,6 +1,6 @@
 <script setup>
 import { Button } from "@/Components/ui/button";
-import { Label } from "@/Components/ui/label"; // Add this import
+import { Label } from "@/Components/ui/label";
 
 import {
     DropdownMenu,
@@ -99,9 +99,13 @@ const filteredTickets = computed(() => {
         tickets = tickets.filter((ticket) => ticket.isDelivered);
     }
     if (selectedTechnician.value && selectedTechnician.value !== AUCUN_VALUE) {
-        tickets = tickets.filter(
-            (ticket) => ticket.user.id === parseInt(selectedTechnician.value)
-        );
+        tickets = tickets.filter((ticket) => {
+            return ticket.interventions.some((intervention) =>
+                intervention.users.some(
+                    (user) => user.id === parseInt(selectedTechnician.value)
+                )
+            );
+        });
     }
     if (selectedDevice.value && selectedDevice.value !== AUCUN_VALUE) {
         tickets = tickets.filter(
@@ -431,6 +435,17 @@ const table = useVueTable({
     },
     // globalFilterFn: fuzzyFilter,
 });
+
+const resetFilters = () => {
+    selectedTechnician.value = AUCUN_VALUE;
+    selectedDevice.value = AUCUN_VALUE;
+    selectedBrand.value = AUCUN_VALUE;
+    selectedType.value = AUCUN_VALUE;
+    selectedClient.value = AUCUN_VALUE;
+    pendingTickets.value = false;
+    deliveredTickets.value = false;
+    globalFilter.value = "";
+};
 </script>
 
 <template>
@@ -509,7 +524,7 @@ const table = useVueTable({
                 </div>
                 <div class="flex gap-2 mb-4">
                     <Select v-if="isClientVisible" v-model="selectedClient">
-                        <SelectTrigger>
+                        <SelectTrigger class="max-w-48">
                             <SelectValue placeholder="Client" />
                         </SelectTrigger>
                         <SelectContent>
@@ -532,7 +547,7 @@ const table = useVueTable({
                         v-if="isTechnicianVisible"
                         v-model="selectedTechnician"
                     >
-                        <SelectTrigger>
+                        <SelectTrigger class="max-w-48">
                             <SelectValue placeholder="Technicien" />
                         </SelectTrigger>
                         <SelectContent>
@@ -552,7 +567,7 @@ const table = useVueTable({
                     </Select>
 
                     <Select v-if="isDeviceVisible" v-model="selectedDevice">
-                        <SelectTrigger>
+                        <SelectTrigger class="max-w-48">
                             <SelectValue placeholder="Model" />
                         </SelectTrigger>
                         <SelectContent>
@@ -572,7 +587,7 @@ const table = useVueTable({
                     </Select>
 
                     <Select v-if="isBrandVisible" v-model="selectedBrand">
-                        <SelectTrigger>
+                        <SelectTrigger class="max-w-48">
                             <SelectValue placeholder="Marque" />
                         </SelectTrigger>
                         <SelectContent>
@@ -592,7 +607,7 @@ const table = useVueTable({
                     </Select>
 
                     <Select v-if="isTypeVisible" v-model="selectedType">
-                        <SelectTrigger>
+                        <SelectTrigger class="max-w-48">
                             <SelectValue placeholder="Type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -610,6 +625,18 @@ const table = useVueTable({
                             </SelectGroup>
                         </SelectContent>
                     </Select>
+
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        class="w-8 shrink-0"
+                        @click="resetFilters"
+                    >
+                        <font-awesome-icon
+                            icon="fa-solid fa-rotate"
+                            class="w-4 h-4"
+                        />
+                    </Button>
                 </div>
 
                 <div class="">
