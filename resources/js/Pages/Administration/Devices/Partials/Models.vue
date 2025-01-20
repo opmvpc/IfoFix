@@ -9,48 +9,50 @@
         item-type="Appareil"
         @save="updateDevice"
     />
-    <Table>
-        <TableBody>
-            <TableRow
-                v-for="device in props.devices"
-                :key="device.id"
-                @click="$emit('filter-device', device)"
-                class="transition-colors cursor-pointer group"
-                :class="{
-                    'bg-indigo-300 dark:bg-indigo-900':
-                        props.selectedDevice?.id === device.id,
-                    'hover:bg-gray-100 dark:hover:bg-gray-800':
-                        props.selectedDevice?.id !== device.id,
-                }"
-            >
-                <TableCell class="flex items-center justify-between">
-                    <span>{{ device.name }}</span>
-                    <div class="items-center hidden gap-2 group-hover:flex">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            @click.stop="$emit('device-selected', device)"
-                        >
-                            <font-awesome-icon
-                                icon="fa-solid fa-pen"
-                                class="w-4 h-4"
-                            />
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            @click.stop="deleteDevice(device)"
-                        >
-                            <font-awesome-icon
-                                icon="fa-solid fa-trash"
-                                class="w-4 h-4 text-red-500"
-                            />
-                        </Button>
-                    </div>
-                </TableCell>
-            </TableRow>
-        </TableBody>
-    </Table>
+    <div class="h-[calc(100vh-250px)] overflow-y-auto scrollbar-custom">
+        <Table>
+            <TableBody>
+                <TableRow
+                    v-for="device in props.devices"
+                    :key="device.id"
+                    @click="$emit('filter-device', device)"
+                    class="transition-colors cursor-pointer group"
+                    :class="{
+                        'bg-indigo-300 dark:bg-indigo-900':
+                            props.selectedDevice?.id === device.id,
+                        'hover:bg-gray-100 dark:hover:bg-gray-800':
+                            props.selectedDevice?.id !== device.id,
+                    }"
+                >
+                    <TableCell class="flex items-center justify-between">
+                        <span>{{ device.name }}</span>
+                        <div class="items-center hidden gap-2 group-hover:flex">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                @click.stop="$emit('device-selected', device)"
+                            >
+                                <font-awesome-icon
+                                    icon="fa-solid fa-pen"
+                                    class="w-4 h-4"
+                                />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                @click.stop="deleteDevice(device)"
+                            >
+                                <font-awesome-icon
+                                    icon="fa-solid fa-trash"
+                                    class="w-4 h-4 text-red-500"
+                                />
+                            </Button>
+                        </div>
+                    </TableCell>
+                </TableRow>
+            </TableBody>
+        </Table>
+    </div>
 </template>
 
 <script setup>
@@ -129,3 +131,29 @@ const deleteDevice = (device) => {
     }
 };
 </script>
+
+<style scoped>
+.scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary)) hsl(var(--muted));
+    -webkit-overflow-scrolling: touch;
+}
+
+.scrollbar-custom::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+    background-color: hsl(var(--muted));
+    @apply rounded-full;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--primary));
+    @apply rounded-full;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--primary) / 0.8);
+}
+</style>
