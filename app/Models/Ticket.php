@@ -29,6 +29,7 @@ class Ticket extends Model
     {
         return $this->belongsTo(Device::class, 'deviceId');
     }
+
     public function images()
     {
         return $this->hasMany(Ticket_images::class, 'ticketId');

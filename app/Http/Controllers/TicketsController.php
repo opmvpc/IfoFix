@@ -21,11 +21,13 @@ class TicketsController extends Controller
     {
         return Inertia::render('Tickets/Index', [
             'tickets' => Ticket::where('isDeleted', false)->with([
-                'device',
-                'interventions.users'
+                'client',
+                'interventions.users',
+                'device.brand',
+                'device.type'
             ])->orderBy('created_at', 'desc')->get(),
             'technicians' => User::where('role', 'technician')->get(),
-            'devices' => Device::all(),
+            'devices' => Device::with(['brand', 'type'])->get(),
             'brands' => Brand::all(),
             'types' => Type::all(),
             'clients' => Client::all(),

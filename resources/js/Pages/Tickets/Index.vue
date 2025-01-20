@@ -4,6 +4,7 @@
             <DataTable
                 :tickets="props.tickets"
                 :clients="clients"
+                :technicians="technicians"
                 :devices="props.devices"
                 :brands="props.brands"
                 :types="props.types"

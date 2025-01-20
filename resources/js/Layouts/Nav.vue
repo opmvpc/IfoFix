@@ -25,7 +25,7 @@
             class="flex items-center justify-center h-20 border-b dark:border-indigo-400"
         >
             <Link
-                :href="route('dashboard')"
+                :href="route('tickets.index')"
                 class="flex gap-4 transition-transform hover:scale-105"
             >
                 <figure class="px-4">
@@ -37,7 +37,7 @@
         <div class="flex flex-col flex-1 px-2 mt-6 space-y-1">
             <NavLink
                 :href="route('tickets.index')"
-                :active="isActive(['tickets.*'])"
+                :active="isActive(['tickets.*', 'interventions.*'])"
                 class="flex items-center px-3 py-2 transition-all rounded-lg group"
             >
                 <font-awesome-icon

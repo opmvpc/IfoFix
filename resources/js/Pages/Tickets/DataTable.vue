@@ -56,6 +56,8 @@ const props = defineProps({
     deliveredTickets: Boolean,
 });
 
+console.log(props.tickets);
+
 const tickets = ref(props.tickets);
 
 watchEffect(() => {
@@ -69,6 +71,7 @@ const selectedTechnician = ref(AUCUN_VALUE);
 const selectedDevice = ref(AUCUN_VALUE);
 const selectedBrand = ref(AUCUN_VALUE);
 const selectedType = ref(AUCUN_VALUE);
+const selectedClient = ref(AUCUN_VALUE);
 
 // Update switch refs to use localStorage
 const pendingTickets = ref(
@@ -115,13 +118,22 @@ const filteredTickets = computed(() => {
             (ticket) => ticket.device.typeId === parseInt(selectedType.value)
         );
     }
+    if (selectedClient.value && selectedClient.value !== AUCUN_VALUE) {
+        tickets = tickets.filter(
+            (ticket) => ticket.client.id === parseInt(selectedClient.value)
+        );
+    }
     return tickets;
 });
 
 const getColumnNames = (id) => {
     const names = {
-        title: "Titre",
         isFinished: "Status",
+        title: "Titre",
+        client: "Client",
+        device: "Appareil",
+        brand: "Marque",
+        type: "Type",
         interventions: "Assigné à",
     };
     return names[id];
@@ -136,30 +148,6 @@ const columns = [
         },
         enableSorting: false,
         enableHiding: false,
-    },
-    {
-        accessorKey: "title",
-        header: ({ column }) => {
-            return h(
-                Button,
-                {
-                    variant: "ghost",
-                    onClick: () =>
-                        column.toggleSorting(column.getIsSorted() === "asc"),
-                },
-                () => ["Titre", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
-            );
-        },
-        cell: ({ row }) =>
-            h(
-                "div",
-                {
-                    class: "capitalize",
-                    // onClick: () =>
-                    //     router.visit(`/tickets/${row.getValue("id")}`),
-                },
-                row.getValue("title")
-            ),
     },
     {
         accessorKey: "isFinished",
@@ -189,7 +177,119 @@ const columns = [
             );
         },
     },
+    {
+        accessorKey: "client",
+        header: ({ column }) => {
+            return h(
+                Button,
+                {
+                    variant: "ghost",
+                    onClick: () =>
+                        column.toggleSorting(column.getIsSorted() === "asc"),
+                },
+                () => ["Clients", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+            );
+        },
+        cell: ({ row }) => {
+            const client = row.getValue("client");
 
+            return h(
+                "div",
+                { class: "flex flex-col gap-1" },
+                client.firstName + " " + client.lastName
+            );
+        },
+    },
+    {
+        accessorKey: "title",
+        header: ({ column }) => {
+            return h(
+                Button,
+                {
+                    variant: "ghost",
+                    onClick: () =>
+                        column.toggleSorting(column.getIsSorted() === "asc"),
+                },
+                () => ["Titre", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+            );
+        },
+        cell: ({ row }) =>
+            h(
+                "div",
+                {
+                    class: "capitalize",
+                    // onClick: () =>
+                    //     router.visit(`/tickets/${row.getValue("id")}`),
+                },
+                row.getValue("title")
+            ),
+    },
+    {
+        accessorKey: "device",
+        header: ({ column }) => {
+            return h(
+                Button,
+                {
+                    variant: "ghost",
+                    onClick: () =>
+                        column.toggleSorting(column.getIsSorted() === "asc"),
+                },
+                () => ["Appareil", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+            );
+        },
+        cell: ({ row }) => {
+            const device = row.getValue("device");
+            return h(
+                "div",
+                { class: "flex flex-col gap-1" },
+                device?.name || "Non spécifié"
+            );
+        },
+    },
+    {
+        accessorKey: "brand",
+        header: ({ column }) => {
+            return h(
+                Button,
+                {
+                    variant: "ghost",
+                    onClick: () =>
+                        column.toggleSorting(column.getIsSorted() === "asc"),
+                },
+                () => ["Marque", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+            );
+        },
+        cell: ({ row }) => {
+            const device = row.getValue("device");
+            return h(
+                "div",
+                { class: "flex flex-col gap-1" },
+                device?.brand?.name || "Non spécifié"
+            );
+        },
+    },
+    {
+        accessorKey: "type",
+        header: ({ column }) => {
+            return h(
+                Button,
+                {
+                    variant: "ghost",
+                    onClick: () =>
+                        column.toggleSorting(column.getIsSorted() === "asc"),
+                },
+                () => ["Type", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+            );
+        },
+        cell: ({ row }) => {
+            const device = row.getValue("device");
+            return h(
+                "div",
+                { class: "flex flex-col gap-1" },
+                device?.type?.name || "Non spécifié"
+            );
+        },
+    },
     {
         accessorKey: "interventions",
         header: "Assigné à",
@@ -259,6 +359,27 @@ watch(
 const rowSelection = ref({});
 const expanded = ref({});
 const globalFilter = ref("");
+
+// Add these computed properties
+const isClientVisible = computed(() => {
+    return table.getColumn("client")?.getIsVisible();
+});
+
+const isTechnicianVisible = computed(() => {
+    return table.getColumn("interventions")?.getIsVisible();
+});
+
+const isDeviceVisible = computed(() => {
+    return table.getColumn("device")?.getIsVisible();
+});
+
+const isBrandVisible = computed(() => {
+    return table.getColumn("brand")?.getIsVisible();
+});
+
+const isTypeVisible = computed(() => {
+    return table.getColumn("type")?.getIsVisible();
+});
 
 const table = useVueTable({
     data: filteredTickets,
@@ -387,14 +508,37 @@ const table = useVueTable({
                     </DropdownMenu>
                 </div>
                 <div class="flex gap-2 mb-4">
-                    <Select v-model="selectedTechnician">
+                    <Select v-if="isClientVisible" v-model="selectedClient">
+                        <SelectTrigger>
+                            <SelectValue placeholder="Client" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem :value="AUCUN_VALUE"
+                                    >Clients</SelectItem
+                                >
+                                <SelectItem
+                                    v-for="client in props.clients"
+                                    :key="client.id"
+                                    :value="String(client.id)"
+                                >
+                                    {{ client.firstName }} {{ client.lastName }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <Select
+                        v-if="isTechnicianVisible"
+                        v-model="selectedTechnician"
+                    >
                         <SelectTrigger>
                             <SelectValue placeholder="Technicien" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
                                 <SelectItem :value="AUCUN_VALUE"
-                                    >Aucun</SelectItem
+                                    >Techniciens</SelectItem
                                 >
                                 <SelectItem
                                     v-for="technician in props.technicians"
@@ -407,14 +551,14 @@ const table = useVueTable({
                         </SelectContent>
                     </Select>
 
-                    <Select v-model="selectedDevice">
+                    <Select v-if="isDeviceVisible" v-model="selectedDevice">
                         <SelectTrigger>
                             <SelectValue placeholder="Model" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
                                 <SelectItem :value="AUCUN_VALUE"
-                                    >Aucun</SelectItem
+                                    >Appareils</SelectItem
                                 >
                                 <SelectItem
                                     v-for="device in props.devices"
@@ -427,14 +571,14 @@ const table = useVueTable({
                         </SelectContent>
                     </Select>
 
-                    <Select v-model="selectedBrand">
+                    <Select v-if="isBrandVisible" v-model="selectedBrand">
                         <SelectTrigger>
                             <SelectValue placeholder="Marque" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
                                 <SelectItem :value="AUCUN_VALUE"
-                                    >Aucun</SelectItem
+                                    >Marques</SelectItem
                                 >
                                 <SelectItem
                                     v-for="brand in props.brands"
@@ -447,14 +591,14 @@ const table = useVueTable({
                         </SelectContent>
                     </Select>
 
-                    <Select v-model="selectedType">
+                    <Select v-if="isTypeVisible" v-model="selectedType">
                         <SelectTrigger>
                             <SelectValue placeholder="Type" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
                                 <SelectItem :value="AUCUN_VALUE"
-                                    >Aucun</SelectItem
+                                    >Types</SelectItem
                                 >
                                 <SelectItem
                                     v-for="type in props.types"
