@@ -1,16 +1,14 @@
 <template>
-    <div class="p-4 bg-white border rounded-lg shadow">
+    <Card class="p-4 m-4 mt-20">
         <div class="flex items-center justify-between mb-4">
-            <BackButton v-if="params === '/tickets/create'" />
             <h2 class="text-lg font-semibold">
                 Modifier Ticket #{{ ticket.id }}
             </h2>
-            <Button
-                variant="ghost"
-                @click="$emit('close')"
-                v-if="params !== '/tickets/create'"
-            >
-                <XIcon class="w-4 h-4" />
+            <Button variant="ghost" size="icon" @click="$emit('close')">
+                <font-awesome-icon
+                    icon="fa-solid fa-close"
+                    class="w-4 h-4 text-gray-400 hover:text-indigo-600"
+                />
             </Button>
         </div>
 
@@ -190,36 +188,36 @@
             </div>
             <Button type="submit" class="w-full">Mettre à jour</Button>
         </form>
+    </Card>
 
-        <CreateClientModal v-model="isNewClientModalOpen" />
+    <CreateClientModal v-model="isNewClientModalOpen" />
 
-        <CreateDeviceModal
-            v-model="isNewDeviceModalOpen"
-            :brands="brands"
-            :types="types"
-        />
+    <CreateDeviceModal
+        v-model="isNewDeviceModalOpen"
+        :brands="brands"
+        :types="types"
+    />
 
-        <TechniciansModal
-            v-model="isModalOpen"
-            :form="form"
-            :technicians="technicians"
-            @update:selectedTechnicians="updateSelectedTechnicians"
-        />
+    <TechniciansModal
+        v-model="isModalOpen"
+        :form="form"
+        :technicians="technicians"
+        @update:selectedTechnicians="updateSelectedTechnicians"
+    />
 
-        <ClientsModal
-            v-model="isClientModalOpen"
-            :form="form"
-            :clients="clients"
-            @update:selectedClientName="selectedClientName = $event"
-        />
+    <ClientsModal
+        v-model="isClientModalOpen"
+        :form="form"
+        :clients="clients"
+        @update:selectedClientName="selectedClientName = $event"
+    />
 
-        <DeviceModal
-            v-model="isDeviceModalOpen"
-            :form="form"
-            :devices="devices"
-            @update:selectedDeviceName="selectedDeviceName = $event"
-        />
-    </div>
+    <DeviceModal
+        v-model="isDeviceModalOpen"
+        :form="form"
+        :devices="devices"
+        @update:selectedDeviceName="selectedDeviceName = $event"
+    />
 </template>
 
 <script setup>
@@ -235,7 +233,14 @@ import ClientsModal from "./ClientsModal.vue";
 import DeviceModal from "./DevicesModal.vue";
 import CreateClientModal from "./CreateClientModal.vue";
 import CreateDeviceModal from "./CreateDeviceModal.vue";
-import BackButton from "@/Components/BackButton.vue";
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+    CardContent,
+    CardFooter,
+} from "@/Components/ui/card";
 
 const props = defineProps({
     ticket: Object,
@@ -354,11 +359,6 @@ const submit = () => {
             });
         }
 
-        // Log the FormData entries
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ": " + pair[1]);
-        }
-
         return formData;
     });
 
@@ -472,7 +472,4 @@ const handleFileDrop = (event) => {
     });
     updateFormImages();
 };
-
-const params = window.location.pathname;
-console.log(params);
 </script>

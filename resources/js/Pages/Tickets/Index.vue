@@ -1,27 +1,26 @@
 <template>
     <AppLayout>
-        <div
-            class="flex p-4 lg:flex-row"
-            :class="showCreateForm ? 'gap-4' : ''"
-        >
+        <div class="flex m-4 grow" :class="showCreateForm ? 'gap-4' : ''">
             <DataTable
                 :tickets="props.tickets"
                 :clients="clients"
                 :devices="props.devices"
                 :brands="props.brands"
                 :types="props.types"
+                class="w-full transition-all duration-300 ease-in-out"
                 @updateDeliveredTickets="deliveredTickets = $event"
                 @updatePendingTickets="pendingTickets = $event"
                 @button-click="buttonClick"
             />
             <CreateTicket
+                v-if="showCreateForm"
                 :devices="devices"
                 :technicians="technicians"
                 :clients="clients"
                 :brands="brands"
                 :types="types"
                 @close="showCreateForm = false"
-                class="transition-all duration-500"
+                class="transition-all duration-300 ease-in-out"
                 :class="
                     showCreateForm
                         ? 'translate-x-0 w-full lg:w-96'

@@ -14,7 +14,7 @@
             <TableRow
                 v-for="device in props.devices"
                 :key="device.id"
-                @click="setSelected(device)"
+                @click="$emit('filter-device', device)"
                 class="transition-colors cursor-pointer group"
                 :class="{
                     'bg-indigo-300 dark:bg-indigo-900':
@@ -29,7 +29,7 @@
                         <Button
                             variant="ghost"
                             size="sm"
-                            @click.stop="startEdit(device)"
+                            @click.stop="$emit('device-selected', device)"
                         >
                             <font-awesome-icon
                                 icon="fa-solid fa-pen"
@@ -79,14 +79,10 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["device-selected"]);
+const emit = defineEmits(["device-selected", "filter-device"]);
 
 const setSelected = (device) => {
-    if (props.selectedDevice?.id === device.id) {
-        emit("device-selected", null);
-    } else {
-        emit("device-selected", device);
-    }
+    emit("device-selected", device);
 };
 
 const isDialogOpen = ref(false);

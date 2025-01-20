@@ -260,32 +260,6 @@ const rowSelection = ref({});
 const expanded = ref({});
 const globalFilter = ref("");
 
-// Ajouter cette fonction de filtrage personnalisée après la définition des colonnes
-// const fuzzyFilter = (
-//     row: any,
-//     columnId: string,
-//     value: string,
-//     column: any
-// ) => {
-//     const searchValue = value.toLowerCase();
-//     const rowData = row.original;
-
-//     // Fonction récursive pour chercher dans les objets imbriqués
-//     const searchInObject = (obj: any): boolean => {
-//         if (!obj) return false;
-
-//         return Object.keys(obj).some((key) => {
-//             const val = obj[key];
-//             if (typeof val === "object") {
-//                 return searchInObject(val);
-//             }
-//             return String(val).toLowerCase().includes(searchValue);
-//         });
-//     };
-
-//     return searchInObject(rowData);
-// };
-
 const table = useVueTable({
     data: filteredTickets,
     columns,

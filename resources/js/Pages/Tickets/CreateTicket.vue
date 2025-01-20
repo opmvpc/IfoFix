@@ -1,23 +1,23 @@
 <template>
-    <Card>
-        <CardHeader>
-            <CardTitle class="flex justify-between">
-                <!-- <div class="p-4 bg-white border rounded-lg shadow"> -->
-                <div class="flex items-center justify-between mb-4">
-                    <BackButton v-if="params === '/tickets/create'" />
-                    <h2 class="text-lg font-semibold">Nouveau Ticket</h2>
-                    <Button
-                        variant="ghost"
-                        @click="$emit('close')"
-                        v-if="params !== '/tickets/create'"
-                    >
-                        <XIcon class="w-4 h-4" />
-                    </Button>
-                </div>
-            </CardTitle>
-        </CardHeader>
-        <CardContent>
-            <form @submit.prevent="submit" class="space-y-4">
+    <form @submit.prevent="submit" class="space-y-4">
+        <Card>
+            <CardHeader>
+                <CardTitle class="flex justify-between">
+                    <!-- <div class="p-4 bg-white border rounded-lg shadow"> -->
+                    <div class="flex items-center justify-between mb-4">
+                        <BackButton v-if="params === '/tickets/create'" />
+                        <h2 class="text-lg font-semibold">Nouveau Ticket</h2>
+                        <Button
+                            variant="ghost"
+                            @click="$emit('close')"
+                            v-if="params !== '/tickets/create'"
+                        >
+                            <XIcon class="w-4 h-4" />
+                        </Button>
+                    </div>
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
                 <div>
                     <Label for="title">Titre</Label>
                     <Input id="title" v-model="form.title" />
@@ -131,7 +131,7 @@
                     >
                         <div class="flex items-center justify-center w-full">
                             <label
-                                class="flex flex-col w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors duration-200"
+                                class="flex flex-col w-full h-32 transition-colors duration-200 border-2 border-dashed rounded-lg cursor-pointer"
                                 :class="{
                                     'border-primary bg-primary/10': isDragging,
                                     'hover:bg-gray-50 border-gray-300':
@@ -195,8 +195,8 @@
                     </div>
                 </div>
                 <Button type="submit" class="w-full">Créer</Button>
-            </form>
-        </CardContent>
+            </CardContent>
+        </Card>
 
         <CreateClientModal v-model="isNewClientModalOpen" />
 
@@ -226,7 +226,7 @@
             :devices="devices"
             @update:selectedDeviceName="selectedDeviceName = $event"
         />
-    </Card>
+    </form>
 </template>
 
 <script setup>
@@ -263,6 +263,8 @@ const form = useForm({
 });
 
 const emit = defineEmits(["close"]);
+
+const createTicketOpen = ref(false);
 
 const submit = () => {
     form.post(route("tickets.store"), {

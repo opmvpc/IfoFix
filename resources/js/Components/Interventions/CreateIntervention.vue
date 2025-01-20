@@ -1,9 +1,9 @@
 <template>
-    <div class="p-4 border rounded-lg bg-white shadow-md">
-        <div class="flex justify-between items-center mb-4">
+    <div>
+        <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-semibold">Nouvelle Intervention</h2>
             <Button variant="ghost" @click="$emit('close')">
-                <XIcon class="h-4 w-4" />
+                <XIcon class="w-4 h-4" />
             </Button>
         </div>
 
@@ -28,7 +28,7 @@
                         <div
                             v-for="tech in filteredTechnicians"
                             :key="tech.id"
-                            class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded"
+                            class="flex items-center p-2 space-x-2 rounded hover:bg-gray-100"
                         >
                             <Checkbox
                                 :id="'tech-' + tech.id"
@@ -71,7 +71,7 @@
                     type="button"
                     variant="outline"
                     @click="openModal"
-                    class="w-full justify-between"
+                    class="justify-between w-full"
                 >
                     Sélectionner des techniciens
                     <font-awesome-icon icon="fa-solid fa-users" />
@@ -82,7 +82,7 @@
                     <div
                         v-for="tech in selectedTechnicians"
                         :key="tech.id"
-                        class="flex items-center gap-2 bg-gray-100 p-2 rounded"
+                        class="flex items-center gap-2 p-2 bg-gray-100 rounded"
                     >
                         <span>{{ tech.firstName }} {{ tech.lastName }}</span>
                         <Button
@@ -90,7 +90,7 @@
                             variant="ghost"
                             size="sm"
                             @click="toggleTechnician(tech.id)"
-                            class="h-6 w-6 p-0"
+                            class="w-6 h-6 p-0"
                         >
                             <font-awesome-icon icon="fa-solid fa-times" />
                         </Button>

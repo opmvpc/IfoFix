@@ -10,7 +10,7 @@
             <TableRow
                 v-for="brand in props.brands"
                 :key="brand.id"
-                @click="setSelected(brand)"
+                @click="$emit('filter-brand', brand)"
                 class="transition-colors cursor-pointer group"
                 :class="{
                     'bg-indigo-300 dark:bg-indigo-900':
@@ -25,7 +25,7 @@
                         <Button
                             variant="ghost"
                             size="sm"
-                            @click.stop="startEdit(brand)"
+                            @click.stop="$emit('brand-selected', brand)"
                         >
                             <font-awesome-icon
                                 icon="fa-solid fa-pen"
@@ -67,16 +67,11 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["brand-selected"]);
+const emit = defineEmits(["brand-selected", "filter-brand"]);
 
 const selectedBrand = ref(null);
 
 const setSelected = (brand) => {
-    if (selectedBrand.value && selectedBrand.value.id === brand.id) {
-        selectedBrand.value = null;
-        emit("brand-selected", null);
-        return;
-    }
     emit("brand-selected", brand);
     selectedBrand.value = brand;
 };

@@ -77,7 +77,7 @@
                     </NavLink> -->
                     <NavLink
                         :href="route('administration.users')"
-                        :active="isActive('administration.users')"
+                        :active="isActive(['administration.users'])"
                         class="flex items-center px-3 py-2 transition-all rounded-lg group"
                     >
                         <font-awesome-icon

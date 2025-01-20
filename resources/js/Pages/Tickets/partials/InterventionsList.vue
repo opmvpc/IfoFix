@@ -1,47 +1,18 @@
 <template>
-    <div class="bg-white rounded-lg shadow-md p-4">
-        <div class="flex items-center gap-3 mb-4">
-            <h2 class="text-xl font-bold">Interventions</h2>
-            <TooltipProvider v-if="auth.user.role === 'admin'">
-                <Tooltip>
-                    <TooltipTrigger>
-                        <font-awesome-icon
-                            icon="fa-solid fa-plus"
-                            :class="`px-3 py-2 transition-all rounded-md ${
-                                props.ticket.isFinished
-                                    ? 'text-gray-400 cursor-not-allowed'
-                                    : 'cursor-pointer hover:bg-indigo-50'
-                            }`"
-                            @click="
-                                !props.ticket.isFinished
-                                    ? $emit('create-intervention')
-                                    : ''
-                            "
-                        />
-                    </TooltipTrigger>
-                    <TooltipContent v-if="props.ticket.isFinished">
-                        <p>
-                            Impossible de créer une intervention sur un ticket
-                            résolu
-                        </p>
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
-        </div>
-
+    <div class="">
         <div
             v-if="props.interventions && props.interventions.length > 0"
             class="space-y-4"
         >
-            <div
+            <card
                 v-for="intervention in props.interventions"
                 :key="intervention.id"
-                class="bg-gray-50 rounded-lg shadow-sm p-4 hover:bg-gray-100 duration-200"
+                class="p-4 duration-200 rounded-lg shadow-sm bg-gradient-to-b from-indigo-50 to-indigo-100 dark:from-indigo-950 dark:via-indigo-950 dark:to-indigo-950 dark:brightness-75 hover:bg-gray-100"
             >
                 <Link :href="getInterventionUrl(intervention)">
                     <div class="flex items-center justify-between">
                         <div>
-                            <div class="flex gap-4 text-sm text-gray-600">
+                            <div class="flex gap-4 text-sm">
                                 <span>
                                     <font-awesome-icon
                                         icon="fa-solid fa-calendar"
@@ -91,7 +62,7 @@
                         </div>
                     </div>
                 </Link>
-            </div>
+            </card>
         </div>
 
         <div v-else class="italic text-gray-500">
@@ -106,14 +77,10 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/Components/ui/tooltip";
+
 import { formatDate } from "@/lib/utils";
 import { Link } from "@inertiajs/vue3";
+import { Card } from "@/Components/ui/card";
 
 const props = defineProps({
     ticket: Object,

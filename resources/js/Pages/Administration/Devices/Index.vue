@@ -1,97 +1,157 @@
 <template>
     <AppLayout>
-        <div class="h-full p-4">
-            <Card class="h-full">
-                <CardHeader>
-                    <div class="flex items-center gap-2">
-                        <h1 class="text-2xl font-bold">Liste des Appareils</h1>
-                    </div>
-                </CardHeader>
+        <div class="flex h-full">
+            <!-- Main content -->
+            <div class="flex-1 p-4">
+                <Card class="h-full">
+                    <CardHeader>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-2xl font-bold">
+                                Liste des Appareils
+                            </h1>
+                        </div>
+                    </CardHeader>
 
-                <CardContent class="flex flex-col gap-4">
-                    <!-- Search Section -->
-                    <div class="flex items-center space-x-2">
-                        <div class="relative flex-1 max-w-52">
-                            <Input
-                                v-model="searchQuery"
-                                placeholder="Rechercher un appareil..."
-                                class="pl-10"
-                            />
-                            <font-awesome-icon
-                                icon="fa-solid fa-search"
-                                class="absolute text-gray-500 -translate-y-1/2 left-3 top-1/2"
-                            />
-                        </div>
-                    </div>
-                    <!-- Main Content -->
-                    <div class="grid grid-cols-1 gap-4 grow lg:grid-cols-3">
-                        <div>
-                            <div class="flex items-center gap-4 mb-2">
-                                <h3 class="text-lg font-semibold">Types</h3>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    @click="openDialog('Type')"
-                                >
-                                    <font-awesome-icon
-                                        icon="fa-solid fa-plus"
-                                        class="w-4 h-4"
-                                    />
-                                </Button>
+                    <CardContent class="flex flex-col gap-4">
+                        <!-- Search Section -->
+                        <div class="flex items-center space-x-2">
+                            <div class="relative flex-1 max-w-52">
+                                <Input
+                                    v-model="searchQuery"
+                                    placeholder="Rechercher un appareil..."
+                                    class="pl-10"
+                                />
+                                <font-awesome-icon
+                                    icon="fa-solid fa-search"
+                                    class="absolute text-gray-500 -translate-y-1/2 left-3 top-1/2"
+                                />
                             </div>
-                            <Types
-                                :types="filteredTypes"
-                                :selectedType="selectedType"
-                                @type-selected="handleTypeSelect"
-                            />
                         </div>
+                        <!-- Main Content -->
+                        <div class="grid grid-cols-1 gap-4 grow lg:grid-cols-3">
+                            <div>
+                                <div class="flex items-center gap-4 mb-2">
+                                    <h3 class="text-lg font-semibold">Types</h3>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        @click="openDialog('Type')"
+                                    >
+                                        <font-awesome-icon
+                                            icon="fa-solid fa-plus"
+                                            class="w-4 h-4"
+                                        />
+                                    </Button>
+                                </div>
+                                <Types
+                                    :types="filteredTypes"
+                                    :selectedType="
+                                        selectedFilter?.type === 'type'
+                                            ? selectedFilter
+                                            : null
+                                    "
+                                    @type-selected="
+                                        (type) => handleItemSelect('type', type)
+                                    "
+                                    @filter-type="
+                                        (type) =>
+                                            handleFilterSelect('type', type)
+                                    "
+                                />
+                            </div>
 
-                        <div>
-                            <div class="flex items-center gap-4 mb-2">
-                                <h3 class="text-lg font-semibold">Marques</h3>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    @click="openDialog('Marque')"
-                                >
-                                    <font-awesome-icon
-                                        icon="fa-solid fa-plus"
-                                        class="w-4 h-4"
-                                    />
-                                </Button>
+                            <div>
+                                <div class="flex items-center gap-4 mb-2">
+                                    <h3 class="text-lg font-semibold">
+                                        Marques
+                                    </h3>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        @click="openDialog('Marque')"
+                                    >
+                                        <font-awesome-icon
+                                            icon="fa-solid fa-plus"
+                                            class="w-4 h-4"
+                                        />
+                                    </Button>
+                                </div>
+                                <Brands
+                                    :brands="filteredBrands"
+                                    :selectedBrand="
+                                        selectedFilter?.type === 'brand'
+                                            ? selectedFilter
+                                            : null
+                                    "
+                                    @brand-selected="
+                                        (brand) =>
+                                            handleItemSelect('brand', brand)
+                                    "
+                                    @filter-brand="
+                                        (brand) =>
+                                            handleFilterSelect('brand', brand)
+                                    "
+                                />
                             </div>
-                            <Brands
-                                :brands="filteredBrands"
-                                :selectedBrand="selectedBrand"
-                                @brand-selected="handleBrandSelect"
-                            />
-                        </div>
 
-                        <div>
-                            <div class="flex items-center gap-4 mb-2">
-                                <h3 class="text-lg font-semibold">Modèles</h3>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    @click="openDialog('Modéle')"
-                                >
-                                    <font-awesome-icon
-                                        icon="fa-solid fa-plus"
-                                        class="w-4 h-4"
-                                    />
-                                </Button>
+                            <div>
+                                <div class="flex items-center gap-4 mb-2">
+                                    <h3 class="text-lg font-semibold">
+                                        Modèles
+                                    </h3>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        @click="openDialog('Modéle')"
+                                    >
+                                        <font-awesome-icon
+                                            icon="fa-solid fa-plus"
+                                            class="w-4 h-4"
+                                        />
+                                    </Button>
+                                </div>
+                                <Models
+                                    :devices="filteredDevices"
+                                    :brands="originalBrands"
+                                    :types="originalTypes"
+                                    :selectedDevice="
+                                        selectedFilter?.type === 'device'
+                                            ? selectedFilter
+                                            : null
+                                    "
+                                    @device-selected="
+                                        (device) =>
+                                            handleItemSelect('device', device)
+                                    "
+                                    @filter-device="
+                                        (device) =>
+                                            handleFilterSelect('device', device)
+                                    "
+                                />
                             </div>
-                            <Models
-                                :devices="filteredDevices"
-                                :brands="originalBrands"
-                                :types="originalTypes"
-                                :selectedDevice="selectedDevice"
-                                @device-selected="handleDeviceSelect"
-                            />
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            </div>
+
+            <!-- Sliding panel -->
+            <div
+                class="py-4 transition-all duration-300 ease-in-out rounded"
+                :class="
+                    selectedItem
+                        ? 'translate-x-0 w-full lg:w-96 pr-4'
+                        : 'translate-x-full opacity-0 w-0'
+                "
+            >
+                <Show
+                    v-if="selectedItem"
+                    :item="selectedItem"
+                    :itemType="selectedItem.type"
+                    :types="originalTypes"
+                    :brands="originalBrands"
+                    @item-selected="(item) => (selectedItem = null)"
+                />
+            </div>
         </div>
 
         <EditDialog
@@ -114,6 +174,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import Brands from "./Partials/Brands.vue";
 import Models from "./Partials/Models.vue";
 import Types from "./Partials/Types.vue";
+import Show from "./Partials/Show.vue";
 import { ref, computed } from "vue";
 import { Card, CardHeader } from "@/Components/ui/card";
 import CardContent from "@/Components/ui/card/CardContent.vue";
@@ -141,9 +202,8 @@ const originalBrands = ref(props.brands);
 const originalDevices = ref(props.devices);
 
 // Track selected items
-const selectedType = ref(null);
-const selectedBrand = ref(null);
-const selectedDevice = ref(null);
+const selectedItem = ref(null); // For right panel editing
+const selectedFilter = ref(null); // For filtering
 
 // Add search query ref
 const searchQuery = ref("");
@@ -153,13 +213,18 @@ const filteredDevices = computed(() => {
     return originalDevices.value.filter((device) => {
         // Type and brand filters
         const matchesType =
-            !selectedType.value || device.typeId === selectedType.value.id;
+            !selectedFilter.value ||
+            selectedFilter.value.type !== "type" ||
+            device.typeId === selectedFilter.value.id;
+
         const matchesBrand =
-            !selectedBrand.value || device.brandId === selectedBrand.value.id;
+            !selectedFilter.value ||
+            selectedFilter.value.type !== "brand" ||
+            device.brandId === selectedFilter.value.id;
 
         // Search filter
         const matchesSearch =
-            searchQuery.value === "" ||
+            !searchQuery.value ||
             device.name.toLowerCase().includes(searchQuery.value.toLowerCase());
 
         return matchesType && matchesBrand && matchesSearch;
@@ -179,16 +244,13 @@ const filteredBrands = computed(() => {
         filtered = filtered.filter((brand) => brandIds.includes(brand.id));
     }
 
-    if (selectedType.value) {
-        // Get all devices of selected type
+    if (selectedFilter.value?.type === "type") {
         const devicesOfType = originalDevices.value.filter(
-            (device) => device.typeId === selectedType.value.id
+            (device) => device.typeId === selectedFilter.value.id
         );
-        // Get unique brand IDs from these devices
         const brandIds = [
             ...new Set(devicesOfType.map((device) => device.brandId)),
         ];
-        // Filter brands
         filtered = filtered.filter((brand) => brandIds.includes(brand.id));
     }
 
@@ -208,16 +270,13 @@ const filteredTypes = computed(() => {
         filtered = filtered.filter((type) => typeIds.includes(type.id));
     }
 
-    if (selectedBrand.value) {
-        // Get all devices of selected brand
+    if (selectedFilter.value?.type === "brand") {
         const devicesOfBrand = originalDevices.value.filter(
-            (device) => device.brandId === selectedBrand.value.id
+            (device) => device.brandId === selectedFilter.value.id
         );
-        // Get unique type IDs from these devices
         const typeIds = [
             ...new Set(devicesOfBrand.map((device) => device.typeId)),
         ];
-        // Filter types
         filtered = filtered.filter((type) => typeIds.includes(type.id));
     }
 
@@ -225,24 +284,19 @@ const filteredTypes = computed(() => {
 });
 
 // Handler functions
-const handleTypeSelect = (type) => {
-    if (selectedType.value?.id === type?.id) {
-        selectedType.value = null;
-    } else {
-        selectedType.value = type;
-    }
+const handleItemSelect = (type, item) => {
+    selectedItem.value = item ? { ...item, type } : null;
 };
 
-const handleBrandSelect = (brand) => {
-    if (selectedBrand.value?.id === brand?.id) {
-        selectedBrand.value = null;
+const handleFilterSelect = (type, item) => {
+    if (
+        selectedFilter.value?.id === item?.id &&
+        selectedFilter.value?.type === type
+    ) {
+        selectedFilter.value = null;
     } else {
-        selectedBrand.value = brand;
+        selectedFilter.value = item ? { ...item, type } : null;
     }
-};
-
-const handleDeviceSelect = (device) => {
-    selectedDevice.value = device.id;
 };
 
 // Add these new refs

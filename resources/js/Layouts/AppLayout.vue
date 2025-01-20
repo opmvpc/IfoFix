@@ -24,7 +24,7 @@
 
                 <!-- Page Content -->
                 <main
-                    class="flex-1 w-full h-screen max-h-screen overflow-hidden"
+                    class="flex-1 w-full h-screen max-h-screen overflow-y-auto"
                 >
                     <slot />
                 </main>
